@@ -13,7 +13,6 @@ import java.util.List;
 @Table(name = "product")
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
 public class ProductEntity {
 
     @Id
@@ -35,16 +34,14 @@ public class ProductEntity {
     private String color;
 
     @ElementCollection
-    @CollectionTable(name = "product_images", joinColumns = @JoinColumn(name = "product_id"))
     private List<String> images = new ArrayList<>();
 
     private int numRatings;
 
     @ManyToOne
-    @JoinColumn(name = "categoryId")
     private CategoryEntity category;
+
     @ManyToOne
-    @JoinColumn(name = "seller_id")
     private SellerEntity seller;
 
     private LocalDateTime createdAt;

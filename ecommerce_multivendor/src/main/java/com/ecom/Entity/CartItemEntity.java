@@ -21,6 +21,7 @@ public class CartItemEntity {
     @JsonIgnore
     private CartEntity cart;
 
+    @ManyToOne
     private ProductEntity product;
 
     private String size;
