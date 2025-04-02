@@ -4,6 +4,7 @@ import com.ecom.Domain.AccountStatus;
 import com.ecom.Domain.UserRole;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
@@ -12,6 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
+@Data
 public class SellerEntity {
 
     @Id
@@ -36,6 +38,7 @@ public class SellerEntity {
     @OneToOne(cascade = CascadeType.ALL)
     private AddressEntity pickupAddress = new AddressEntity();
 
+    @Enumerated(EnumType.STRING)
     private UserRole role = UserRole.ROLE_SELLER;
 
     private boolean isEmailVerified = false;

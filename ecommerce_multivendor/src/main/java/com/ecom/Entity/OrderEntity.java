@@ -48,6 +48,7 @@ public class OrderEntity {
 
     private int totalItem;
 
+    @Enumerated(EnumType.STRING)
     private PaymentStatus paymentStatus = PaymentStatus.PENDING;
 
     private LocalDateTime orderDate = LocalDateTime.now();

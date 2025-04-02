@@ -1,9 +1,10 @@
 package com.ecom.Service;
 
-import org.springframework.stereotype.Service;
+import com.ecom.Entity.UserEntity;
+import com.ecom.Response.SignUpRequest;
 
-@Service
-public class AuthService {
+public interface AuthService {
 
+    public String CreateUser(SignUpRequest signUpRequest);
 
 }
