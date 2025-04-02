@@ -21,6 +21,8 @@ public class EmailService {
         }
         catch (MailException e) {
             throw new MailSendException("Error sending email", e);
+
+
         }
     }
 }
