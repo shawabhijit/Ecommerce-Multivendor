@@ -3,9 +3,11 @@ package com.ecom.Service.Impl;
 import com.ecom.Config.JwtProvider;
 import com.ecom.Domain.UserRole;
 import com.ecom.Entity.CartEntity;
+import com.ecom.Entity.SellerEntity;
 import com.ecom.Entity.UserEntity;
 import com.ecom.Entity.VerificationCode;
 import com.ecom.Repository.CartRepo;
+import com.ecom.Repository.SellerRepo;
 import com.ecom.Repository.UserRepo;
 import com.ecom.Repository.VerificationCodeRepo;
 import com.ecom.Request.LoginRequest;
@@ -43,18 +45,29 @@ public class AuthServiceImpl implements AuthService {
     private final VerificationCodeRepo verificationCodeRepo;
     private final EmailService emailService;
     private final CustomUserServiceImpl customUserService;
+    private final SellerRepo sellerRepo;
 
     @Override
-    public void sentLoginOtp(String email) throws Exception {
-        String SIGNIN_PREFIX = "signin_";
+    public void sentLoginOtp(String email , UserRole role ) throws Exception {
+        String SIGNIN_PREFIX = "signing_";
+        //String SELLER_PREFIX = "seller_";
 
         if(email.startsWith(SIGNIN_PREFIX)) {
             email = email.substring(SIGNIN_PREFIX.length());
 
-            UserEntity user = userRepo.findByEmail(email);
-            if (user == null) {
-                throw new Exception("User not exits with provided email.");
+            if (role.equals(UserRole.ROLE_SELLER)) {
+                SellerEntity seller = sellerRepo.findByEmail(email);
+                if (seller == null) {
+                    throw new Exception("SELLER not found.");
+                }
             }
+            else {
+                UserEntity user = userRepo.findByEmail(email);
+                if (user == null) {
+                    throw new Exception("User not exits with provided email.");
+                }
+            }
+
         }
 
         VerificationCode isExits = verificationCodeRepo.findByEmail(email);
@@ -101,6 +114,12 @@ public class AuthServiceImpl implements AuthService {
 
     private Authentication authenticate(String username, String otp) {
         UserDetails userDetails = customUserService.loadUserByUsername(username);
+
+        String SELLER_PREFIX = "seller_";
+
+        if (username.startsWith(SELLER_PREFIX)) {
+            username = username.substring(SELLER_PREFIX.length());
+        }
 
         if (userDetails == null) {
             throw new BadCredentialsException("Invalid username.");
