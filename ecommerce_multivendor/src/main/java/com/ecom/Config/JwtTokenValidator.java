@@ -16,7 +16,11 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.crypto.SecretKey;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.List;
+
+import static io.jsonwebtoken.Jwts.*;
 
 public class JwtTokenValidator extends OncePerRequestFilter {
 
@@ -24,14 +28,26 @@ public class JwtTokenValidator extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String jwt = request.getHeader(JWT_CONSTANT.JWT_HEADER);
         if (jwt != null) {
-            jwt=jwt.substring(7);
+            if (jwt.startsWith("Bearer ")) {
+                jwt = jwt.substring(7);
+            }
+            System.out.println("JWT HEADER: " + jwt);
             try {
-                SecretKey key = Keys.hmacShaKeyFor(JWT_CONSTANT.SECRET_KEY.getBytes());
-                Claims claims = Jwts.parser().setSigningKey(key).build()
-                        .parseClaimsJws(jwt).getBody();
+                SecretKey key = Keys.hmacShaKeyFor(Base64.getDecoder().decode(JWT_CONSTANT.SECRET_KEY));
+
+                System.out.println("JWT KEY: " + key);
+
+                // Updated JWT parsing code to use the newer API
+                Claims claims = Jwts.parser()
+                        .setSigningKey(key)
+                        .build()
+                        .parseClaimsJws(jwt)
+                        .getBody();
+
+                System.out.println("JWT CLAIMS: " + claims);
 
                 String email = String.valueOf(claims.get("email"));
-                String authorities = claims.get("authorities").toString();
+                String authorities = claims.get("authrities").toString();
 
                 List<GrantedAuthority> authorityList = AuthorityUtils.commaSeparatedStringToAuthorityList(authorities);
 
@@ -39,6 +55,7 @@ public class JwtTokenValidator extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
             catch (Exception e) {
+                System.out.println("JWT Error: " + e.getMessage());  // Add detailed logging
                 throw new BadCredentialsException("Invalid JWT token...");
             }
         }

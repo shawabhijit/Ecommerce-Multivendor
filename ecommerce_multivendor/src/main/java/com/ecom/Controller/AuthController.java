@@ -2,6 +2,7 @@ package com.ecom.Controller;
 
 import com.ecom.Domain.UserRole;
 import com.ecom.Entity.VerificationCode;
+import com.ecom.Request.LoginRequest;
 import com.ecom.Response.ApiResponse;
 import com.ecom.Response.AuthResponse;
 import com.ecom.Response.SignUpRequest;
@@ -44,4 +45,15 @@ public class AuthController {
 
         return ResponseEntity.ok().body(authResponse);
     }
+
+    @PostMapping("/signing")
+    public ResponseEntity<?> loginHandler (@RequestBody LoginRequest req) throws Exception {
+
+        AuthResponse response = authService.signing(req);
+
+        return ResponseEntity.ok().body(response);
+    }
+
+
+
 }
