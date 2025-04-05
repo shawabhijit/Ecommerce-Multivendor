@@ -28,10 +28,10 @@ public class SellerServiceImpl implements SellerService {
 
 
     @Override
-    public SellerEntity getSellerProfile(String jwt) throws Exception {
+    public SellerEntity getSellerProfile(String jwt) throws SellerException {
         String email = jwtProvider.getEmailFromJwtToken(jwt);
         if (email == null) {
-            throw new Exception("Invalid JWT token");
+            throw new SellerException("Invalid JWT token");
         }
         return this.getSellerByEmail(email);
     }

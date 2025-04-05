@@ -170,8 +170,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductEntity> getProductBySellerId(Long sellerId) {
-        return productRepo.findBySellerId(sellerId);
+    public List<ProductEntity> getProductBySellerId(Long sellerId) throws ProductException {
+        List<ProductEntity> products = productRepo.findBySellerId(sellerId);
+        if (products.isEmpty()) {
+            throw new ProductException("No products found with this seller id :"+ sellerId);
+        }
+        return products;
     }
 
     private int calculateDiscountPercentage(double mrpPrice , double sellingPrice) {

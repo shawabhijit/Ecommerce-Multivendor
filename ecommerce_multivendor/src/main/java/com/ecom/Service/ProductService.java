@@ -28,5 +28,5 @@ public interface ProductService {
             Integer pageNumber
     );
 
-    public List<ProductEntity> getProductBySellerId (Long sellerId);
+    public List<ProductEntity> getProductBySellerId (Long sellerId) throws ProductException;
 }
