@@ -46,7 +46,7 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public CartEntity findUserCart(UserEntity user) {
-        CartEntity cart = cartRepo.findByUser(user.getId());
+        CartEntity cart = cartRepo.findByUserId(user.getId());
 
         int totalPrice = 0;
         int totalItem = 0;
