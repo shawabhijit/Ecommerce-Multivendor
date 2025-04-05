@@ -3,6 +3,7 @@ package com.ecom.Entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
@@ -11,6 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
+@Data
 public class CategoryEntity {
 
     @Id
@@ -26,5 +28,5 @@ public class CategoryEntity {
     @ManyToOne
     private CategoryEntity parentCategory;
 
-    private String level;
+    private int level;
 }

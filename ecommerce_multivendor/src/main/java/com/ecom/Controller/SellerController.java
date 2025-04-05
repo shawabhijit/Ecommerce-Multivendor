@@ -5,6 +5,7 @@ import com.ecom.Domain.AccountStatus;
 import com.ecom.Entity.SellerEntity;
 import com.ecom.Entity.SellerReport;
 import com.ecom.Entity.VerificationCode;
+import com.ecom.Exceptions.SellerException;
 import com.ecom.Repository.VerificationCodeRepo;
 import com.ecom.Request.LoginRequest;
 import com.ecom.Response.ApiResponse;
@@ -84,7 +85,7 @@ public class SellerController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getSellerById (@PathVariable Long id) throws Exception {
+    public ResponseEntity<?> getSellerById (@PathVariable Long id) throws SellerException {
         SellerEntity seller = sellerService.getSellerById(id);
         return ResponseEntity.ok().body(seller);
     }

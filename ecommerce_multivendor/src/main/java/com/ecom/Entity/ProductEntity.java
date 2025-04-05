@@ -2,6 +2,7 @@ package com.ecom.Entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
@@ -13,6 +14,7 @@ import java.util.List;
 @Table(name = "product")
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
 public class ProductEntity {
 
     @Id
@@ -23,11 +25,11 @@ public class ProductEntity {
 
     private String description;
 
-    private String mrpPrice;
+    private Integer mrpPrice;
 
-    private String SellingPrice;
+    private Integer sellingPrice;
 
-    private String discountPrice;
+    private Integer discountPrice;
 
     private int quantity;
 

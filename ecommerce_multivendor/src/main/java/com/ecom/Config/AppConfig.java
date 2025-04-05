@@ -33,7 +33,7 @@ public class AppConfig {
                                 .requestMatchers(new AntPathRequestMatcher("/api/products/*/reviews")).permitAll()
                                 .anyRequest().permitAll()
                 ).csrf(AbstractHttpConfigurer::disable)
-                .addFilterBefore(new JwtTokenValidator(), BasicAuthenticationFilter.class)
+                .addFilterBefore(new JwtTokenValidator(), BasicAuthenticationFilter.class) // this line works for authorization
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()));
 
         return http.build();

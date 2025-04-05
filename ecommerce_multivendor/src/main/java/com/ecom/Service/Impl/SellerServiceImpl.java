@@ -5,6 +5,7 @@ import com.ecom.Domain.AccountStatus;
 import com.ecom.Domain.UserRole;
 import com.ecom.Entity.AddressEntity;
 import com.ecom.Entity.SellerEntity;
+import com.ecom.Exceptions.SellerException;
 import com.ecom.Repository.AddressRepo;
 import com.ecom.Repository.SellerRepo;
 import com.ecom.Service.SellerService;
@@ -32,7 +33,7 @@ public class SellerServiceImpl implements SellerService {
         if (email == null) {
             throw new Exception("Invalid JWT token");
         }
-        return this.getSellerProfile(email);
+        return this.getSellerByEmail(email);
     }
 
     @Override
@@ -56,18 +57,18 @@ public class SellerServiceImpl implements SellerService {
     }
 
     @Override
-    public SellerEntity getSellerById(Long id) throws Exception {
+    public SellerEntity getSellerById(Long id) throws SellerException {
         return sellerRepo.findById(id)
-                .orElseThrow( () -> new Exception("Seller not found with id " + id));
+                .orElseThrow( () -> new SellerException("Seller not found with id " + id));
     }
 
     @Override
-    public SellerEntity getSellerByEmail(String email) throws Exception {
+    public SellerEntity getSellerByEmail(String email) throws SellerException {
         SellerEntity seller = sellerRepo.findByEmail(email);
         if (seller == null) {
-            throw new Exception("Seller not found.");
+            throw new SellerException("Seller not found.");
         }
-        return null;
+        return seller;
     }
 
     @Override
