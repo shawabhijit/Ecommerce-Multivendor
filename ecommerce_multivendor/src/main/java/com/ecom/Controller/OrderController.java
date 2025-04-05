@@ -2,10 +2,7 @@ package com.ecom.Controller;
 
 import com.ecom.Domain.PaymenyMethod;
 import com.ecom.Entity.*;
-import com.ecom.Service.CartService;
-import com.ecom.Service.OrderService;
-import com.ecom.Service.SellerService;
-import com.ecom.Service.UserService;
+import com.ecom.Service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +19,7 @@ public class OrderController {
     private final UserService userService;
     private final CartService cartService;
     private final SellerService sellerService;
+    private final SellerReportService sellerReportService;
 
 
     @PostMapping()
@@ -69,7 +67,11 @@ public class OrderController {
         OrderEntity order = orderService.cancelOrder(orderId,user);
 
         SellerEntity seller = sellerService.getSellerById(order.getSellerId());
-        //SellerReport report = Sel
+        SellerReport report = sellerReportService.getSellerReport(seller);
+        report.setCanceledOrders(report.getCanceledOrders());
+        report.setTotalRefunds(report.getTotalRefunds() + order.getTotalSellingPrice());
+
+        sellerReportService.updateSellerReport(report);
 
         return ResponseEntity.accepted().body(order);
     }

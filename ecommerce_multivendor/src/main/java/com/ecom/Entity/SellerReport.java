@@ -2,6 +2,7 @@ package com.ecom.Entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
@@ -9,6 +10,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "transection")
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
 public class SellerReport {
 
     @Id

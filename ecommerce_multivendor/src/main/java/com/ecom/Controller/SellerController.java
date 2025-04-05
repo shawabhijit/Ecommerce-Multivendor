@@ -12,6 +12,7 @@ import com.ecom.Response.ApiResponse;
 import com.ecom.Response.AuthResponse;
 import com.ecom.Service.AuthService;
 import com.ecom.Service.EmailService;
+import com.ecom.Service.SellerReportService;
 import com.ecom.Service.SellerService;
 import com.ecom.Utils.OtpUtil;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,7 @@ public class SellerController {
     private final AuthService authService;
     private final EmailService emailService;
     private final JwtProvider jwtProvider;
+    private final SellerReportService sellerReportService;
 
 
     @PostMapping("/login")
@@ -96,12 +98,12 @@ public class SellerController {
         return ResponseEntity.ok().body(seller);
     }
 
-//    @GetMapping("/report")
-//    public ResponseEntity<?> getSellerReport(@RequestHeader("Authorization") String jwt) throws Exception {
-//          SellerEntity seller = sellerService.getSellerProfile(jwt);
-//            SellerReport report = sellerReportService.getSellerReport(seller);
-//            return ResponseEntity.ok().body(report);
-//    }
+    @GetMapping("/report")
+    public ResponseEntity<?> getSellerReport(@RequestHeader("Authorization") String jwt) throws Exception {
+        SellerEntity seller = sellerService.getSellerProfile(jwt);
+        SellerReport report = sellerReportService.getSellerReport(seller);
+        return ResponseEntity.ok().body(report);
+    }
 
     @GetMapping
     public ResponseEntity<?> getAllSellers(@RequestParam(required = false)AccountStatus status) throws Exception {
