@@ -15,16 +15,30 @@ public class WishListServiceImpl implements WishListService {
 
     @Override
     public WishList createWishList(UserEntity user) {
-        return null;
+        WishList wishList = new WishList();
+        wishList.setUser(user);
+        return wishListRepo.save(wishList);
     }
 
     @Override
     public WishList getWishListByUserId(UserEntity user) {
-        return null;
+        WishList wishList = wishListRepo.findByUserId(user.getId());
+        if (wishList == null) {
+            wishList = this.createWishList(user);
+        }
+        return wishList;
     }
 
     @Override
     public WishList addProductToWishList(UserEntity user, ProductEntity product) {
-        return null;
+        WishList wishList = getWishListByUserId(user);
+
+        if (wishList.getProducts().contains(product)) {
+            wishList.getProducts().remove(product);
+        }
+        else {
+            wishList.getProducts().add(product);
+        }
+        return wishListRepo.save(wishList);
     }
 }
