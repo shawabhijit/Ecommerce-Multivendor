@@ -3,10 +3,7 @@ package com.ecom.Controller;
 import com.ecom.Entity.*;
 import com.ecom.Response.ApiResponse;
 import com.ecom.Response.PaymentLinkResponse;
-import com.ecom.Service.PaymentService;
-import com.ecom.Service.SellerReportService;
-import com.ecom.Service.SellerService;
-import com.ecom.Service.UserService;
+import com.ecom.Service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +17,7 @@ public class PaymentController {
     private final UserService userService;
     private final SellerService sellerService;
     private final SellerReportService sellerReportService;
+    private final TransactionService transactionService;
 
     @GetMapping("/{paymentId}")
     public ResponseEntity<?> paymentSuccessHandler (
@@ -37,7 +35,8 @@ public class PaymentController {
 
         if (paymentSuccess) {
             for (OrderEntity order : paymentOrder.getOrders()) {
-//                transactionService.createTransaction(order);
+                transactionService.createTransaction(order);
+
                 SellerEntity seller = sellerService.getSellerById(order.getSellerId());
                 SellerReport report = sellerReportService.getSellerReport(seller);
                 report.setTotalOrders(report.getTotalOrders() + 1);
