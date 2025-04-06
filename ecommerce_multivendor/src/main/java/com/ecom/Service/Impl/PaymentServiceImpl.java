@@ -30,9 +30,9 @@ public class PaymentServiceImpl implements PaymentService {
     private final PaymentOrderRepo paymentOrderRepo;
     private final OrderRepo orderRepo;
 
-    private final String apiKey = "";
-    private final String apiSecret = "";
-    private final String stripeApiKey = "";
+    private final String apiKey = "rzp_test_fHAM9vlitExOQI";
+    private final String apiSecret = "2ggGKtnLAW8hWDgTLhTEdfMc";
+    private final String stripeApiKey = "sk_test_51RAxAm06fEIM4VuNEZcWJmjPLjXNRUoee9AZjarVl1F7b9IZjZMFdzZxtUY8peB0hVTEySpEwufjLDYNY8bkj2lo00RrUghQi4";
 
     @Override
     public PaymentOrder createOrder(UserEntity user, Set<OrderEntity> orders) {
