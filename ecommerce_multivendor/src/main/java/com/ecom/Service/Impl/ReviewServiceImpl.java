@@ -1,10 +1,11 @@
-package com.ecom.Service;
+package com.ecom.Service.Impl;
 
 import com.ecom.Entity.ProductEntity;
 import com.ecom.Entity.ReviewEntity;
 import com.ecom.Entity.UserEntity;
 import com.ecom.Repository.ReviewRepo;
 import com.ecom.Request.CreateReviewRequest;
+import com.ecom.Service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

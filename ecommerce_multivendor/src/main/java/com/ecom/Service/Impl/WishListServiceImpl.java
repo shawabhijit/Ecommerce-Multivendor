@@ -1,9 +1,10 @@
-package com.ecom.Service;
+package com.ecom.Service.Impl;
 
 import com.ecom.Entity.ProductEntity;
 import com.ecom.Entity.UserEntity;
 import com.ecom.Entity.WishList;
 import com.ecom.Repository.WishListRepo;
+import com.ecom.Service.WishListService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
