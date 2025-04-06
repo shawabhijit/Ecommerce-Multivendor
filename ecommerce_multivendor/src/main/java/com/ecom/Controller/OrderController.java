@@ -2,7 +2,10 @@ package com.ecom.Controller;
 
 import com.ecom.Domain.PaymenyMethod;
 import com.ecom.Entity.*;
+import com.ecom.Repository.PaymentOrderRepo;
+import com.ecom.Response.PaymentLinkResponse;
 import com.ecom.Service.*;
+import com.razorpay.PaymentLink;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +23,8 @@ public class OrderController {
     private final CartService cartService;
     private final SellerService sellerService;
     private final SellerReportService sellerReportService;
+    private final PaymentService paymentService;
+    private final PaymentOrderRepo paymentOrderRepo;
 
 
     @PostMapping()
@@ -32,12 +37,25 @@ public class OrderController {
         CartEntity cart = cartService.findUserCart(user);
         Set<OrderEntity> orders = orderService.createOrder(user, shippingAddress, cart);
 
-        // paymentOrder = paymenyService.createOrder(User,orders);
+        PaymentOrder paymentOrder = paymentService.createOrder(user,orders);
 
-//        if (paymenyMethod.equals(PaymenyMethod.RAZORPAY)) {
-//            PayL
-//        }
-        return ResponseEntity.noContent().build();
+        PaymentLinkResponse res = new PaymentLinkResponse();
+
+        if (paymenyMethod.equals(PaymenyMethod.RAZORPAY)) {
+            PaymentLink paymentLink = paymentService.creteRazorpayPaymentLink(user,paymentOrder.getAmount(),paymentOrder.getId());
+            String paymentUrl = paymentLink.get("short_url");
+            String paymentUrlId = paymentLink.get("id");
+
+            res.setPayment_link_url(paymentUrl);
+            paymentOrder.setPaymentLinkId(paymentUrlId);
+
+            paymentOrderRepo.save(paymentOrder);
+        }
+        else {
+            String paymentUrl = paymentService.createStripePaymentLink(user,paymentOrder.getAmount(),paymentOrder.getId());
+            res.setPayment_link_url(paymentUrl);
+        }
+        return ResponseEntity.ok().body(res);
     }
 
     @GetMapping("/user")

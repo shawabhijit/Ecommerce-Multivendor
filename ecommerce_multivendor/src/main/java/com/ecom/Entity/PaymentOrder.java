@@ -4,6 +4,7 @@ import com.ecom.Domain.PaymentOrderStatus;
 import com.ecom.Domain.PaymenyMethod;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
@@ -14,7 +15,7 @@ import java.util.Set;
 @Table(name = "verification_code")
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
+@Data
 public class PaymentOrder {
 
     @Id
