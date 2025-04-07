@@ -3,11 +3,13 @@ package com.ecom.Service.Impl;
 import com.ecom.Domain.OrderStatus;
 import com.ecom.Domain.PaymentStatus;
 import com.ecom.Entity.*;
+import com.ecom.Exceptions.OrderException;
 import com.ecom.Repository.AddressRepo;
 import com.ecom.Repository.OrderItemRepo;
 import com.ecom.Repository.OrderRepo;
 import com.ecom.Service.OrderService;
 import lombok.RequiredArgsConstructor;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -73,8 +75,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderEntity findOrderById(Long id) throws Exception {
-        return orderRepo.findById(id).orElseThrow( () -> new Exception("Order not found..."));
+    public OrderEntity findOrderById(Long id) throws OrderException {
+        return orderRepo.findById(id).orElseThrow( () -> new OrderException("Order not found..."));
     }
 
     @Override
@@ -88,7 +90,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderEntity updateOrderStatus(Long id, OrderStatus status) throws Exception {
+    public OrderEntity updateOrderStatus(Long id, OrderStatus status) throws OrderException {
 
         OrderEntity order = this.findOrderById(id);
         order.setOrderStatus(status);
@@ -97,12 +99,12 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderEntity cancelOrder(Long id, UserEntity user) throws Exception {
+    public OrderEntity cancelOrder(Long id, UserEntity user) throws OrderException {
 
         OrderEntity order = this.findOrderById(id);
 
         if (!user.getId().equals(order.getUser().getId())) {
-            throw new Exception("You dont have permission to cancel this order");
+            throw new OrderException("You dont have permission to cancel this order");
         }
 
         order.setOrderStatus(OrderStatus.CANCELLED);
@@ -111,8 +113,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderItemEntity getOrderItemById(Long id) throws Exception {
-        return orderItemRepo.findById(id).orElseThrow( () ->  new Exception("Order Item not exits...."));
+    public OrderItemEntity getOrderItemById(Long id) throws OrderException {
+        return orderItemRepo.findById(id).orElseThrow( () ->  new OrderException("Order Item not exits...."));
     }
 
 }

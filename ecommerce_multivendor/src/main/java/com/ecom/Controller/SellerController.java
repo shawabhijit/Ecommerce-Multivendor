@@ -15,6 +15,7 @@ import com.ecom.Service.EmailService;
 import com.ecom.Service.SellerReportService;
 import com.ecom.Service.SellerService;
 import com.ecom.Utils.OtpUtil;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -67,7 +68,7 @@ public class SellerController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createSeller (@RequestBody SellerEntity seller) throws Exception {
+    public ResponseEntity<?> createSeller (@RequestBody SellerEntity seller) throws SellerException , MessagingException {
 
         SellerEntity savedSeller = sellerService.createSeller(seller);
 
@@ -93,13 +94,13 @@ public class SellerController {
     }
 
     @GetMapping("/profile")
-    public ResponseEntity<?> getSellerByJwt (@RequestHeader("Authorization") String jwt) throws Exception {
+    public ResponseEntity<?> getSellerByJwt (@RequestHeader("Authorization") String jwt) throws SellerException {
         SellerEntity seller = sellerService.getSellerProfile(jwt);
         return ResponseEntity.ok().body(seller);
     }
 
     @GetMapping("/report")
-    public ResponseEntity<?> getSellerReport(@RequestHeader("Authorization") String jwt) throws Exception {
+    public ResponseEntity<?> getSellerReport(@RequestHeader("Authorization") String jwt) throws SellerException {
         SellerEntity seller = sellerService.getSellerProfile(jwt);
         SellerReport report = sellerReportService.getSellerReport(seller);
         return ResponseEntity.ok().body(report);
@@ -113,14 +114,14 @@ public class SellerController {
 
     @PatchMapping()
     public ResponseEntity<?> updateSeller (@RequestHeader("Authorization") String jwt ,
-                                           @RequestBody SellerEntity seller) throws Exception {
+                                           @RequestBody SellerEntity seller) throws SellerException {
         SellerEntity profile = sellerService.getSellerProfile(jwt);
         profile = sellerService.updateSeller(profile.getId(), seller);
         return ResponseEntity.ok().body(profile);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteSeller (@PathVariable Long id) throws Exception {
+    public ResponseEntity<?> deleteSeller (@PathVariable Long id) throws SellerException {
         sellerService.deleteSeller(id);
         return ResponseEntity.noContent().build();
     }

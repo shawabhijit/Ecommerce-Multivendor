@@ -37,9 +37,9 @@ public class SellerServiceImpl implements SellerService {
     }
 
     @Override
-    public SellerEntity createSeller(SellerEntity seller) throws Exception {
+    public SellerEntity createSeller(SellerEntity seller) throws SellerException {
         if (sellerRepo.findByEmail(seller.getEmail()) != null) {
-            throw new Exception("Email already in use , Provide some different email.");
+            throw new SellerException("Email already in use , Provide some different email.");
         }
         AddressEntity address = addressRepo.save(seller.getPickupAddress());
 
@@ -77,7 +77,7 @@ public class SellerServiceImpl implements SellerService {
     }
 
     @Override
-    public SellerEntity updateSeller(Long id, SellerEntity seller) throws Exception {
+    public SellerEntity updateSeller(Long id, SellerEntity seller) throws SellerException {
         SellerEntity oldSeller = this.getSellerById(id);
 
         if (seller.getSellerName() != null) {
@@ -122,20 +122,20 @@ public class SellerServiceImpl implements SellerService {
     }
 
     @Override
-    public void deleteSeller(Long id) throws Exception {
+    public void deleteSeller(Long id) throws SellerException {
         SellerEntity seller = this.getSellerById(id);
         sellerRepo.delete(seller);
     }
 
     @Override
-    public SellerEntity verifyEmail(String email, String otp) throws Exception {
+    public SellerEntity verifyEmail(String email, String otp) throws SellerException {
         SellerEntity seller = sellerRepo.findByEmail(email);
         seller.setEmailVerified(true);
         return sellerRepo.save(seller);
     }
 
     @Override
-    public SellerEntity updateSellerAccountStatus(Long id, AccountStatus status) throws Exception {
+    public SellerEntity updateSellerAccountStatus(Long id, AccountStatus status) throws SellerException {
         SellerEntity seller = this.getSellerById(id);
         seller.setAccountStatus(status);
         return sellerRepo.save(seller);

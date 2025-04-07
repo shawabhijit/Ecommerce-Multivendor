@@ -2,6 +2,7 @@ package com.ecom.Service.Impl;
 
 import com.ecom.Entity.DealEntity;
 import com.ecom.Entity.HomeCategory;
+import com.ecom.Exceptions.DealExceptions;
 import com.ecom.Repository.DealRepo;
 import com.ecom.Repository.HomeCategoryRepo;
 import com.ecom.Service.DealService;
@@ -33,7 +34,7 @@ public class DealServiceImpl implements DealService {
     }
 
     @Override
-    public DealEntity updateDeal(DealEntity deal , Long id) throws Exception {
+    public DealEntity updateDeal(DealEntity deal , Long id) throws DealExceptions {
         DealEntity exits = dealRepo.findById(id).orElse(null);
         HomeCategory category = homeCategoryRepo.findById(deal.getCategory().getId()).orElse(null);
 
@@ -46,12 +47,12 @@ public class DealServiceImpl implements DealService {
             }
             return dealRepo.save(exits);
         }
-        throw new Exception("Deal not Found...");
+        throw new DealExceptions("Deal not Found...");
     }
 
     @Override
-    public void deleteDeal(Long dealId) {
-        DealEntity newDeal = dealRepo.findById(dealId).orElseThrow(() -> new RuntimeException("Deal not found"));
+    public void deleteDeal(Long dealId) throws DealExceptions {
+        DealEntity newDeal = dealRepo.findById(dealId).orElseThrow(() -> new DealExceptions("Deal not found"));
         dealRepo.delete(newDeal);
     }
 }

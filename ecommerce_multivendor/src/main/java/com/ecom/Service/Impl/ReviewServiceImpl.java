@@ -3,6 +3,7 @@ package com.ecom.Service.Impl;
 import com.ecom.Entity.ProductEntity;
 import com.ecom.Entity.ReviewEntity;
 import com.ecom.Entity.UserEntity;
+import com.ecom.Exceptions.ReviewExceptions;
 import com.ecom.Repository.ReviewRepo;
 import com.ecom.Request.CreateReviewRequest;
 import com.ecom.Service.ReviewService;
@@ -36,7 +37,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public ReviewEntity updateReview(Long reviewId, String reviewTest, double reviewRating, Long userId) throws Exception {
+    public ReviewEntity updateReview(Long reviewId, String reviewTest, double reviewRating, Long userId) throws ReviewExceptions {
         ReviewEntity review = getReviewById(reviewId);
         if (review.getUser().getId().equals(userId)) {
             review.setReviewText(reviewTest);
@@ -44,20 +45,20 @@ public class ReviewServiceImpl implements ReviewService {
             return reviewRepo.save(review);
         }
         else {
-            throw new Exception("You can't update this review...");
+            throw new ReviewExceptions("You can't update this review...");
         }
     }
 
     @Override
-    public void deleteReview(Long reviewId, Long userId) throws Exception {
+    public void deleteReview(Long reviewId, Long userId) throws ReviewExceptions {
         ReviewEntity review = getReviewById(reviewId);
         if (review.getUser().getId().equals(userId)) {
-            throw new Exception("You can't delete this review..");
+            throw new ReviewExceptions("You can't delete this review..");
         }
     }
 
     @Override
-    public ReviewEntity getReviewById(Long reviewId) throws Exception {
-        return reviewRepo.findById(reviewId).orElseThrow(() -> new Exception("Review Not Found..."));
+    public ReviewEntity getReviewById(Long reviewId) throws ReviewExceptions {
+        return reviewRepo.findById(reviewId).orElseThrow(() -> new ReviewExceptions("Review Not Found..."));
     }
 }

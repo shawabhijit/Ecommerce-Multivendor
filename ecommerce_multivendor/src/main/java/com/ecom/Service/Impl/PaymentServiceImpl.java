@@ -5,6 +5,7 @@ import com.ecom.Domain.PaymentStatus;
 import com.ecom.Entity.OrderEntity;
 import com.ecom.Entity.PaymentOrder;
 import com.ecom.Entity.UserEntity;
+import com.ecom.Exceptions.PaymentExceptions;
 import com.ecom.Repository.OrderRepo;
 import com.ecom.Repository.PaymentOrderRepo;
 import com.ecom.Service.PaymentService;
@@ -46,15 +47,15 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public PaymentOrder getPaymentOrderById(Long orderId) throws Exception {
-        return paymentOrderRepo.findById(orderId).orElseThrow( () -> new Exception("Payment order is not found ..."));
+    public PaymentOrder getPaymentOrderById(Long orderId) throws PaymentExceptions {
+        return paymentOrderRepo.findById(orderId).orElseThrow( () -> new PaymentExceptions("Payment order is not found ..."));
     }
 
     @Override
-    public PaymentOrder getPaymentOrderByPaymentId(String paymentId) throws Exception {
+    public PaymentOrder getPaymentOrderByPaymentId(String paymentId) throws PaymentExceptions {
         PaymentOrder paymentOrder = paymentOrderRepo.findByPaymentLinkId(paymentId);
         if (paymentOrder == null) {
-            throw new Exception("Payment order not found with payment link id :" + paymentId);
+            throw new PaymentExceptions("Payment order not found with payment link id :" + paymentId);
         }
         return paymentOrder;
     }
@@ -113,7 +114,7 @@ public class PaymentServiceImpl implements PaymentService {
 
             return paymentLink;
         }
-        catch (Exception e) {
+        catch (RazorpayException e) {
             System.out.println(e.getMessage());
             throw new RazorpayException(e.getMessage());
         }

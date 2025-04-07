@@ -3,6 +3,7 @@ package com.ecom.Service.Impl;
 import com.ecom.Entity.OrderEntity;
 import com.ecom.Entity.SellerEntity;
 import com.ecom.Entity.Transaction;
+import com.ecom.Exceptions.SellerException;
 import com.ecom.Repository.SellerRepo;
 import com.ecom.Repository.TransactionRepo;
 import com.ecom.Service.TransactionService;
@@ -19,8 +20,8 @@ public class TransactionServiceImpl implements TransactionService {
     private final SellerRepo sellerRepo;
 
     @Override
-    public Transaction createTransaction(OrderEntity order) {
-        SellerEntity seller = sellerRepo.findById(order.getSellerId()).orElseThrow( () -> new RuntimeException("Seller not found"));
+    public Transaction createTransaction(OrderEntity order) throws SellerException {
+        SellerEntity seller = sellerRepo.findById(order.getSellerId()).orElseThrow( () -> new SellerException("Seller not found"));
 
         Transaction transaction = new Transaction();
         transaction.setSeller(seller);

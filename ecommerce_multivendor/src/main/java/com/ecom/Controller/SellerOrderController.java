@@ -3,6 +3,8 @@ package com.ecom.Controller;
 import com.ecom.Domain.OrderStatus;
 import com.ecom.Entity.OrderEntity;
 import com.ecom.Entity.SellerEntity;
+import com.ecom.Exceptions.OrderException;
+import com.ecom.Exceptions.SellerException;
 import com.ecom.Service.OrderService;
 import com.ecom.Service.SellerService;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +22,7 @@ public class SellerOrderController {
     private final SellerService sellerService;
 
     @GetMapping()
-    public ResponseEntity<?> getAllOrdersHandler (@RequestHeader("Authorization") String jwt) throws Exception {
+    public ResponseEntity<?> getAllOrdersHandler (@RequestHeader("Authorization") String jwt) throws SellerException {
         SellerEntity seller = sellerService.getSellerProfile(jwt);
         List<OrderEntity> orders = orderService.sellerOrder(seller.getId());
         return ResponseEntity.accepted().body(orders);
@@ -31,7 +33,7 @@ public class SellerOrderController {
             @PathVariable Long orderId,
             @PathVariable OrderStatus orderStatus,
             @RequestHeader("Authorization") String jwt
-    ) throws Exception {
+    ) throws OrderException {
         OrderEntity orders = orderService.updateOrderStatus(orderId, orderStatus);
         return ResponseEntity.accepted().body(orders);
     }
