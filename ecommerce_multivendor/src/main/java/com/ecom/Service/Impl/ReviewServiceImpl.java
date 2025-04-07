@@ -4,6 +4,7 @@ import com.ecom.Entity.ProductEntity;
 import com.ecom.Entity.ReviewEntity;
 import com.ecom.Entity.UserEntity;
 import com.ecom.Exceptions.ReviewExceptions;
+import com.ecom.Repository.ProductRepo;
 import com.ecom.Repository.ReviewRepo;
 import com.ecom.Request.CreateReviewRequest;
 import com.ecom.Service.ReviewService;
@@ -17,6 +18,7 @@ import java.util.List;
 public class ReviewServiceImpl implements ReviewService {
 
     private final ReviewRepo reviewRepo;
+    private final ProductRepo productRepo;
 
     @Override
     public ReviewEntity createReview(CreateReviewRequest req, UserEntity user, ProductEntity product) {
