@@ -8,7 +8,7 @@ const Deal = () => {
         dots: true,
         infinite : true,
         speed: 500,
-        slidesToShow: 3,
+        slidesToShow: 4,
         slidesToScroll: 2,
         autoplay: true,
         autoplaySpeed: 3000, // time in milliseconds between slides (3 seconds here)
@@ -16,7 +16,7 @@ const Deal = () => {
         pauseOnHover: true,
     }
     return (
-        <div className='py-5 lg:px-20'>
+        <div className='py-5 lg:px-20 ml-20'>
          
                 <Slider {...settings}>
                     {
