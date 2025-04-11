@@ -4,6 +4,7 @@ import StarIcon from '@mui/icons-material/Star';
 import { teal } from '@mui/material/colors';
 import { Button, Divider } from '@mui/material';
 import SimillerProducts from './SimillerProducts';
+import ReviewCard from '../Review/ReviewCard';
 
 const images = [
     "https://m.media-amazon.com/images/I/41bkMtA7usL._SX300_SY300_QL70_FMwebp_.jpg",
@@ -104,6 +105,10 @@ const ProductDetails = () => {
                     </div>
                     <div className='mt-5 text-sm'>
                         <p>Highest-Power with Snapdragon 7 Gen 3: Experience unrivalled speed and efficiency with the Qualcomm Snapdragon 7 Gen 3 chipset. It powers through demanding tasks, delivers blazing download speeds up to 5Gbps, and optimizes battery usage for mobile gaming, productivity, and entertainment without compromise.</p>
+                    </div>
+                    <div className='mt-7 space-y-5'>
+                        <ReviewCard />
+                        <Divider />
                     </div>
                 </section>
             </div>
