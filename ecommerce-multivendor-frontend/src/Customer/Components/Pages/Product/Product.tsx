@@ -1,19 +1,26 @@
 import React, { useState } from 'react'
 import FilterSection from './FilterSection'
 import ProductCart from './ProductCart'
-import { Box, Divider, FormControl, IconButton, InputLabel, MenuItem, Select, useMediaQuery, useTheme } from '@mui/material';
+import { Box, Divider, FormControl, IconButton, InputLabel, MenuItem, Pagination, Select, useMediaQuery, useTheme } from '@mui/material';
 import { FilterAlt } from '@mui/icons-material';
 
 const Product = () => {
 
     const isLarge = window.innerWidth > 1024; // Check if the screen width is greater than 1024px
-    const [sort , setSort] = useState();
+    const [sort, setSort] = useState();
+    const [page, setPage] = useState(1);
 
-    const handleSortChange = (event : any) => {
+    const handleSortChange = (event: any) => {
         setSort(event.target.value);
     }
     // const theme = useTheme();
     // const isLarge = useMediaQuery(theme.breakpoints.up('lg'));
+
+    const handlePageChange = (value: number) => {
+        setPage(value);
+        // console.log(event.value)
+    }
+
 
     return (
         <div className='-z-10 mt-10'>
@@ -28,7 +35,7 @@ const Product = () => {
                     <div className='flex justify-between items-center px-9 h-[40px] '>
                         <div className='relative w-[50%]'>
                             {
-                                !isLarge && 
+                                !isLarge &&
                                 (
                                     <IconButton>
                                         <FilterAlt />
@@ -36,7 +43,7 @@ const Product = () => {
                                 )
                             }
                             {
-                                !isLarge && 
+                                !isLarge &&
                                 (
                                     <Box>
                                         <FilterSection />
@@ -59,11 +66,21 @@ const Product = () => {
                             </Select>
                         </FormControl>
                     </div>
-                    <Divider />
-                    <section className='product_section'>
-                        <ProductCart />
+                    {/* <Divider /> */}
+                    <section className='product_section grid sm:gtid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-y-5 px-5 justify-center mt-2'>
+                        {
+                            [1, 1, 1, 1, 1, 11, 1, 1, 1, 1, 1].map((item, index) => <ProductCart key={index} />)
+                        }
                     </section>
+                    <div className='flex justify-center py-10'>
+                        <Pagination
+                            onChange={(e, value) => handlePageChange(value)}
+                            count={10}
+                            shape="rounded"
+                        />
+                    </div>
                 </div>
+
             </div>
         </div>
     )
