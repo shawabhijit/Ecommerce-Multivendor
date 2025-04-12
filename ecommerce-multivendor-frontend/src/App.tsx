@@ -9,6 +9,7 @@ import Review from "./Customer/Components/Pages/Review/Review"
 import Cart from "./Customer/Components/Pages/Cart/Cart"
 import Checkout from "./Customer/Components/Pages/Checkout/Checkout"
 import Account from "./Customer/Components/Pages/Account/Account"
+import { Route, Routes } from "react-router-dom"
 
 function App() {
 
@@ -18,15 +19,19 @@ function App() {
       
         <ThemeProvider theme={customTheme}>
           <div>
-            <Navbar />
+            {/* <Navbar /> */}
+            {/* <Home /> */}
+            {/* <Product /> */}
+            {/* <ProductDetails /> */}
+            {/* <Review /> */}
+            {/* <Cart /> */}
+            {/* <Checkout /> */}
+            {/* <Account /> */}
+            <Routes>
+              <Route path="/" element={<Home />} />
+              
+            </Routes>
           </div>
-          {/* <Home /> */}
-          {/* <Product /> */}
-          {/* <ProductDetails /> */}
-          {/* <Review /> */}
-          {/* <Cart /> */}
-          {/* <Checkout /> */}
-          <Account />
         </ThemeProvider>
 
     </>
