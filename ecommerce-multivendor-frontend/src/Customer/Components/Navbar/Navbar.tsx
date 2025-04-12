@@ -5,6 +5,7 @@ import { AddShoppingCart, FavoriteBorder, Storefront } from '@mui/icons-material
 import CategoryShett from './CategoryShett';
 import levelOneCategories from '../../Data/LevelOneCategory/LevelOneCategories';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
 
@@ -14,7 +15,7 @@ const Navbar = () => {
     const [selectedCategory, setSelectedCategory] = useState("Electronics")
     const [showCategorySheet, setShowCategorySheet] = useState(false)
 
-
+    const navigate = useNavigate();
     return (
         <div>
             <Box className="sticky top-0 left-0 right-0 bg-white z-10">
@@ -24,7 +25,7 @@ const Navbar = () => {
                             {!isLarge && <IconButton>
                                 <MenuIcon />
                             </IconButton>}
-                            <h1 className='logo-bold cursor-pointer text-lg md:text-2xl text-[#09c5a9] '>HikariHub</h1>
+                            <h1 onClick={() => navigate("/")} className='logo-bold cursor-pointer text-lg md:text-2xl text-[#09c5a9] '>HikariHub</h1>
                         </div>
                         <ul className='flex items-center font-medium text-gray-800'>
                             {levelOneCategories.map(item =>
@@ -48,7 +49,7 @@ const Navbar = () => {
                             <SearchIcon className='text-white'></SearchIcon>
                         </IconButton>
                         {
-                            isLoggedIn ? <Button className='gap-2'>
+                            isLoggedIn ? <Button onClick={() => navigate("/account/orders")} className='gap-2'>
                                 <Avatar
                                     sx={{ width: 29, height: 29 }}
                                     src="/static/images/avatar/1.jpg"
@@ -60,7 +61,7 @@ const Navbar = () => {
                         <IconButton>
                             <FavoriteBorder sx={{ fontSize: 29 }} />
                         </IconButton>
-                        <IconButton>
+                        <IconButton onClick={() => navigate("/cart")}>
                             <AddShoppingCart className='text-gray-700' sx={{ fontSize: 29 }} />
                         </IconButton>
                         {

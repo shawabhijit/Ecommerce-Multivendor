@@ -7,6 +7,7 @@ import FashionLevelThree from '../../Data/LevelThreeCategories/FashionLevelThree
 import HomeFurnitureLevelThreeCategories from '../../Data/LevelThreeCategories/Home&FurnitureLevelThree'
 import { Box } from '@mui/material'
 import { Category } from '../../Data/CategoryType'
+import { useNavigate } from 'react-router-dom'
 
 const categoryTwo:{[key:string]:any} = {
     Electronics: ElectronicsLevelTwo,
@@ -26,6 +27,8 @@ const CategoryShett = ({selectedCategory,setShowSheet} :any) => {
         return category.filter((item:Category) => item.parentCategoryId === parentCategoryId);
     }
 
+    const navigate = useNavigate();
+
     return (
         <>
         <Box className = "bg-white shadow-lg lg:h-[200px] overflow-y-auto">
@@ -35,7 +38,8 @@ const CategoryShett = ({selectedCategory,setShowSheet} :any) => {
                         <p key={category.category_Id} className='text-[#00927c] mb-5 font-semibold text-lg'>{category.name}</p>
                         <ul className='space-y-3'>
                             {
-                                childCategory(levelThree["Electronics"], category.category_Id)?.map((item:Category) => <li key={item.category_Id} className='text-gray-700 hover:text-[#00927c] hover:border-b-2'>{item.name}</li>)
+                                childCategory(levelThree["Electronics"], category.category_Id)?.map((item:Category) => 
+                                <li onClick={() => navigate("/products/"+item.category_Id)} key={item.category_Id} className='text-gray-700 hover:text-[#00927c] hover:border-b-2'>{item.name}</li>)
 
                             }
                         </ul>
