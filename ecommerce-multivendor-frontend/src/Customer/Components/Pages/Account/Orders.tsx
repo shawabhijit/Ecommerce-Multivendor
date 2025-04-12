@@ -1,5 +1,5 @@
 import React from 'react'
-import OrderItem from './orderItem'
+import OrderItem from './OrderItem'
 import { Divider } from '@mui/material'
 
 const Orders = () => {

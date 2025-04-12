@@ -2,6 +2,9 @@ import { Divider } from '@mui/material'
 import React from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import Orders from './Orders'
+import OrderDetails from './OrderDetails'
+import UserDetails from './UserDetails'
+import Address from './Address'
 
 const menu = [
     { name: "orders", path: "/account/orders" },
@@ -24,8 +27,8 @@ const Account = () => {
                 <h1 className='text-xl font-bold pb-5'>Abhijit Sahoo</h1>
             </div>
             <Divider />
-            <div className='grid grid-cols-1 lg:grid-cols-3 lg:min-h-[78vh]'>
-                <section className='left col-span-1 lg:border-r lg:pr-5 py-5 h-full'>
+            <div className='grid grid-cols-1 lg:grid-cols-3 lg:min-h-[80vh]'>
+                <section className='left col-span-1 lg:border-r lg:border-r-gray-300 lg:pr-5 py-5 h-full'>
                     {
                         menu.map((item) => (
                             <div
@@ -38,8 +41,10 @@ const Account = () => {
                         ))
                     }
                 </section>
-                <section className='right lg:col-span-2 lg:pl-5 py-5'>
-                    <Orders />
+                <section className='right lg:col-span-2 lg:pl-5 py-5 w-full lg:ml-20'>
+                    {/* <OrderDetails /> */}
+                    {/* <UserDetails /> */}
+                    <Address />
                 </section>
             </div>
         </div>
