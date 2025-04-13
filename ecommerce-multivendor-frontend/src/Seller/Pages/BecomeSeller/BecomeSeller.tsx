@@ -2,8 +2,57 @@ import React, { useState } from 'react'
 import SellerAccountForm from './SellerAccountForm';
 import SelllerLogin from './SelllerLogin';
 import { Button } from '@mui/material';
+import { useFormik } from 'formik';
 
 const BecomeSeller = () => {
+
+    const formik = useFormik({
+        initialValues: {
+            mobile: '',
+            otp: "",
+            gstin: "",
+            pickupAddress: {
+                name: '',
+                mobile: '',
+                pincode: "",
+                address: "",
+                city: "",
+                state: "",
+                locality: ""
+            },
+            bankDetails: {
+                accountNumber: "",
+                ifscCode: "",
+                accountHolderName: "",
+            },
+            sellerName: "",
+            email: "",
+            businessDetails: {
+                businessName: "",
+                businessEmail: "",
+                businessMobile: "",
+                logo: "",
+                banner: "",
+                businessAddress: "",
+            },
+            password: ""
+        },
+        validationSchema: "",
+        onSubmit: (values) => {
+            console.log('values', values)
+        }
+    })
+
+    const formik2 = useFormik({
+        initialValues:{
+            email:"",
+            otp:"",
+        },
+        validationSchema:"",
+        onSubmit : (values)=> {
+            console.log('values', values)
+        }
+    })
 
     const [isLogin , setIsLogin] = useState(false);
 
@@ -15,7 +64,7 @@ const BecomeSeller = () => {
     <div className='grid grid-cols-3 min-h-screen md:gap-10'>
         <section className='lg:col-span-1 md:col-span-2 col-span-3 p-10 shadow-lg rounded-md'>
             {
-                !isLogin ? <SellerAccountForm /> : <SelllerLogin />
+                !isLogin ? <SellerAccountForm formik={formik} /> : <SelllerLogin formik={formik2}  />
             }
             <div className='mt-10 space-y-2'>
                 <h1 className='text-center text-sm font-medium'>

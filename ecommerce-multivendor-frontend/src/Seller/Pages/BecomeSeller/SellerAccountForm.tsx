@@ -1,7 +1,10 @@
 import { Button, Step, StepLabel, Stepper } from '@mui/material';
 import React, { useState } from 'react'
 import BecomeSellerFormStep1 from './BecomeSellerFormStep1';
+import BicomeSellerFromStep2 from './BicomeSellerFromStep2';
 import { useFormik } from 'formik';
+import BecomeSellerFromStep3 from './BecomeSellerFromStep3';
+import BecomeSellerFromStep4 from './BecomeSellerFromStep4';
 
 const steps = [
   "Tax Details & Mobile",
@@ -10,44 +13,7 @@ const steps = [
   "Supplier Details"
 ]
 
-const SellerAccountForm = () => {
-
-  const formik = useFormik({
-    initialValues: {
-      mobile: '',
-      otp: "",
-      gstin: "",
-      pickupAddress: {
-        name: '',
-        mobile: '',
-        pincode: "",
-        address: "",
-        city: "",
-        state: "",
-        locality: ""
-      },
-      bankDetails: {
-        accountNumber: "",
-        ifscCode: "",
-        accountHolderName: "",
-      },
-      sellerName: "",
-      email: "",
-      businessDeatils: {
-        businessName: "",
-        businessEmail: "",
-        businessMobile: "",
-        logo: "",
-        banner: "",
-        businessAddress: "",
-      },
-      password: ""
-    },
-    validationSchema: "",
-    onSubmit: (values) => {
-      console.log('values', values)
-    }
-  })
+const SellerAccountForm = ({formik} : any) => {
 
 
   const [activeStep, setActiveStep] = useState(0);
@@ -75,7 +41,10 @@ const SellerAccountForm = () => {
       <section className='mt-20 space-y-10'>
         <div>
           {
-            activeStep == 0 ? <BecomeSellerFormStep1 formik={formik} /> : ""
+            activeStep == 0 ? <BecomeSellerFormStep1 formik={formik} /> : 
+            activeStep == 1 ? <BicomeSellerFromStep2 formik={formik} /> : 
+            activeStep == 2 ? <BecomeSellerFromStep3 formik={formik} /> :
+            activeStep == 3 ? <BecomeSellerFromStep4 formik={formik} /> : ""
           }
         </div>
         <div className='flex items-center justify-between'>

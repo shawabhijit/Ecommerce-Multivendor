@@ -10,7 +10,8 @@ import Cart from "./Customer/Components/Pages/Cart/Cart"
 import Checkout from "./Customer/Components/Pages/Checkout/Checkout"
 import Account from "./Customer/Components/Pages/Account/Account"
 import { Route, Routes } from "react-router-dom"
-import BecomeSeller from "./Seller/Components/BecomeSeller"
+import BecomeSeller from "./Seller/Pages/BecomeSeller/BecomeSeller"
+import SellerDashboard from "./Seller/Pages/SellerDashBoard/SellerDashboard"
 
 function App() {
 
@@ -38,6 +39,7 @@ function App() {
               <Route path="/checkout" element={<Checkout />} />
               <Route path="/account/*" element={<Account />} />
               <Route path="/become-seller" element={<BecomeSeller />} />
+              <Route path="/seller/*" element={<SellerDashboard />} />
             </Routes>
           </div>
         </ThemeProvider>
