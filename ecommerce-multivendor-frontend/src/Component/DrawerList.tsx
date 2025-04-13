@@ -1,51 +1,64 @@
-import { AccountBalanceWallet, Add, Dashboard, Inventory, ShoppingBag } from '@mui/icons-material'
+import { Divider, ListItem, ListItemText } from '@mui/material';
 import React from 'react'
+import { useLocation, useNavigate } from 'react-router-dom';
 
-const menu = [
-    {
-        name:"Dashboard",
-        path : "/seller",
-        icon : <Dashboard className='text-teal-500' />,
-        activeIcon: <Dashboard className='text-white' />
-    },
-    {
-        name:"Orders",
-        path : "/seller/orders",
-        icon : <ShoppingBag className='text-teal-500' />,
-        activeIcon: <ShoppingBag className='text-white' />
-    },
-    {
-        name:"Products",
-        path : "/seller/products",
-        icon : <Inventory className='text-teal-500' />,
-        activeIcon: <Inventory className='text-white' />
-    },
-    {
-        name:"Add Product",
-        path : "/seller/add-product",
-        icon : <Add className='text-teal-500' />,
-        activeIcon: <Add className='text-white' />
-    },
-    {
-        name:"Payment",
-        path : "/seller/payment",
-        icon : <AccountBalanceWallet className='text-teal-500' />,
-        activeIcon: <AccountBalanceWallet className='text-white' />
-    },
-]
+type drawerListProps = {
+    menu: menuItem[];
+    menu2: menuItem[];
+    toogleDrawer: ()=>void
+}
 
-const DrawerList = () => {
-  return (
-    <div className='h-full'>
-        <div className='flex flex-col justify-between h-full w-[300px] border-r py-5'>
-            <div>
+type menuItem = {
+    name : string;
+    path: string;
+    icon: string;
+    activeIcon: any;
+}
+
+const DrawerList = ({menu , menu2 , toogleDrawer} : drawerListProps) => {
+    const location = useLocation();
+    const navigate = useNavigate();
+    return (
+        <div className='h-full'>
+            <div className='flex flex-col justify-between h-full w-[300px] border-r border-r-gray-500 py-5'>
                 <div className='space-y-2'>
-
+                    {
+                        menu.map((item,index) => (
+                            <div onClick={() => navigate(item.path)} className='pr-9 hover:cursor-pointer' key={index}>
+                                <p className={`${item.path == location.pathname ? "bg-teal-500 text-white" : "text-teal-500"} 
+                                flex items-center px-5 py-3 rounded-r-full gap-4`}>
+                                    <ListItem sx={{width:"30px"}}>
+                                        {
+                                            item.path == location.pathname ? item.activeIcon : item.icon
+                                        }
+                                    </ListItem>
+                                    <ListItemText primary={item.name} />
+                                </p>
+                            </div>
+                        ))
+                    }
+                </div>
+                <Divider />
+                <div className='space-y-2 '>
+                    {
+                        menu2.map((item,index) => (
+                            <div onClick={() => navigate(item.path)} className='pr-9 hover:cursor-pointer' key={index}>
+                                <p className={`${item.path == location.pathname ? "bg-teal-500 text-white" : "text-teal-500"} 
+                                flex items-center px-5 py-3 rounded-r-full gap-4`}>
+                                    <ListItem sx={{width:"30px"}}>
+                                        {
+                                            item.path == location.pathname ? item.activeIcon : item.icon
+                                        }
+                                    </ListItem>
+                                    <ListItemText primary={item.name} />
+                                </p>
+                            </div>
+                        ))
+                    }
                 </div>
             </div>
         </div>
-    </div>
-  )
+    )
 }
 
 export default DrawerList
