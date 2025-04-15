@@ -84,9 +84,9 @@ const Navbar = ({isLogedin} : any) => {
                         <motion.div
                             initial={{ opacity: 0, x: -20 }}
                             animate={{ opacity: 1, x: 0 }}
-                            className="text-3xl font-bold text-hiakri-orange"
+                            className="text-3xl font-bold hiakri-orange"
                         >
-                            Hikari<span className="text-hiakri">Hub</span>
+                            Hikari<span className="hiakri-primary">Hub</span>
                         </motion.div>
                     </Link>
 
@@ -103,20 +103,20 @@ const Navbar = ({isLogedin} : any) => {
                         {
                             isLogedin ? (
                                 <nav className="hidden md:flex items-center space-x-5 font-semibold">
-                                    <a href="#" className="text-gray-700 hover:text-hiakri transition-colors">Electronics</a>
-                                    <a href="#features" className="text-gray-700 hover:text-hiakri transition-colors">Fashion</a>
-                                    <a href="#categories" className="text-gray-700 hover:text-hiakri transition-colors">Home & kitchen</a>
-                                    <a href="#categories" className="text-gray-700 hover:text-hiakri transition-colors">Books</a>
-                                    <a href="#testimonials" className="text-gray-700 hover:text-hiakri transition-colors">Beauty</a>
-                                    <a href="#join" className="text-gray-700 hover:text-hiakri transition-colors">Sports</a>
+                                    <a href="#" className="text-gray-700 hover:text-[#F97316] transition-colors">Electronics</a>
+                                    <a href="#features" className="text-gray-700 hover:text-[#F97316] transition-colors">Fashion</a>
+                                    <a href="#categories" className="text-gray-700 hover:text-[#F97316] transition-colors">Home & kitchen</a>
+                                    <a href="#categories" className="text-gray-700 hover:text-[#F97316] transition-colors">Books</a>
+                                    <a href="#testimonials" className="text-gray-700 hover:text-[#F97316] transition-colors">Beauty</a>
+                                    <a href="#join" className="text-gray-700 hover:text-[#F97316] transition-colors">Sports</a>
                                 </nav>
                             ) : (
                                 <nav className="hidden md:flex items-center space-x-5 font-semibold">
-                                    <a href="#" className="text-gray-700 hover:text-hiakri transition-colors">Home</a>
-                                    <a href="#features" className="text-gray-700 hover:text-hiakri transition-colors">Features</a>
-                                    <a href="#categories" className="text-gray-700 hover:text-hiakri transition-colors">Categories</a>
-                                    <a href="#testimonials" className="text-gray-700 hover:text-hiakri transition-colors">Testimonials</a>
-                                    <a href="#join" className="text-gray-700 hover:text-hiakri transition-colors">Become a Seller</a>
+                                    <a href="#" className="text-gray-700 hover:text-[#F97316] transition-colors">Home</a>
+                                    <a href="#features" className="text-gray-700 hover:text-[#F97316] transition-colors">Features</a>
+                                    <a href="#categories" className="text-gray-700 hover:text-[#F97316] transition-colors">Categories</a>
+                                    <a href="#testimonials" className="text-gray-700 hover:text-[#F97316] transition-colors">Testimonials</a>
+                                    <a href="#join" className="text-gray-700 hover:text-[#F97316] transition-colors">Become a Seller</a>
                                 </nav>
                             )
                         }
@@ -184,14 +184,13 @@ const Navbar = ({isLogedin} : any) => {
                                             <div className="px-2 mt-3 mb-4">
                                                 <h1 className="text-lg">Welcome</h1>
                                                 <p className="text-sm text-gray-400">Please Login to acces all features</p>
-                                                <Button variant={"destructive"} className="bg-hiakri hover:bg-hiakri-dark mt-3">
+                                                    <Button variant={"destructive"} className="bg-[#1D4ED8] hover:bg-hiakri-dark mt-3">
                                                     Login
                                                 </Button>
                                             </div>
                                             <DropdownMenuSeparator />
                                             <DropdownMenuItem>Orders</DropdownMenuItem>
                                             <DropdownMenuItem>Wishlist</DropdownMenuItem>
-                                            <DropdownMenuSeparator />
                                         </DropdownMenuContent>
                                     )
 
