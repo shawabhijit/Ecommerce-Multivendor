@@ -2,17 +2,9 @@
 
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Button } from "@/Components/ui/button"
-import { Card, CardContent } from "@/Components/ui/card"
-import { Minus, Plus, ShoppingBag, Trash2, CreditCard, Wallet, CheckCircle2 } from "lucide-react"
-import { RadioGroup, RadioGroupItem } from "@/Components/ui/radio-group"
-import { Label } from "@/Components/ui/label"
-import Cart from "./Cart"
+import {ShoppingBag} from "lucide-react"
 import PriceDetails from "./PriceDetails"
 import { Outlet, useLocation } from "react-router-dom"
-import UserAddress from "./UserAddress"
-import UserOrderPayment from "./UserOrderPayment"
-import Confirmation from "./Confirmation"
 import { CartContext } from "./Context/CartContext"
 
 export default function UserCheckoutPage() {
@@ -49,12 +41,12 @@ export default function UserCheckoutPage() {
 
 
 
-    const updateQuantity = (id, newQuantity) => {
+    const updateQuantity = (id : number, newQuantity: number) => {
         if (newQuantity < 1) return
         setCartItems(cartItems.map((item) => (item.id === id ? { ...item, quantity: newQuantity } : item)))
     }
 
-    const removeItem = (id) => {
+    const removeItem = (id : number) => {
         setCartItems(cartItems.filter((item) => item.id !== id))
     }
 

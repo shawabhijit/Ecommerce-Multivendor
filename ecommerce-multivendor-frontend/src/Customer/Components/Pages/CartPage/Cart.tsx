@@ -1,7 +1,6 @@
-import { Button } from '@/Components/ui/button'
+import { Button } from '../../../../Components/ui/button'
 import { Minus, Plus, ShoppingBag, Trash2 } from 'lucide-react'
 import { motion, AnimatePresence } from "framer-motion"
-import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useCart } from './Context/CartContext'
 
