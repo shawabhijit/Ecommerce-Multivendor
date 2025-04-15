@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
-import { getProductById, getProducts } from "@/lib/api"
-import type { Product } from "@/lib/Types"
+import { getProductById, getProducts } from "../../../../lib/api"
+import type { Product } from "../../../../lib/Types"
 import ImageGallery from "./ImageGallery"
 import ProductInfo from "./ProductInfo"
 import ProductTabs from "./ProductTabs"
