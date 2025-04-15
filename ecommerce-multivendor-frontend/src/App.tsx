@@ -15,6 +15,7 @@ import SellerDashboard from "./Seller/Pages/SellerDashBoard/Dashboard/SellerDash
 
 function App() {
 
+  let isLogedin =- false;
 
   return (
     <>
@@ -29,7 +30,7 @@ function App() {
           {/* <Cart /> */}
           {/* <Checkout /> */}
           {/* <Account /> */}
-          <Navbar />
+          <Navbar isLogedin={isLogedin} />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/products/:category" element={<Product />} />

@@ -1,84 +1,267 @@
-import { Avatar, Box, Button, IconButton, useMediaQuery, useTheme } from '@mui/material'
+import { Avatar, Box, IconButton, useMediaQuery, useTheme } from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import { AddShoppingCart, FavoriteBorder, Storefront } from '@mui/icons-material';
 import CategoryShett from './CategoryShett';
 import levelOneCategories from '../../Data/LevelOneCategory/LevelOneCategories';
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useScroll, useTransform } from 'motion/react';
+import {motion} from "motion/react"
+import { cn } from '../../../lib/utils';
+import {Button} from "../../../Components/ui/button"
+import { Heart, Menu, Search, ShoppingCart, User, X } from 'lucide-react';
+import { Input } from '../../../Components/ui/input';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '../../../Components/ui/dropdown-menu';
 
-const Navbar = () => {
 
-    let isLoggedIn = true; // This should be replaced with actual authentication logic
-    const theme = useTheme()
-    const isLarge = useMediaQuery(theme.breakpoints.up('lg')) // Check if the screen size is large or 
-    const [selectedCategory, setSelectedCategory] = useState("Electronics")
-    const [showCategorySheet, setShowCategorySheet] = useState(false)
+const products = [
+    "Mobile",
+    "Mobile Cover",
+    "Mobile Charger",
+    "Laptop",
+    "Earbuds",
+    "Smartwatch",
+    "Camera",
+    "Mobile Stand",
+    "Mobile Holder"
+];
+
+const Navbar = ({isLogedin} : any) => {
+
+    const [isScrolled, setIsScrolled] = useState(false);
+    const [isAccountOpen, setIsAccountOpen] = useState(false);
+    const [searchValue, setSearchValue] = useState("");
+    const [filteredResults, setFilteredResults] = useState<string[]>([]);
+    const [isOpenSearch, setIsOpenSearch] = useState(false);
+    const [isOpen, setIsOpen] = useState(false)
 
     const navigate = useNavigate();
+
+    const { scrollY } = useScroll()
+    const headerBackground = useTransform(scrollY, [0, 50], ["rgba(255, 255, 255, 0.9)", "rgba(255, 255, 255, 1)"])
+    const headerShadow = useTransform(scrollY, [0, 50], ["0 0 0 rgba(0, 0, 0, 0)", "0 4px 6px rgba(0, 0, 0, 0.1)"])
+
+    useEffect(() => {
+        const handleScroll = () => {
+            setIsScrolled(window.scrollY > 10);
+        };
+
+        if (searchValue.trim() === "") {
+            setFilteredResults([]);
+            setIsOpenSearch(false);
+            return;
+        }
+
+        const filtered = products.filter((item) =>
+            item.toLowerCase().includes(searchValue.toLowerCase())
+        );
+        setFilteredResults(filtered);
+        setIsOpenSearch(filtered.length > 0);
+
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, [searchValue]);
+
     return (
-        <div>
-            <Box className="sticky top-0 left-0 right-0 bg-white z-10">
-                <div className='flex justify-between items-center px-5 lg:px-20 h-[70px] border-b border-gray-300'>
-                    <div className='flex items-center gap-2 md:gap-9'>
-                        <div className='flex items-center gap-2 md:gap-4 p-2 md:p-4 '>
-                            {!isLarge && <IconButton>
-                                <MenuIcon />
-                            </IconButton>}
-                            <h1 onClick={() => navigate("/")} className='logo-bold cursor-pointer text-lg md:text-2xl text-[#09c5a9] '>HikariHub</h1>
-                        </div>
-                        <ul className='flex items-center font-medium text-gray-800'>
-                            {levelOneCategories.map(item =>
-                                <div
-                                    //onMouseLeave={() => setShowCategorySheet(false)}
-                                    onMouseEnter={() => {
-                                        setShowCategorySheet(true)
-                                        setSelectedCategory(item.name)
-                                    }}
-                                >
-                                    <li
-                                        className='mainCategory items-center hover:text-[#00927c] hover:border-b-2  px-4 border-[#00927c]'>
-                                        {item.name}
-                                    </li>
-                                </div>
-                            )}
-                        </ul>
+        <motion.header
+            className={cn(
+                "fixed top-0 left-0 right-0 z-50 transition-all duration-300 ",
+                isScrolled ? "bg-white shadow-md py-1" : "bg-transparent py-2"
+            )}
+            style={{
+                backgroundColor: headerBackground,
+                boxShadow: headerShadow,
+            }}
+            initial={{ y: -100 }}
+            animate={{ y: 0 }}
+            transition={{ duration: 0.5 }}
+        >
+            <div className="container mx-auto px-4">
+                <div className="flex items-center justify-between h-16">
+                    {/* Logo */}
+                    <Link to="/" className="flex items-center">
+                        <motion.div
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            className="text-3xl font-bold text-hiakri-orange"
+                        >
+                            Hikari<span className="text-hiakri">Hub</span>
+                        </motion.div>
+                    </Link>
+
+                    {/* Mobile menu button */}
+                    <div className="md:hidden">
+                        <Button variant="ghost" size="icon" onClick={() => setIsOpen(!isOpen)} aria-label="Toggle menu">
+                            {isOpen ? <X size={24} /> : <Menu size={24} />}
+                        </Button>
                     </div>
-                    <div className='flex gap-1 lg:gap-6 items-center'>
-                        <IconButton>
-                            <SearchIcon className='text-white'></SearchIcon>
-                        </IconButton>
+
+                    {/* Desktop Navigation */}
+                    {/* <div className="hidden md:flex items-center flex-1 mx-6"> */}
+                    <div>
                         {
-                            isLoggedIn ? <Button onClick={() => navigate("/account/orders")} className='gap-2'>
-                                <Avatar
-                                    sx={{ width: 29, height: 29 }}
-                                    src="/static/images/avatar/1.jpg"
+                            isLogedin ? (
+                                <nav className="hidden md:flex items-center space-x-5 font-semibold">
+                                    <a href="#" className="text-gray-700 hover:text-hiakri transition-colors">Electronics</a>
+                                    <a href="#features" className="text-gray-700 hover:text-hiakri transition-colors">Fashion</a>
+                                    <a href="#categories" className="text-gray-700 hover:text-hiakri transition-colors">Home & kitchen</a>
+                                    <a href="#categories" className="text-gray-700 hover:text-hiakri transition-colors">Books</a>
+                                    <a href="#testimonials" className="text-gray-700 hover:text-hiakri transition-colors">Beauty</a>
+                                    <a href="#join" className="text-gray-700 hover:text-hiakri transition-colors">Sports</a>
+                                </nav>
+                            ) : (
+                                <nav className="hidden md:flex items-center space-x-5 font-semibold">
+                                    <a href="#" className="text-gray-700 hover:text-hiakri transition-colors">Home</a>
+                                    <a href="#features" className="text-gray-700 hover:text-hiakri transition-colors">Features</a>
+                                    <a href="#categories" className="text-gray-700 hover:text-hiakri transition-colors">Categories</a>
+                                    <a href="#testimonials" className="text-gray-700 hover:text-hiakri transition-colors">Testimonials</a>
+                                    <a href="#join" className="text-gray-700 hover:text-hiakri transition-colors">Become a Seller</a>
+                                </nav>
+                            )
+                        }
+                    </div>
+                    {/* </div> */}
+
+                    {/* User Actions */}
+                    <div className="hidden md:flex items-center gap-6 pr-5">
+                        <div className="relative w-[350px]">
+                            <div className="relative">
+                                <Search className="absolute left-3 top-2.5 text-gray-400 h-5 w-5" />
+                                <Input
+                                    placeholder="Search Categories or Products"
+                                    className="pl-10 pr-4 py-2 bg-gray-100 rounded-md"
+                                    value={searchValue}
+                                    onChange={(e) => setSearchValue(e.target.value)}
                                 />
-                                <h1 className='font-semibold hidden  lg:block'>Abhi</h1>
-                            </Button> :
-                                <Button variant="contained">Login</Button>
-                        }
-                        <IconButton>
-                            <FavoriteBorder sx={{ fontSize: 29 }} />
-                        </IconButton>
-                        <IconButton onClick={() => navigate("/cart")}>
-                            <AddShoppingCart className='text-gray-700' sx={{ fontSize: 29 }} />
-                        </IconButton>
-                        {
-                            isLarge && <Button onClick={() => navigate("/become-seller")} variant="outlined" startIcon={<Storefront />}>
-                                Become Seller
-                            </Button>
-                        }
+                            </div>
+                            {
+                                filteredResults && (
+                                    <div className="absolute top-0 mt-10 bg-white w-full rounded-md">
+                                        {
+                                            filteredResults.map((item, index) => (
+                                                <div
+                                                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                                                    onClick={() => {
+                                                        console.log("Selected:", item);
+                                                        setSearchValue(item);
+                                                        setIsOpenSearch(false);
+                                                    }}
+                                                    key={index}
+                                                >
+                                                    {item}
+                                                </div>
+                                            ))
+                                        }
+                                    </div>
+                                )
+                            }
+                        </div>
+
+                        <div className="relative"
+                            onMouseEnter={() => setIsAccountOpen(true)}
+                            onMouseLeave={() => setIsAccountOpen(false)}
+                        >
+                            <DropdownMenu open={isAccountOpen}>
+                                <DropdownMenuTrigger asChild>
+                                    <div className="flex flex-col gap-y-[-1] items-center cursor-pointer">
+                                        <User className="h-5 w-5" />
+                                        <span className="hidden sm:inline text-sm font-bold">Account</span>
+                                        {/* <ChevronDown className="h-4 w-4" /> */}
+                                    </div>
+                                </DropdownMenuTrigger>
+                                {
+                                    isLogedin ? (
+                                        <DropdownMenuContent align="end" className="w-[200px]">
+                                            <DropdownMenuItem onClick={() => navigate("/user/profile?tab=profile")}>My Profile</DropdownMenuItem>
+                                            <DropdownMenuItem onClick={() => navigate("/user/profile?tab=orders")}>Orders</DropdownMenuItem>
+                                            <DropdownMenuItem onClick={() => navigate("/user/wishlist")}>Wishlist</DropdownMenuItem>
+                                            <DropdownMenuSeparator />
+                                            <DropdownMenuItem>Logout</DropdownMenuItem>
+                                        </DropdownMenuContent>
+                                    ) : (
+                                        <DropdownMenuContent align="center" className="w-[300px] p-2">
+                                            <div className="px-2 mt-3 mb-4">
+                                                <h1 className="text-lg">Welcome</h1>
+                                                <p className="text-sm text-gray-400">Please Login to acces all features</p>
+                                                <Button variant={"destructive"} className="bg-hiakri hover:bg-hiakri-dark mt-3">
+                                                    Login
+                                                </Button>
+                                            </div>
+                                            <DropdownMenuSeparator />
+                                            <DropdownMenuItem>Orders</DropdownMenuItem>
+                                            <DropdownMenuItem>Wishlist</DropdownMenuItem>
+                                            <DropdownMenuSeparator />
+                                        </DropdownMenuContent>
+                                    )
+
+                                }
+                            </DropdownMenu>
+                        </div>
+
+                        <div onClick={() => navigate("/user/wishlist")} className="relative flex flex-col items-center justify-center gap-y-[-1]">
+                            <Heart className="h-5 w-5 text-red-600" />
+                            <span className="hidden sm:inline text-sm font-bold">Whishlist</span>
+                        </div>
+
+                        <div onClick={() => navigate("/my/cart")} className="relative flex flex-col cursor-pointer items-center justify-center gap-[-1]">
+                            <ShoppingCart className="h-5 w-5 " />
+                            <span className="hidden sm:inline ml-1 text-sm font-bold ">Cart</span>
+                            <span className="absolute -top-2 -right-2 bg-primary text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                                0
+                            </span>
+                        </div>
                     </div>
                 </div>
-                {showCategorySheet && <div
-                    onMouseLeave={() => setShowCategorySheet(false)}
-                    onMouseEnter={() => setShowCategorySheet(true)}
-                    className='absolute top-[4.41rem] left-20 right-20 categorySheet'>
-                    <CategoryShett selectedCategory={selectedCategory} />
-                </div>}
-            </Box>
-        </div>
+
+                {/* Mobile Search - shown below header on mobile */}
+                <div className="md:hidden py-2 pb-3">
+                    <div className="flex w-full relative">
+                        <input
+                            type="text"
+                            placeholder="Search..."
+                            className="pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-hiakri/50 w-full"
+                        />
+                        <Search className="absolute left-3 top-2.5 text-gray-400 h-5 w-5" />
+                    </div>
+                </div>
+
+                {/* Mobile Menu */}
+                {isOpen && (
+                    <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        className="md:hidden py-4 border-t"
+                    >
+                        <nav className="flex flex-col space-y-4">
+                            <Link to="/profile" className="flex items-center px-2 py-1 hover:bg-gray-100 rounded">
+                                <User className="h-5 w-5 mr-2" />
+                                My Profile
+                            </Link>
+                            <Link to="/orders" className="flex items-center px-2 py-1 hover:bg-gray-100 rounded">
+                                Orders
+                            </Link>
+                            <Link to="/wishlist" className="flex items-center px-2 py-1 hover:bg-gray-100 rounded">
+                                Wishlist
+                            </Link>
+                            <Link to="/cart" className="flex items-center px-2 py-1 hover:bg-gray-100 rounded">
+                                <ShoppingCart className="h-5 w-5 mr-2" />
+                                Cart
+                                <span className="ml-auto bg-primary text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                                    3
+                                </span>
+                            </Link>
+                            <div className="pt-2 border-t">
+                                <Button variant="outline" className="w-full">
+                                    Logout
+                                </Button>
+                            </div>
+                        </nav>
+                    </motion.div>
+                )}
+            </div>
+        </motion.header>
     )
 }
 
