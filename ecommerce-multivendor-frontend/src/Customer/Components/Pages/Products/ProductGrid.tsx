@@ -3,7 +3,7 @@
 import { motion } from "framer-motion"
 import { useInView } from "react-intersection-observer"
 import ProductCard from "./ProductCard"
-import type { Product } from "@/lib/Types"
+import type { Product } from "../../../../lib/Types"
 
 export default function ProductGrid({ products }: { products: Product[] }) {
     return (

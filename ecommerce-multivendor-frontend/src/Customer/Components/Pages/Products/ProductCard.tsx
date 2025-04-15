@@ -4,7 +4,7 @@ import { useState } from "react"
 import { Link } from "react-router-dom"
 import { motion } from "framer-motion"
 import { Star, ShoppingCart, Eye } from "lucide-react"
-import type { Product } from "@/lib/Types"
+import type { Product } from "../../../../lib/Types"
 import ProductDetails from "../ProductDetails/ProductDetails"
 
 export default function ProductCard({ product }: { product: Product }) {

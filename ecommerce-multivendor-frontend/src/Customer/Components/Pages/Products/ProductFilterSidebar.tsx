@@ -1,8 +1,8 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { Checkbox } from "@/Components/ui/checkbox"
-import { Label } from "@/Components/ui/label"
+import { Checkbox } from "../../../../Components/ui/checkbox"
+import { Label } from "../../../../Components/ui/label"
 
 interface FilterSidebarProps {
     categories: string[]
