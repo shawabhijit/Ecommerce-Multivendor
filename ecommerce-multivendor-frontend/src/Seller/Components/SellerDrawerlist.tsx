@@ -1,6 +1,6 @@
 import { AccountBalanceWallet, AccountBox, Add, Dashboard, Inventory, Logout, Receipt, ShoppingBag } from '@mui/icons-material'
 import React from 'react'
-import DrawerList from '../../Component/DrawerList'
+import DrawerList from '../../Components/DrawerList'
 
 type menuItem = {
     name: string;
@@ -9,7 +9,7 @@ type menuItem = {
     activeIcon: any;
 }
 
-const menu : menuItem[] = [
+const menu: menuItem[] = [
     {
         name: "Dashboard",
         path: "/seller",
@@ -48,7 +48,7 @@ const menu : menuItem[] = [
     },
 ]
 
-const menu2 : menuItem[] = [
+const menu2: menuItem[] = [
     {
         name: "Account",
         path: "/seller/account",
@@ -64,11 +64,11 @@ const menu2 : menuItem[] = [
 ]
 
 
-const SellerDrawerlist = ({toogleDrawer} : {toogleDrawer:any}) => {
-  return (
-    
+const SellerDrawerlist = ({ toogleDrawer }: { toogleDrawer: any }) => {
+    return (
+
         <DrawerList menu={menu} menu2={menu2} toogleDrawer={toogleDrawer} />
-  )
+    )
 }
 
 export default SellerDrawerlist
