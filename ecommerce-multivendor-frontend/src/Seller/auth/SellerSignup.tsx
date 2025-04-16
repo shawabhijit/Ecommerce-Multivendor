@@ -3,7 +3,7 @@
 import type React from "react"
 
 import { useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { motion, AnimatePresence } from "framer-motion"
 import { ArrowLeft, ArrowRight, CheckCircle, ShoppingBag, Upload } from "lucide-react"
 
@@ -17,6 +17,7 @@ import { ImageUploader } from "../../Components/Pages/ImageUploader/ImageUploade
 
 
 export function SellerSignup() {
+    const navigate = useNavigate();
     const issendOtp = false
     const [step, setStep] = useState(1)
     const [loading, setLoading] = useState(false)
@@ -585,7 +586,7 @@ export function SellerSignup() {
                                         <ArrowLeft size={16} /> Back
                                     </Button>
                                 ) : (
-                                    <Link to="/">
+                                    <Link to="/seller/login">
                                         <Button type="button" variant="outline" className="flex items-center gap-2">
                                             <ArrowLeft size={16} /> Login
                                         </Button>
@@ -612,7 +613,7 @@ export function SellerSignup() {
                     <CardFooter className="flex justify-center">
                         <p className="text-sm text-gray-600">
                             Already have a seller account?{" "}
-                            <Link to="/" className="text-primary font-medium hover:underline">
+                            <Link to="/seller/login" className="text-primary font-medium hover:underline">
                                 Sign In
                             </Link>
                         </p>

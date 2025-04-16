@@ -3,7 +3,7 @@
 import type React from "react"
 
 import { useState } from "react"
-import {Link, useNavigate} from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { motion } from "framer-motion"
 import { Eye, EyeOff, ShoppingBag } from "lucide-react"
 
@@ -11,15 +11,18 @@ import { Button } from "../../Components/ui/button"
 import { Input } from "../../Components/ui/input"
 import { Label } from "../../Components/ui/label"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../../Components/ui/card"
+import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from "../../Components/ui/input-otp"
 
 export function SellerLogin() {
     const router = useNavigate();
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState("")
     const [showPassword, setShowPassword] = useState(false)
+    const [sendOtp, setSendOtp] = useState(false);
+
     const [formData, setFormData] = useState({
         email: "",
-        password: "",
+        otp: "",
     })
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -50,7 +53,7 @@ export function SellerLogin() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
-                className="w-full max-w-md"
+                className="w-full max-w-md px-8"
             >
                 <Card className="w-full">
                     <CardHeader className="space-y-1 text-center">
@@ -70,7 +73,7 @@ export function SellerLogin() {
                     </CardHeader>
                     <CardContent>
                         <form onSubmit={handleSubmit} className="space-y-4">
-                            <div className="space-y-2">
+                            <div className="space-y-2 relative">
                                 <Label htmlFor="email">Email or Phone</Label>
                                 <Input
                                     id="email"
@@ -81,8 +84,15 @@ export function SellerLogin() {
                                     value={formData.email}
                                     onChange={handleChange}
                                 />
+                                {
+                                    !sendOtp ? <button onClick={() => setSendOtp(true)} type="button" className="absolute top-7 right-4 text-sm text-[#10B981] hover:text-[#1D4ED8] hover:scale-[1.01] duration-300 cursor-pointer">
+                                        send otp
+                                    </button> : <button onClick={() => setSendOtp(true)} type="button" className="absolute top-7 right-4 text-sm text-[#10B981] hover:text-[#1D4ED8] hover:scale-[1.1] duration-300 cursor-pointer">
+                                        Resent otp
+                                    </button>
+                                }
                             </div>
-                            <div className="space-y-2">
+                            {/* <div className="space-y-2">
                                 <div className="flex items-center justify-between">
                                     <Label htmlFor="password">Password</Label>
                                     <Link to="/forgot-password" className="text-sm text-primary hover:underline">
@@ -107,7 +117,20 @@ export function SellerLogin() {
                                         {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                                     </button>
                                 </div>
-                            </div>
+                            </div> */}
+                            {
+                                sendOtp && <div className="w-full flex items-center justify-center">
+                                    <InputOTP maxLength={6} className="gap-2">
+                                        {[...Array(6)].map((_, i) => (
+                                            <InputOTPSlot
+                                                key={i}
+                                                index={i}
+                                                className="w-12 h-12 border border-gray-300 rounded-md text-center text-xl font-semibold transition-all duration-200 focus:border-primary focus:ring-2 focus:ring-primary/50 bg-white shadow-sm"
+                                            />
+                                        ))}
+                                    </InputOTP>
+                                </div>
+                            }
 
                             {error && (
                                 <motion.div
@@ -129,7 +152,7 @@ export function SellerLogin() {
                     <CardFooter className="flex justify-center">
                         <p className="text-sm text-gray-600">
                             Don&apos;t have a seller account?{" "}
-                            <Link to="/signup" className="text-primary font-medium hover:underline">
+                            <Link to="/seller/signup" className="text-primary font-medium hover:underline">
                                 Create Account
                             </Link>
                         </p>
