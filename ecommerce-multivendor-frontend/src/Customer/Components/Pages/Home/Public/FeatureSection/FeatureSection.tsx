@@ -40,7 +40,7 @@ const FeatureCard = ({ feature, index }: { feature: any, index: number }) => {
             initial={{ opacity: 0, y: 50 }}
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
             transition={{ duration: 0.5, delay: index * 0.1 }}
-            className="bg-white p-8 rounded-xl shadow-lg card-hover"
+            className="p-8 rounded-xl shadow-lg card-hover"
         >
             <div className="mb-4">{feature.icon}</div>
             <h3 className="text-xl font-bold mb-3">{feature.title}</h3>
@@ -54,7 +54,7 @@ const FeaturesSection = () => {
     const isInView = useInView(ref, { once: true, margin: "-100px" });
 
     return (
-        <section id="features" className="py-16 md:py-24 bg-gray-50 overflow-hidden rounded-xl px-4">
+        <section id="features" className="py-16 md:py-24 overflow-hidden rounded-xl px-4">
             <div className="container mx-auto px-4">
                 <motion.div
                     ref={ref}

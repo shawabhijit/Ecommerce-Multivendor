@@ -7,6 +7,7 @@ import { Button } from "../../../../Components/ui/button"
 import { Heart, Menu, Search, ShoppingCart, User, X } from 'lucide-react';
 import { Input } from '../../../../Components/ui/input';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '../../../../Components/ui/dropdown-menu';
+import { useTheme } from '../../../../context/theme-provider';
 
 
 const products = [
@@ -23,6 +24,9 @@ const products = [
 
 const Navbar = ({ isLogedin }: any) => {
 
+    const { theme , setTheme } = useTheme();
+    const isDark = theme === 'dark';
+
     const [isScrolled, setIsScrolled] = useState(false);
     const [isAccountOpen, setIsAccountOpen] = useState(false);
     const [searchValue, setSearchValue] = useState("");
@@ -33,7 +37,7 @@ const Navbar = ({ isLogedin }: any) => {
     const navigate = useNavigate();
 
     const { scrollY } = useScroll()
-    const headerBackground = useTransform(scrollY, [0, 50], ["rgba(255, 255, 255, 0.9)", "rgba(255, 255, 255, 1)"])
+    const headerBackground = useTransform(scrollY, [0, 50], [isDark ?"rgba(0, 0, 0, 0.9)" : "", "rgba(255, 255, 255, 1)"])
     const headerShadow = useTransform(scrollY, [0, 50], ["0 0 0 rgba(0, 0, 0, 0)", "0 4px 6px rgba(0, 0, 0, 0.1)"])
 
     useEffect(() => {
@@ -173,6 +177,7 @@ const Navbar = ({ isLogedin }: any) => {
                                                     <DropdownMenuItem onClick={() => navigate("/user/wishlist")}>Wishlist</DropdownMenuItem>
                                                     <DropdownMenuSeparator />
                                                     <DropdownMenuItem>Logout</DropdownMenuItem>
+                                                    <DropdownMenuItem onClick={() => setTheme(isDark ? "light" : "dark")}>Change Theme</DropdownMenuItem>
                                                 </DropdownMenuContent>
                                             </DropdownMenu>
                                         </div>

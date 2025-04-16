@@ -11,31 +11,38 @@ import UserAddress from "./Customer/Components/Pages/CartPage/UserAddress"
 import UserOrderPayment from "./Customer/Components/Pages/CartPage/UserOrderPayment"
 import Confirmation from "./Customer/Components/Pages/CartPage/Confirmation"
 import Index from "./Customer/Components/Pages/Home/Index"
-
+import { ThemeProvider } from "./context/theme-provider"
+// import {QueryClintProvider} from "@tanstack/react-query"
 
 
 function App() {
 
-  const isLogedin = false;
+  const isLogedin = true;
 
   return (
-    <BrowserRouter>
-      <Navbar isLogedin={isLogedin} />
-      <Routes>
-        <Route path="/" element={<Index isLogedin={isLogedin} />} />
-        <Route path="*" element={<NotFound />} />
-        <Route path="/products/*" element={<ProductsPage />} />
-        <Route path="product/:id" element={<ProductDetailsWrapper />} />
-        <Route path="/user/wishlist" element={<WishlistPage />} />
-        <Route path="/user/*" element={<UserProfile />} />
-        <Route path="/my/" element={<UserCheckoutPage />}>
-          <Route path="cart" element={<Cart />} />
-          <Route path="address" element={<UserAddress />} />
-          <Route path="payment" element={<UserOrderPayment />} />
-          <Route path="confirmation" element={<Confirmation />} />
-        </Route>
-      </Routes>
+    // <QueryClintProvider>
+    <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
+      <BrowserRouter>
+        <Navbar isLogedin={isLogedin} />
+        <Routes>
+          <Route path="/" element={<Index isLogedin={isLogedin} />} />
+          <Route path="*" element={<NotFound />} />
+          <Route path="/products/*" element={<ProductsPage />} />
+          <Route path="product/:id" element={<ProductDetailsWrapper />} />
+          <Route path="/user/wishlist" element={<WishlistPage />} />
+          <Route path="/user/*" element={<UserProfile />} />
+          <Route path="/my/" element={<UserCheckoutPage />}>
+            <Route path="cart" element={<Cart />} />
+            <Route path="address" element={<UserAddress />} />
+            <Route path="payment" element={<UserOrderPayment />} />
+            <Route path="confirmation" element={<Confirmation />} />
+          </Route>
+        </Routes>
     </BrowserRouter>
+    </ThemeProvider>
+      
+    // </QueryClintProvider>
+    
   )
 }
 

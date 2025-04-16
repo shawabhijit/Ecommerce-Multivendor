@@ -105,7 +105,7 @@ const TestimonialsSection = () => {
                     className="text-center max-w-3xl mx-auto mb-16"
                 >
                     <h2 className="text-4xl font-bold mb-4">What Our Users Say</h2>
-                    <p className="text-xl text-gray-600">
+                    <p className="text-xl text-gray-400">
                         Don't just take our word for it. Hear from our community of sellers and customers
                         who have experienced the HiakriHub difference.
                     </p>
@@ -125,7 +125,7 @@ const TestimonialsSection = () => {
                                     x: { type: "spring", stiffness: 300, damping: 30 },
                                     opacity: { duration: 0.2 }
                                 }}
-                                className="bg-white rounded-2xl shadow-xl p-8 md:p-12 absolute top-0 left-0 w-full"
+                                className=" rounded-2xl shadow-xl p-8 md:p-12 absolute top-0 left-0 w-full"
                             >
                                 <div className="flex flex-col items-center text-center">
                                     <div className="relative mb-6">
@@ -145,7 +145,7 @@ const TestimonialsSection = () => {
                                         ))}
                                     </div>
 
-                                    <blockquote className="text-xl italic text-gray-700 mb-6">
+                                    <blockquote className="text-xl italic text-gray-400 mb-6">
                                         "{testimonials[current].content}"
                                     </blockquote>
 
