@@ -64,12 +64,15 @@ const Index = ({ isLogedin }: any) => {
                     </main>
                 ) : (
                     <main>
-                        <HeroSection />
+                        <div className="container mx-auto px-4 space-y-8 pb-10 pt-32">
+                        <HeroCarousel />
                         <FeaturesSection />
                         <CategoriesSection />
+                        <DealsOfTheDay />
                         <WhyChooseUsSection />
                         <TestimonialsSection />
                         <VendorCTASection />
+                        </div>
                     </main>
                 )
             }

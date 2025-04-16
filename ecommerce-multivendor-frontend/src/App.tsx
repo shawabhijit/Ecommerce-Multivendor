@@ -16,7 +16,7 @@ import Confirmation from "./Customer/Components/Pages/CartPage/Confirmation"
 
 function App() {
 
-  const isLogedin = false;
+  const isLogedin = true;
 
   return (
     <BrowserRouter>

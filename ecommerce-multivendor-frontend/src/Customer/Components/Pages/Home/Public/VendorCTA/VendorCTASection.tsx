@@ -28,7 +28,7 @@ const VendorCTASection = () => {
     };
 
     return (
-        <section id="join" className="py-16 md:py-24 bg-[#3571bb] text-white overflow-hidden">
+        <section id="join" className="py-16 md:py-24 px-4 bg-[#3571bb] text-white overflow-hidden rounded-xl">
             <div className="container mx-auto px-4">
                 <div className="grid md:grid-cols-2 gap-12 items-center">
                     <motion.div

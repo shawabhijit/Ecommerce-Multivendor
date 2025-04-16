@@ -51,7 +51,7 @@ export default function HomeProductCard({
         <motion.div
             variants={itemVariants}
             whileHover={{ y: -5, transition: { duration: 0.2 } }}
-            className=" bg-white rounded-lg shadow-sm border overflow-hidden w-full sm:w-[200px]"
+            className=" min-w-[50%] sm:min-w-[25%] md:min-w-[unset] md:w-[200px] lg:w-[200px] bg-white rounded-lg shadow-sm border overflow-hidden"
         >
             <div className="relative cursor-pointer">
                 <img src={"https://rukminim2.flixcart.com/image/612/612/xif0q/smartwatch/c/t/x/-original-imah6s6prqw3w883.jpeg?q=70"} alt={product.name} className="h-full w-full object-cover p-4" />

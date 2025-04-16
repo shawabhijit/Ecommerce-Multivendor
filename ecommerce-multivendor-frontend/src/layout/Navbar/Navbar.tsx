@@ -106,7 +106,6 @@ const Navbar = ({isLogedin} : any) => {
                                 </nav>
                             ) : (
                                 <nav className="hidden md:flex items-center space-x-5 font-semibold">
-                                    <a href="#" className="text-gray-700 hover:text-[#F97316] transition-colors">Home</a>
                                     <a href="#features" className="text-gray-700 hover:text-[#F97316] transition-colors">Features</a>
                                     <a href="#categories" className="text-gray-700 hover:text-[#F97316] transition-colors">Categories</a>
                                     <a href="#testimonials" className="text-gray-700 hover:text-[#F97316] transition-colors">Testimonials</a>
@@ -118,7 +117,7 @@ const Navbar = ({isLogedin} : any) => {
                     {/* </div> */}
 
                     {/* User Actions */}
-                    <div className="hidden md:flex items-center gap-6 pr-5">
+                    <div className="hidden md:flex items-center gap-6">
                         <div className="relative w-[350px]">
                             <div className="relative">
                                 <Search className="absolute left-3 top-2.5 text-gray-400 h-5 w-5" />
@@ -152,57 +151,53 @@ const Navbar = ({isLogedin} : any) => {
                             }
                         </div>
 
-                        <div className="relative"
-                            onMouseEnter={() => setIsAccountOpen(true)}
-                            onMouseLeave={() => setIsAccountOpen(false)}
-                        >
-                            <DropdownMenu open={isAccountOpen}>
-                                <DropdownMenuTrigger asChild>
-                                    <div className="flex flex-col gap-y-[-1] items-center cursor-pointer">
-                                        <User className="h-5 w-5" />
-                                        <span className="hidden sm:inline text-sm font-bold">Account</span>
-                                        {/* <ChevronDown className="h-4 w-4" /> */}
+                        <div>
+                            {
+                                isLogedin ? (
+                                    <div className='flex gap-5'>
+                                        <div className="relative"
+                                            onMouseEnter={() => setIsAccountOpen(true)}
+                                            onMouseLeave={() => setIsAccountOpen(false)}
+                                        >
+                                            <DropdownMenu open={isAccountOpen}>
+                                                <DropdownMenuTrigger asChild>
+                                                    <div className="flex flex-col gap-y-[-1] items-center cursor-pointer">
+                                                        <User className="h-5 w-5" />
+                                                        <span className="hidden sm:inline text-sm font-bold">Account</span>
+                                                        {/* <ChevronDown className="h-4 w-4" /> */}
+                                                    </div>
+                                                </DropdownMenuTrigger>
+                                                <DropdownMenuContent align="end" className="w-[200px]">
+                                                    <DropdownMenuItem onClick={() => navigate("/user/profile?tab=profile")}>My Profile</DropdownMenuItem>
+                                                    <DropdownMenuItem onClick={() => navigate("/user/profile?tab=orders")}>Orders</DropdownMenuItem>
+                                                    <DropdownMenuItem onClick={() => navigate("/user/wishlist")}>Wishlist</DropdownMenuItem>
+                                                    <DropdownMenuSeparator />
+                                                    <DropdownMenuItem>Logout</DropdownMenuItem>
+                                                </DropdownMenuContent>
+                                            </DropdownMenu>
+                                        </div>
+                        
+                                        <div onClick={() => navigate("/user/wishlist")} className="relative flex flex-col items-center justify-center gap-y-[-1] cursor-pointer">
+                                            <Heart className="h-5 w-5 text-red-600" />
+                                            <span className="hidden sm:inline text-sm font-bold">Whishlist</span>
+                                        </div>
+                        
+                                        <div onClick={() => navigate("/my/cart")} className="relative flex flex-col cursor-pointer items-center justify-center gap-[-1]">
+                                            <ShoppingCart className="h-5 w-5 " />
+                                            <span className="hidden sm:inline ml-1 text-sm font-bold ">Cart</span>
+                                            <span className="absolute -top-2 -right-2 bg-primary text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                                                0
+                                            </span>
+                                        </div>
                                     </div>
-                                </DropdownMenuTrigger>
-                                {
-                                    isLogedin ? (
-                                        <DropdownMenuContent align="end" className="w-[200px]">
-                                            <DropdownMenuItem onClick={() => navigate("/user/profile?tab=profile")}>My Profile</DropdownMenuItem>
-                                            <DropdownMenuItem onClick={() => navigate("/user/profile?tab=orders")}>Orders</DropdownMenuItem>
-                                            <DropdownMenuItem onClick={() => navigate("/user/wishlist")}>Wishlist</DropdownMenuItem>
-                                            <DropdownMenuSeparator />
-                                            <DropdownMenuItem>Logout</DropdownMenuItem>
-                                        </DropdownMenuContent>
-                                    ) : (
-                                        <DropdownMenuContent align="center" className="w-[300px] p-2">
-                                            <div className="px-2 mt-3 mb-4">
-                                                <h1 className="text-lg">Welcome</h1>
-                                                <p className="text-sm text-gray-400">Please Login to acces all features</p>
-                                                    <Button variant={"destructive"} className="bg-[#1D4ED8] hover:bg-hiakri-dark mt-3">
-                                                    Login
-                                                </Button>
-                                            </div>
-                                            <DropdownMenuSeparator />
-                                            <DropdownMenuItem>Orders</DropdownMenuItem>
-                                            <DropdownMenuItem>Wishlist</DropdownMenuItem>
-                                        </DropdownMenuContent>
-                                    )
-
-                                }
-                            </DropdownMenu>
-                        </div>
-
-                        <div onClick={() => navigate("/user/wishlist")} className="relative flex flex-col items-center justify-center gap-y-[-1]">
-                            <Heart className="h-5 w-5 text-red-600" />
-                            <span className="hidden sm:inline text-sm font-bold">Whishlist</span>
-                        </div>
-
-                        <div onClick={() => navigate("/my/cart")} className="relative flex flex-col cursor-pointer items-center justify-center gap-[-1]">
-                            <ShoppingCart className="h-5 w-5 " />
-                            <span className="hidden sm:inline ml-1 text-sm font-bold ">Cart</span>
-                            <span className="absolute -top-2 -right-2 bg-primary text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                                0
-                            </span>
+                                ) : (
+                                    <div>
+                                        <Button variant="default" className='bg-[#3571bb] cursor-pointer hover:bg-[#1D4ED8]'>
+                                            Sign In
+                                        </Button>
+                                    </div>
+                                )
+                            }
                         </div>
                     </div>
                 </div>

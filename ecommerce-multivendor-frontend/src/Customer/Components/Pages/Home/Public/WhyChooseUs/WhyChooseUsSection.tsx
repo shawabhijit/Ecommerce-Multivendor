@@ -72,7 +72,7 @@ const WhyChooseUsSection = () => {
     const isInView = useInView(ref, { once: true, margin: "-100px" });
 
     return (
-        <section id="why-choose-us" className="py-16 md:py24 bg-gradient-to-br from-gray-50 to-blue-50">
+        <section id="why-choose-us" className="py-16 md:py24 bg-gradient-to-br from-gray-50 to-blue-50 rounded-xl">
             <div className="container mx-auto px-4">
                 <motion.div
                     ref={ref}

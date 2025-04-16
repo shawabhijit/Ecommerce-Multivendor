@@ -54,7 +54,7 @@ const FeaturesSection = () => {
     const isInView = useInView(ref, { once: true, margin: "-100px" });
 
     return (
-        <section id="features" className="py-16 md:py-24 bg-gray-50 overflow-hidden">
+        <section id="features" className="py-16 md:py-24 bg-gray-50 overflow-hidden rounded-xl px-4">
             <div className="container mx-auto px-4">
                 <motion.div
                     ref={ref}
