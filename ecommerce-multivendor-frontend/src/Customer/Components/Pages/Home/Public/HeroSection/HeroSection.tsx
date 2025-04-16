@@ -1,6 +1,6 @@
 import React from 'react'
 import {motion } from "motion/react"
-import { Button } from '../../../../../Components/ui/button'
+import { Button } from '../../../../../../Components/ui/button'
 import { ShoppingBag, Users } from 'lucide-react';
 
 const HeroSection = () => {
@@ -47,7 +47,7 @@ const HeroSection = () => {
                     transition={{ duration: 0.8 }}
                 >
                     <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-4">
-                        Your One-Stop <span className="text-hiakri">Online Marketplace</span>
+                        Your One-Stop <span className="text-[#3B82F6]">Online Marketplace</span>
                     </h1>
 
                     <p className="text-xl text-gray-600 mb-8 md:pr-12">
@@ -79,15 +79,15 @@ const HeroSection = () => {
 
                     <div className="mt-12 flex items-center gap-8">
                         <div>
-                            <p className="text-4xl font-bold text-hiakri">50K+</p>
+                            <p className="text-4xl font-bold text-[#3B82F6]">50K+</p>
                             <p className="text-sm text-gray-600">Products</p>
                         </div>
                         <div>
-                            <p className="text-4xl font-bold text-hiakri">10K+</p>
+                            <p className="text-4xl font-bold text-[#3B82F6]">10K+</p>
                             <p className="text-sm text-gray-600">Sellers</p>
                         </div>
                         <div>
-                            <p className="text-4xl font-bold text-hiakri">2M+</p>
+                            <p className="text-4xl font-bold text-[#3B82F6]">2M+</p>
                             <p className="text-sm text-gray-600">Customers</p>
                         </div>
                     </div>
@@ -120,8 +120,8 @@ const HeroSection = () => {
                             transition={{ duration: 0.5, delay: 0.6 }}
                         >
                             <div className="flex items-center gap-3">
-                                <div className="h-10 w-10 bg-hiakri-green/20 rounded-full flex items-center justify-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-hiakri-green" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <div className="h-10 w-10 bg-[#10B981]/20 rounded-full flex items-center justify-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[#10B981]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                                     </svg>
                                 </div>
@@ -139,8 +139,8 @@ const HeroSection = () => {
                             transition={{ duration: 0.5, delay: 0.9 }}
                         >
                             <div className="flex items-center gap-3">
-                                <div className="h-10 w-10 bg-hiakri-orange/20 rounded-full flex items-center justify-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-hiakri-orange" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <div className="h-10 w-10 bg-hiakri-[#F97316]/20 rounded-full flex items-center justify-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[#F97316]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                     </svg>
                                 </div>

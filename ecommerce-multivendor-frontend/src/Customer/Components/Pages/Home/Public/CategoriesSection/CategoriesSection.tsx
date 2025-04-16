@@ -65,7 +65,7 @@ const CategoryCard = ({ category, index, onClick }: { category: any, index: numb
             animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }}
             transition={{ duration: 0.4, delay: index * 0.1 }}
             whileHover={{ y: -10, boxShadow: "0 20px 25px -5px rgb(0 0 0 / 0.1)" }}
-            className="category-card"
+            className="rounded-lg bg-white shadow-md text-center p-6 transition-all duration-100 hover:shadow-lg hover:translate-y-1 cursor-pointer"
             onClick={onClick}
         >
             <div className="flex flex-col items-center">
@@ -85,7 +85,7 @@ const CategoriesSection = () => {
     const isInView = useInView(ref, { once: true, margin: "-100px" });
 
     return (
-        <section id="categories" className="section-padding">
+        <section id="categories" className="py-16 md:py-24">
             <div className="container mx-auto px-4">
                 <motion.div
                     ref={ref}

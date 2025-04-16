@@ -1,51 +1,41 @@
+import { BrowserRouter, Route, Routes} from "react-router-dom"
+import Index from "./Customer/Components/Index"
+import NotFound from "./Components/Pages/NotFoundPage/NotFound"
+import ProductsPage from "./Customer/Components/Pages/Products/ProductsPage"
+import ProductDetailsWrapper from "./Customer/Components/Pages/ProductDetails/ProductDetailsWrapper"
+import WishlistPage from "./Customer/Components/Pages/WhishlistPage/WhishlistPage"
+import Navbar from "./layout/Navbar/Navbar"
+import UserProfile from "./Customer/Components/Pages/Profile/UserProfile"
+import UserCheckoutPage from "./Customer/Components/Pages/CartPage/UserCheckoutPage"
+import Cart from "./Customer/Components/Pages/CartPage/Cart"
+import UserAddress from "./Customer/Components/Pages/CartPage/UserAddress"
+import UserOrderPayment from "./Customer/Components/Pages/CartPage/UserOrderPayment"
+import Confirmation from "./Customer/Components/Pages/CartPage/Confirmation"
 
-import { Button, ThemeProvider } from "@mui/material"
-import Navbar from "./Customer/Components/Navbar/Navbar"
-import { customTheme } from "./Theme/CustomTheme"
-import Home from "./Customer/Components/Pages/Home/Home"
-import Product from "./Customer/Components/Pages/Product/Product"
-import ProductDetails from "./Customer/Components/Pages/ProductDetails/ProductDetails"
-import Review from "./Customer/Components/Pages/Review/Review"
-import Cart from "./Customer/Components/Pages/Cart/Cart"
-import Checkout from "./Customer/Components/Pages/Checkout/Checkout"
-import Account from "./Customer/Components/Pages/Account/Account"
-import { Route, Routes } from "react-router-dom"
-import BecomeSeller from "./Seller/Pages/BecomeSeller/BecomeSeller"
-import SellerDashboard from "./Seller/Pages/SellerDashBoard/Dashboard/SellerDashboard"
+
 
 function App() {
 
-  let isLogedin =- false;
+  const isLogedin = false;
 
   return (
-    <>
-
-      <ThemeProvider theme={customTheme}>
-        <div>
-
-          {/* <Home /> */}
-          {/* <Product /> */}
-          {/* <ProductDetails /> */}
-          {/* <Review /> */}
-          {/* <Cart /> */}
-          {/* <Checkout /> */}
-          {/* <Account /> */}
-          <Navbar isLogedin={isLogedin} />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/products/:category" element={<Product />} />
-            <Route path="/reviews/:productId" element={<Review />} />
-            <Route path="/product-details/:categoryId/:name/:productId" element={<ProductDetails />} />
-            <Route path="/cart" element={<Cart />} />
-            <Route path="/checkout" element={<Checkout />} />
-            <Route path="/account/*" element={<Account />} />
-            <Route path="/become-seller" element={<BecomeSeller />} />
-            <Route path="/seller/*" element={<SellerDashboard />} />
-          </Routes>
-        </div>
-      </ThemeProvider>
-
-    </>
+    <BrowserRouter>
+      <Navbar isLogedin={isLogedin} />
+      <Routes>
+        <Route path="/" element={<Index isLogedin={isLogedin} />} />
+        <Route path="*" element={<NotFound />} />
+        <Route path="/products/*" element={<ProductsPage />} />
+        <Route path="product/:id" element={<ProductDetailsWrapper />} />
+        <Route path="/user/wishlist" element={<WishlistPage />} />
+        <Route path="/user/*" element={<UserProfile />} />
+        <Route path="/my/" element={<UserCheckoutPage />}>
+          <Route path="cart" element={<Cart />} />
+          <Route path="address" element={<UserAddress />} />
+          <Route path="payment" element={<UserOrderPayment />} />
+          <Route path="confirmation" element={<Confirmation />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   )
 }
 

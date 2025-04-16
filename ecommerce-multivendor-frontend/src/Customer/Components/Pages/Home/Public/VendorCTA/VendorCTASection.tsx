@@ -28,7 +28,7 @@ const VendorCTASection = () => {
     };
 
     return (
-        <section id="join" className="section-padding bg-hiakri text-white overflow-hidden">
+        <section id="join" className="py-16 md:py-24 bg-[#3571bb] text-white overflow-hidden">
             <div className="container mx-auto px-4">
                 <div className="grid md:grid-cols-2 gap-12 items-center">
                     <motion.div
@@ -71,7 +71,7 @@ const VendorCTASection = () => {
                                 className="inline-block"
                             >
                                 <Button
-                                    className="bg-white text-hiakri hover:bg-blue-50 transition-colors py-6 px-8 text-lg font-medium inline-flex items-center gap-2"
+                                    className="bg-white text-[#3571bb] hover:bg-blue-50 cursor-pointer transition-colors py-6 px-8 text-lg font-medium inline-flex items-center gap-2"
                                 >
                                     <Store className="h-5 w-5" />
                                     Become a Seller
@@ -107,7 +107,7 @@ const VendorCTASection = () => {
                                 whileTap={{ scale: 0.97 }}
                                 className="w-full"
                             >
-                                <Button className="w-full bg-hiakri text-white hover:bg-hiakri-dark py-6 text-lg">
+                                <Button className="w-full bg-[#3571bb] text-white hover:bg-[#1D4ED8] py-6 text-lg cursor-pointer">
                                     Register as a Seller
                                 </Button>
                             </motion.div>

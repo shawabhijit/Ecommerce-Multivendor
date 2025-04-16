@@ -38,7 +38,7 @@ const AnimatedCounter = ({ value, suffix }: { value: number, suffix: string }) =
     const formattedCount = count.toLocaleString();
 
     return (
-        <div ref={ref} className="counter-number">
+        <div ref={ref} className="text-4xl font-bold text-[#3571bb] mb-2">
             {formattedCount}{suffix}
         </div>
     );
@@ -46,22 +46,22 @@ const AnimatedCounter = ({ value, suffix }: { value: number, suffix: string }) =
 
 const whyChooseUs = [
     {
-        icon: <Shield className="h-10 w-10 text-hiakri" />,
+        icon: <Shield className="h-10 w-10 text-[#3571bb]" />,
         title: "100% Secure Payment",
         description: "All our payments are processed through secure payment gateways with industry-leading encryption."
     },
     {
-        icon: <Package className="h-10 w-10 text-hiakri-orange" />,
+        icon: <Package className="h-10 w-10 text-[#F97316]" />,
         title: "Easy Returns",
         description: "Not satisfied? Return your products within 30 days for a full refund, no questions asked."
     },
     {
-        icon: <Clock className="h-10 w-10 text-hiakri-green" />,
+        icon: <Clock className="h-10 w-10 text-[#10B981]" />,
         title: "Fast Delivery",
         description: "Experience lightning-fast delivery with our network of trusted logistics partners."
     },
     {
-        icon: <HeadphonesIcon className="h-10 w-10 text-hiakri-purple" />,
+        icon: <HeadphonesIcon className="h-10 w-10 text-[#8b5CF6]" />,
         title: "24/7 Customer Support",
         description: "Our dedicated support team is available around the clock to assist you with any questions."
     }
@@ -72,7 +72,7 @@ const WhyChooseUsSection = () => {
     const isInView = useInView(ref, { once: true, margin: "-100px" });
 
     return (
-        <section id="why-choose-us" className="section-padding bg-gradient-to-br from-gray-50 to-blue-50">
+        <section id="why-choose-us" className="py-16 md:py24 bg-gradient-to-br from-gray-50 to-blue-50">
             <div className="container mx-auto px-4">
                 <motion.div
                     ref={ref}
@@ -95,10 +95,10 @@ const WhyChooseUsSection = () => {
                             initial={{ opacity: 0, y: 20 }}
                             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
                             transition={{ duration: 0.5, delay: index * 0.1 }}
-                            className="counter-item"
+                            className="flex flex-col items-center p-4"
                         >
                             <AnimatedCounter value={item.number} suffix={item.suffix} />
-                            <div className="counter-label">{item.label}</div>
+                            <div className="text-gray-600 text-lg">{item.label}</div>
                         </motion.div>
                     ))}
                 </div>

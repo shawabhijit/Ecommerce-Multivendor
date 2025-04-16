@@ -2,11 +2,11 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useScroll, useTransform } from 'motion/react';
 import {motion} from "motion/react"
-import { cn } from '../../../../lib/utils';
-import {Button} from "../../../../Components/ui/button"
+import { cn } from '../../lib/utils';
+import {Button} from "../../Components/ui/button"
 import { Heart, Menu, Search, ShoppingCart, User, X } from 'lucide-react';
-import { Input } from '../../../../Components/ui/input';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '../../../../Components/ui/dropdown-menu';
+import { Input } from '../../Components/ui/input';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '../../Components/ui/dropdown-menu';
 
 
 const products = [

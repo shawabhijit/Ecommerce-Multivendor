@@ -4,27 +4,27 @@ import { Users, Truck, Search, ShieldCheck, PieChart } from 'lucide-react';
 
 const features = [
     {
-        icon: <Users className="h-12 w-12 text-hiakri" />,
+        icon: <Users className="h-12 w-12 text-[#3571bb]" />,
         title: "Multiple Seller Support",
         description: "Our platform supports thousands of sellers offering millions of products. Join our thriving community of entrepreneurs."
     },
     {
-        icon: <Search className="h-12 w-12 text-hiakri-orange" />,
+        icon: <Search className="h-12 w-12 text-[#F97316]" />,
         title: "Advanced Search & Filtering",
         description: "Find exactly what you're looking for with our powerful search and filtering system. Save time, find more."
     },
     {
-        icon: <Truck className="h-12 w-12 text-hiakri-green" />,
+        icon: <Truck className="h-12 w-12 text-[#10B981]" />,
         title: "Real-time Tracking & Delivery",
         description: "Track your orders in real-time and enjoy lightning-fast delivery options to get your products ASAP."
     },
     {
-        icon: <ShieldCheck className="h-12 w-12 text-hiakri-purple" />,
+        icon: <ShieldCheck className="h-12 w-12 text-[#8b5CF6]" />,
         title: "Secure Payments",
         description: "Multiple payment options with bank-level security protocols to keep your financial information safe."
     },
     {
-        icon: <PieChart className="h-12 w-12 text-hiakri" />,
+        icon: <PieChart className="h-12 w-12 text-[#3571bb]" />,
         title: "Smart Recommendations",
         description: "Our AI-powered recommendation engine suggests products you'll love based on your preferences."
     }
@@ -54,7 +54,7 @@ const FeaturesSection = () => {
     const isInView = useInView(ref, { once: true, margin: "-100px" });
 
     return (
-        <section id="features" className="section-padding bg-gray-50 overflow-hidden">
+        <section id="features" className="py-16 md:py-24 bg-gray-50 overflow-hidden">
             <div className="container mx-auto px-4">
                 <motion.div
                     ref={ref}

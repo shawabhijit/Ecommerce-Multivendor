@@ -95,7 +95,7 @@ const TestimonialsSection = () => {
     };
 
     return (
-        <section id="testimonials" ref={sectionRef} className="section-padding">
+        <section id="testimonials" ref={sectionRef} className="py-16 md:py-24">
             <div className="container mx-auto px-4">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
@@ -158,7 +158,8 @@ const TestimonialsSection = () => {
 
                     <button
                         onClick={prevTestimonial}
-                        className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 md:-translate-x-6 bg-white shadow-lg rounded-full p-3 text-gray-600 hover:text-hiakri transition-colors z-10"
+                        className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 md:-translate-x-6 bg-white shadow-lg rounded-full p-3 text-gray-600 
+                        hover:text-[#3571bb] transition-colors z-10"
                         aria-label="Previous testimonial"
                     >
                         <ChevronLeft className="h-6 w-6" />
@@ -166,7 +167,8 @@ const TestimonialsSection = () => {
 
                     <button
                         onClick={nextTestimonial}
-                        className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 md:translate-x-6 bg-white shadow-lg rounded-full p-3 text-gray-600 hover:text-hiakri transition-colors z-10"
+                        className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 md:translate-x-6 bg-white shadow-lg rounded-full p-3 text-gray-600 
+                        hover:text-[#3571bb] transition-colors z-10"
                         aria-label="Next testimonial"
                     >
                         <ChevronRight className="h-6 w-6" />
@@ -180,7 +182,7 @@ const TestimonialsSection = () => {
                                     setDirection(index > current ? 1 : -1);
                                     setCurrent(index);
                                 }}
-                                className={`h-3 w-3 rounded-full transition-colors ${index === current ? 'bg-hiakri' : 'bg-gray-300'
+                                className={`h-3 w-3 rounded-full transition-colors ${index === current ? 'bg-[#3571bb]' : 'bg-gray-300'
                                     }`}
                                 aria-label={`Go to testimonial ${index + 1}`}
                             />
