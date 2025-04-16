@@ -12,6 +12,7 @@ import UserOrderPayment from "./Customer/Components/Pages/CartPage/UserOrderPaym
 import Confirmation from "./Customer/Components/Pages/CartPage/Confirmation"
 import Index from "./Customer/Components/Pages/Home/Index"
 import { ThemeProvider } from "./context/theme-provider"
+import { SellerSignup } from "./Seller/auth/SellerSignup"
 // import {QueryClintProvider} from "@tanstack/react-query"
 
 
@@ -37,8 +38,9 @@ function App() {
             <Route path="payment" element={<UserOrderPayment />} />
             <Route path="confirmation" element={<Confirmation />} />
           </Route>
+          <Route path="/seller/signup" element={<SellerSignup />} />
         </Routes>
-    </BrowserRouter>
+      </BrowserRouter>
     </ThemeProvider>
       
     // </QueryClintProvider>
