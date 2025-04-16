@@ -1,22 +1,22 @@
-import { BrowserRouter, Route, Routes} from "react-router-dom"
-import Index from "./Customer/Components/Index"
+import { BrowserRouter, Route, Routes } from "react-router-dom"
 import NotFound from "./Components/Pages/NotFoundPage/NotFound"
 import ProductsPage from "./Customer/Components/Pages/Products/ProductsPage"
 import ProductDetailsWrapper from "./Customer/Components/Pages/ProductDetails/ProductDetailsWrapper"
 import WishlistPage from "./Customer/Components/Pages/WhishlistPage/WhishlistPage"
-import Navbar from "./layout/Navbar/Navbar"
+import Navbar from "./Customer/Components/Layout/Navbar/Navbar"
 import UserProfile from "./Customer/Components/Pages/Profile/UserProfile"
 import UserCheckoutPage from "./Customer/Components/Pages/CartPage/UserCheckoutPage"
 import Cart from "./Customer/Components/Pages/CartPage/Cart"
 import UserAddress from "./Customer/Components/Pages/CartPage/UserAddress"
 import UserOrderPayment from "./Customer/Components/Pages/CartPage/UserOrderPayment"
 import Confirmation from "./Customer/Components/Pages/CartPage/Confirmation"
+import Index from "./Customer/Components/Pages/Home/Index"
 
 
 
 function App() {
 
-  const isLogedin = true;
+  const isLogedin = false;
 
   return (
     <BrowserRouter>

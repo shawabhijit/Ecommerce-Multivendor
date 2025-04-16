@@ -1,15 +1,15 @@
-import DealsOfTheDay from './Pages/Home/Private/DealsOfTheDay/DealsOfTheDay';
-import HeroCarousel from './Pages/Home/Private/HeroCarousel/HeroCarousel';
-import PersonalizedSuggestions from './Pages/Home/Private/PersonalizedSuggestion/PersonalizedSuggestion';
-import ProductFeed from './Pages/Home/Private/ProductFeed/ProductFeed';
-import CategoriesSection from './Pages/Home/Public/CategoriesSection/CategoriesSection';
-import FeaturesSection from './Pages/Home/Public/FeatureSection/FeatureSection';
-import HeroSection from './Pages/Home/Public/HeroSection/HeroSection';
-import TestimonialsSection from './Pages/Home/Public/TestimonialsSection/TestimonialsSection';
-import VendorCTASection from './Pages/Home/Public/VendorCTA/VendorCTASection';
-import WhyChooseUsSection from './Pages/Home/Public/WhyChooseUs/WhyChooseUsSection';
-import Footer from '../../layout/Footer/Footer';
+
 import { useEffect } from 'react';
+import HeroCarousel from './Private/HeroCarousel/HeroCarousel';
+import DealsOfTheDay from './Private/DealsOfTheDay/DealsOfTheDay';
+import ProductFeed from './Private/ProductFeed/ProductFeed';
+import PersonalizedSuggestions from './Private/PersonalizedSuggestion/PersonalizedSuggestion';
+import FeaturesSection from './Public/FeatureSection/FeatureSection';
+import CategoriesSection from './Public/CategoriesSection/CategoriesSection';
+import WhyChooseUsSection from './Public/WhyChooseUs/WhyChooseUsSection';
+import TestimonialsSection from './Public/TestimonialsSection/TestimonialsSection';
+import VendorCTASection from './Public/VendorCTA/VendorCTASection';
+import Footer from '../../Layout/Footer/Footer';
 
 
 

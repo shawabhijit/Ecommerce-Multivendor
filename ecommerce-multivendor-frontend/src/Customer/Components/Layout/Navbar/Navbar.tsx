@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useScroll, useTransform } from 'motion/react';
-import {motion} from "motion/react"
-import { cn } from '../../lib/utils';
-import {Button} from "../../Components/ui/button"
+import { motion } from "motion/react"
+import { cn } from '../../../../lib/utils';
+import { Button } from "../../../../Components/ui/button"
 import { Heart, Menu, Search, ShoppingCart, User, X } from 'lucide-react';
-import { Input } from '../../Components/ui/input';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '../../Components/ui/dropdown-menu';
+import { Input } from '../../../../Components/ui/input';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '../../../../Components/ui/dropdown-menu';
 
 
 const products = [
@@ -21,7 +21,7 @@ const products = [
     "Mobile Holder"
 ];
 
-const Navbar = ({isLogedin} : any) => {
+const Navbar = ({ isLogedin }: any) => {
 
     const [isScrolled, setIsScrolled] = useState(false);
     const [isAccountOpen, setIsAccountOpen] = useState(false);
@@ -176,12 +176,12 @@ const Navbar = ({isLogedin} : any) => {
                                                 </DropdownMenuContent>
                                             </DropdownMenu>
                                         </div>
-                        
+
                                         <div onClick={() => navigate("/user/wishlist")} className="relative flex flex-col items-center justify-center gap-y-[-1] cursor-pointer">
                                             <Heart className="h-5 w-5 text-red-600" />
                                             <span className="hidden sm:inline text-sm font-bold">Whishlist</span>
                                         </div>
-                        
+
                                         <div onClick={() => navigate("/my/cart")} className="relative flex flex-col cursor-pointer items-center justify-center gap-[-1]">
                                             <ShoppingCart className="h-5 w-5 " />
                                             <span className="hidden sm:inline ml-1 text-sm font-bold ">Cart</span>
