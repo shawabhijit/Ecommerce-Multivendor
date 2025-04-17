@@ -15,32 +15,6 @@ import Footer from '../../Layout/Footer/Footer';
 
 const Index = ({ isLogedin }: any) => {
 
-    // Add smooth scrolling for anchor links
-    useEffect(() => {
-        const handleAnchorClick = (e: MouseEvent) => {
-            const target = e.target as HTMLElement;
-            if (target.tagName === 'A' && target.getAttribute('href')?.startsWith('#')) {
-                e.preventDefault();
-                const id = target.getAttribute('href')?.substring(1);
-                const element = document.getElementById(id || '');
-
-                if (element) {
-                    const offset = 80; // Account for fixed header
-                    const elementPosition = element.getBoundingClientRect().top;
-                    const offsetPosition = elementPosition + window.pageYOffset - offset;
-
-                    window.scrollTo({
-                        top: offsetPosition,
-                        behavior: 'smooth'
-                    });
-                }
-            }
-        };
-
-        document.addEventListener('click', handleAnchorClick);
-        return () => document.removeEventListener('click', handleAnchorClick);
-    }, []);
-
     return (
         <div className="flex flex-col min-h-screen overflow-x-hidden">
             {/* <Navbar2 isLogedin={isLogedin} /> */}

@@ -14,8 +14,9 @@ import Index from "./Customer/Components/Pages/Home/Index";
 import { ThemeProvider } from "./context/theme-provider";
 import { SellerSignup } from "./Seller/auth/SellerSignup";
 import { SellerLogin } from "./Seller/auth/SellerLogin";
-import { SellerLayout } from "./Seller/layout/SellerLayout";
 import SellerNav from "./Seller/layout/SellerNav";
+import { useEffect } from "react";
+import SellerIndex from "./Seller/SellerIndex";
 // import { QueryClientProvider } from "@tanstack/react-query";
 
 function AppWrapper() {
@@ -23,9 +24,35 @@ function AppWrapper() {
   const isLogedin = true;
 
   // Define paths where Navbar should be hidden
-  const hideNavbarRoutes = ["/seller/signup", "/seller/login", "/seller/layout"];
+  const hideNavbarRoutes = ["/seller/signup", "/seller/login", "/seller"];
 
   const shouldHideNavbar = hideNavbarRoutes.includes(location.pathname);
+
+
+  useEffect(() => {
+          const handleAnchorClick = (e: MouseEvent) => {
+              const target = e.target as HTMLElement;
+              if (target.tagName === 'A' && target.getAttribute('href')?.startsWith('#')) {
+                  e.preventDefault();
+                  const id = target.getAttribute('href')?.substring(1);
+                  const element = document.getElementById(id || '');
+  
+                  if (element) {
+                      const offset = 80; // Account for fixed header
+                      const elementPosition = element.getBoundingClientRect().top;
+                      const offsetPosition = elementPosition + window.pageYOffset - offset;
+  
+                      window.scrollTo({
+                          top: offsetPosition,
+                          behavior: 'smooth'
+                      });
+                  }
+              }
+          };
+  
+          document.addEventListener('click', handleAnchorClick);
+          return () => document.removeEventListener('click', handleAnchorClick);
+      }, []);
 
   return (
     <>
@@ -45,7 +72,7 @@ function AppWrapper() {
         </Route>
         <Route path="/seller/signup" element={<SellerSignup />} />
         <Route path="/seller/login" element={<SellerLogin />} />
-        <Route path="/seller/layout" element={<SellerNav isLogedin={isLogedin} />} />
+        <Route path="/seller" element={<SellerIndex isLogedin={isLogedin} />} />
       </Routes>
     </>
   );
