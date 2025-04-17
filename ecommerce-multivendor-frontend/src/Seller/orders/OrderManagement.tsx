@@ -341,7 +341,7 @@ export function OrderManagement() {
                                                 </Button>
                                                 <DropdownMenu>
                                                     <DropdownMenuTrigger asChild>
-                                                        <Button variant="outline" size="sm">
+                                                        <Button className="cursor-pointer " variant="outline" size="sm">
                                                             Actions
                                                         </Button>
                                                     </DropdownMenuTrigger>

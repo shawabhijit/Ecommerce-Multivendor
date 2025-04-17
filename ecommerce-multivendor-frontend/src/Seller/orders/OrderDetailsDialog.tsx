@@ -13,7 +13,7 @@ const OrderDetailsDialog = ({selectedOrder , formatDate , getStatusBadge , setIs
                 <DialogHeader>
                     <DialogTitle className="flex items-center justify-between">
                         <span>Order Details - {selectedOrder?.id}</span>
-                        <Badge variant="outline" className="ml-2">
+                        <Badge variant="outline" className="ml-2 mr-4">
                             {(selectedOrder?.status ?? "").charAt(0).toUpperCase() + (selectedOrder?.status ?? "").slice(1)}
                         </Badge>
                     </DialogTitle>
@@ -199,10 +199,10 @@ const OrderDetailsDialog = ({selectedOrder , formatDate , getStatusBadge , setIs
                         </Tabs>
 
                         <DialogFooter>
-                            <Button variant="outline" onClick={() => setIsOrderDetailsOpen(false)}>
+                            <Button className='cursor-pointer' variant="outline" onClick={() => setIsOrderDetailsOpen(false)}>
                                 Close
                             </Button>
-                            <Button onClick={() => openUpdateStatus(selectedOrder)}>Update Status</Button>
+                            <Button className='cursor-pointer' onClick={() => openUpdateStatus(selectedOrder)}>Update Status</Button>
                         </DialogFooter>
                     </div>
                 )}
