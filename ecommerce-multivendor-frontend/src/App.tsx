@@ -14,14 +14,16 @@ import Index from "./Customer/Components/Pages/Home/Index";
 import { ThemeProvider } from "./context/theme-provider";
 import { SellerSignup } from "./Seller/auth/SellerSignup";
 import { SellerLogin } from "./Seller/auth/SellerLogin";
+import { SellerLayout } from "./Seller/layout/SellerLayout";
+import SellerNav from "./Seller/layout/SellerNav";
 // import { QueryClientProvider } from "@tanstack/react-query";
 
 function AppWrapper() {
   const location = useLocation();
-  const isLogedin = false;
+  const isLogedin = true;
 
   // Define paths where Navbar should be hidden
-  const hideNavbarRoutes = ["/seller/signup", "/seller/login"];
+  const hideNavbarRoutes = ["/seller/signup", "/seller/login", "/seller/layout"];
 
   const shouldHideNavbar = hideNavbarRoutes.includes(location.pathname);
 
@@ -43,6 +45,7 @@ function AppWrapper() {
         </Route>
         <Route path="/seller/signup" element={<SellerSignup />} />
         <Route path="/seller/login" element={<SellerLogin />} />
+        <Route path="/seller/layout" element={<SellerNav isLogedin={isLogedin} />} />
       </Routes>
     </>
   );
