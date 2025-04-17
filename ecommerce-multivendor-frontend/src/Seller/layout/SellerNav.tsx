@@ -10,6 +10,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "../../Components/ui/avatar"
 
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '../../Components/ui/dropdown-menu';
 import { useTheme } from '../../context/theme-provider';
+import { DarkMode, LightMode } from '@mui/icons-material';
 
 
 const products = [
@@ -186,7 +187,7 @@ const SellerNav = ({ isLogedin }: any) => {
                                                         </Avatar>
                                                     </Button>
                                                 </DropdownMenuTrigger>
-                                                <DropdownMenuContent align="end">
+                                                <DropdownMenuContent align="end" className='w-[200px] absolute left-[-150px] top-2'>
                                                     <DropdownMenuLabel>My Account</DropdownMenuLabel>
                                                     <DropdownMenuSeparator />
                                                     <DropdownMenuItem>
@@ -202,7 +203,18 @@ const SellerNav = ({ isLogedin }: any) => {
                                                         <LogOut className="mr-2 h-4 w-4" />
                                                         <span>Logout</span>
                                                     </DropdownMenuItem>
-                                                    <DropdownMenuItem onClick={() => setTheme(isDark ? "light" : "dark")}>Change Theme</DropdownMenuItem>
+                                                    <DropdownMenuItem onClick={() => setTheme(isDark ? "light" : "dark")}>
+                                                        {
+                                                            isDark ? (
+                                                                <LightMode />
+                                                            ) : (
+                                                                <DarkMode />
+                                                            )
+                                                        }
+                                                        {
+                                                            isDark ? "Light" : "Dark"
+                                                        }
+                                                    </DropdownMenuItem>
                                                 </DropdownMenuContent>
                                             </DropdownMenu>
                                         </div>
