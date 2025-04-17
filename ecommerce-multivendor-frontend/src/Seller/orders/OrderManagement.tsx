@@ -1,18 +1,16 @@
 "use client"
 
-import { useState } from "react"
+import React, { useState } from "react"
 import { motion } from "framer-motion"
 import {
-    ArrowUp,
     Calendar,
+    CalendarIcon,
     ChevronLeft,
     ChevronRight,
     Download,
     Eye,
     Filter,
-    Package,
     Search,
-    Truck,
 } from "lucide-react"
 
 import { Button } from "../../Components/ui/button"
@@ -36,7 +34,6 @@ import {
     DialogTitle,
 } from "../../Components/ui/dialog"
 import { Popover, PopoverContent, PopoverTrigger } from "../../Components/ui/popover"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../Components/ui/tabs"
 import { Avatar, AvatarFallback, AvatarImage } from "../../Components/ui/avatar"
 import { Label } from "../../Components/ui/label"
 import { Textarea } from "../../Components/ui/textarea"
@@ -45,6 +42,10 @@ import { Textarea } from "../../Components/ui/textarea"
 import { mockOrders } from "../Data/api"
 import SellerOrderStatus from "./SellerOrderStatus"
 import OrderDetailsDialog from "./OrderDetailsDialog"
+import { Calendar as Calendar1 } from "../../Components/ui/calendar"
+import { cn } from "../../lib/utils"
+import Pagination from "../Components/Pagination/Pagination"
+
 
 export function OrderManagement() {
 
@@ -53,14 +54,15 @@ export function OrderManagement() {
     const [searchQuery, setSearchQuery] = useState("")
     const [statusFilter, setStatusFilter] = useState("all")
     const [dateFilter, setDateFilter] = useState("all")
-
-    const [isUpdateStatusOpen, setIsUpdateStatusOpen] = useState(false)
     const [currentPage, setCurrentPage] = useState(1)
+    const [isUpdateStatusOpen, setIsUpdateStatusOpen] = useState(false)
     const [selectedOrder, setSelectedOrder] = useState<(typeof mockOrders)[0] | null>(null)
     const [isOrderDetailsOpen, setIsOrderDetailsOpen] = useState(false)
     const [newStatus, setNewStatus] = useState("")
     const [trackingNumber, setTrackingNumber] = useState("")
     const [trackingNotes, setTrackingNotes] = useState("")
+    const [date, setDate] = React.useState<Date>()
+
 
     const ordersPerPage = 5
 
@@ -103,7 +105,7 @@ export function OrderManagement() {
     const indexOfFirstOrder = indexOfLastOrder - ordersPerPage
     const currentOrders = filteredOrders.slice(indexOfFirstOrder, indexOfLastOrder)
 
-    const paginate = (pageNumber: number) => setCurrentPage(pageNumber)
+    // const paginate = (pageNumber: number) => setCurrentPage(pageNumber)
     //
 
     const viewOrderDetails = (order: (typeof mockOrders)[0]) => {
@@ -201,7 +203,7 @@ export function OrderManagement() {
     }
 
     return (
-        <div className="container mx-auto px-4 lg:px-8">
+        <div className="container mx-auto px-4 lg:px-8 overflow-y-hidden">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
                 <div>
                     <h1 className="text-2xl font-bold">Order Management</h1>
@@ -249,7 +251,7 @@ export function OrderManagement() {
                             </Select>
 
                             <Select value={dateFilter} onValueChange={setDateFilter}>
-                                <SelectTrigger className="w-full sm:w-[180px]">
+                                <SelectTrigger className="w-full sm:w-[180px] overflow-hidden">
                                     <SelectValue placeholder="Filter by date" />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -263,15 +265,23 @@ export function OrderManagement() {
 
                             <Popover>
                                 <PopoverTrigger asChild>
-                                    <Button variant="outline" size="icon" className="shrink-0">
-                                        <Calendar className="h-4 w-4" />
+                                    <Button
+                                        variant={"outline"}
+                                        className={cn(
+                                            "w-[40px] justify-start text-right font-normal",
+                                            !date && "text-muted-foreground"
+                                        )}
+                                    >
+                                        <CalendarIcon />
                                     </Button>
                                 </PopoverTrigger>
-                                <PopoverContent className="w-auto p-0" align="end">
-                                    {/* Date picker would go here */}
-                                    <div className="p-4">
-                                        <p className="text-sm text-gray-500">Date picker placeholder</p>
-                                    </div>
+                                <PopoverContent className="w-auto p-0" align="start">
+                                    <Calendar1
+                                        mode="single"
+                                        selected={date}
+                                        onSelect={() => setDate(date as Date)}
+                                        initialFocus
+                                    />
                                 </PopoverContent>
                             </Popover>
                         </div>
@@ -370,41 +380,14 @@ export function OrderManagement() {
 
                     {/* Pagination */}
                     {totalPages > 1 && (
-                        <div className="flex items-center justify-between mt-4">
-                            <p className="text-sm text-gray-500">
-                                Showing {indexOfFirstOrder + 1} to {Math.min(indexOfLastOrder, filteredOrders.length)} of{" "}
-                                {filteredOrders.length} orders
-                            </p>
-                            <div className="flex items-center gap-1">
-                                <Button
-                                    variant="outline"
-                                    size="icon"
-                                    onClick={() => paginate(Math.max(1, currentPage - 1))}
-                                    disabled={currentPage === 1}
-                                >
-                                    <ChevronLeft className="h-4 w-4" />
-                                </Button>
-                                {Array.from({ length: totalPages }, (_, i) => i + 1).map((number) => (
-                                    <Button
-                                        key={number}
-                                        variant={currentPage === number ? "default" : "outline"}
-                                        size="icon"
-                                        onClick={() => paginate(number)}
-                                        className="h-8 w-8"
-                                    >
-                                        {number}
-                                    </Button>
-                                ))}
-                                <Button
-                                    variant="outline"
-                                    size="icon"
-                                    onClick={() => paginate(Math.min(totalPages, currentPage + 1))}
-                                    disabled={currentPage === totalPages}
-                                >
-                                    <ChevronRight className="h-4 w-4" />
-                                </Button>
-                            </div>
-                        </div>
+                        <Pagination 
+                            filteredOrders={filteredOrders}
+                            totalPages={totalPages}
+                            indexOfFirstOrder={indexOfFirstOrder}
+                            indexOfLastOrder={indexOfLastOrder}
+                            currentPage={currentPage}
+                            setCurrentPage={setCurrentPage}
+                        />
                     )}
                 </CardContent>
             </Card>

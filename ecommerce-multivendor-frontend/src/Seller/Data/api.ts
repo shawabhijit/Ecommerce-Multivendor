@@ -283,3 +283,127 @@ export const recentOrders = [
         avatar: "/placeholder.svg",
     },
 ]
+
+
+export const mockProducts = [
+    {
+        id: "PROD-001",
+        title: "Premium Wireless Headphones",
+        image: "/placeholder.svg",
+        price: 129.99,
+        offerPrice: 99.99,
+        stock: 45,
+        status: "active",
+        category: "Electronics",
+        variants: ["Black", "White", "Blue"],
+    },
+    {
+        id: "PROD-002",
+        title: "Ergonomic Mechanical Keyboard",
+        image: "/placeholder.svg",
+        price: 89.99,
+        offerPrice: null,
+        stock: 32,
+        status: "active",
+        category: "Electronics",
+        variants: ["US Layout", "UK Layout"],
+    },
+    {
+        id: "PROD-003",
+        title: "Ultra HD Webcam",
+        image: "/placeholder.svg",
+        price: 69.99,
+        offerPrice: 59.99,
+        stock: 18,
+        status: "active",
+        category: "Electronics",
+        variants: [],
+    },
+    {
+        id: "PROD-004",
+        title: "Portable Bluetooth Speaker",
+        image: "/placeholder.svg",
+        price: 49.99,
+        offerPrice: null,
+        stock: 0,
+        status: "out_of_stock",
+        category: "Electronics",
+        variants: ["Black", "Red"],
+    },
+    {
+        id: "PROD-005",
+        title: "Wireless Charging Pad",
+        image: "/placeholder.svg",
+        price: 29.99,
+        offerPrice: 24.99,
+        stock: 56,
+        status: "active",
+        category: "Electronics",
+        variants: [],
+    },
+    {
+        id: "PROD-006",
+        title: "USB-C to HDMI Adapter",
+        image: "/placeholder.svg",
+        price: 19.99,
+        offerPrice: null,
+        stock: 72,
+        status: "active",
+        category: "Electronics",
+        variants: [],
+    },
+    {
+        id: "PROD-007",
+        title: "Smart Home Hub",
+        image: "/placeholder.svg",
+        price: 149.99,
+        offerPrice: 129.99,
+        stock: 12,
+        status: "active",
+        category: "Smart Home",
+        variants: [],
+    },
+    {
+        id: "PROD-008",
+        title: "Fitness Tracker",
+        image: "/placeholder.svg",
+        price: 79.99,
+        offerPrice: null,
+        stock: 0,
+        status: "inactive",
+        category: "Wearables",
+        variants: ["Small", "Medium", "Large"],
+    },
+]
+
+
+export const productStatus = [
+    {id : "all" , value:"All Status"},
+    {id : "active" , value:"Active"},
+    {id : "inactive" , value:"Inactive"},
+    {id : "in_stock" , value:"In Strock"},
+    {id : "out_in_stock" , value:"Out of stock"}
+]
+export const productCategories = [
+    {id : "all" , value:"All Categories"},
+    {id : "electronics" , value:"Electronics"},
+    {id : "smart home" , value:"Smart Home"},
+    {id : "wearables" , value:"Wearables"},
+]
+
+export const OrderStatus = [
+    { id: "all", value: "All Status" },
+    { id: "pending", value: "Pending" },
+    { id: "processing", value: "Processing" },
+    { id: "shipped", value: "Shipped" },
+    { id: "delivered", value: "Delivered" },
+    { id: "cancelled", value: "Cancelled" },
+]
+
+export const OrderDates = [
+    { id: "all", value: "All Time" },
+    { id: "today", value: "Today" },
+    { id: "yesterday", value: "Yesterday" },
+    { id: "last7days", value: "Last 7 Days" },
+    { id: "last30days", value: "Last 30 Days" },
+]
