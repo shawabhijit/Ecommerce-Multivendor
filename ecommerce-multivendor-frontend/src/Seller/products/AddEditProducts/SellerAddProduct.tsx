@@ -23,7 +23,7 @@ import { mockImagePreviews, mockProductData } from "../../Data/api"
 
 
 export function AddEditProduct({ productId }: { productId?: string }) {
-    const isEditMode = !!productId
+    const isEditMode = true
     const [activeTab, setActiveTab] = useState("basic")
     const [loading, setLoading] = useState(false)
     const [saveSuccess, setSaveSuccess] = useState(false)
@@ -319,11 +319,11 @@ export function AddEditProduct({ productId }: { productId?: string }) {
                 </div>
 
                 {isEditMode && (
-                    <div className="flex items-center gap-2 mt-4 md:mt-0">
+                    <div className="flex items-center gap-2 mt-4 md:mt-0 ">
                         <TooltipProvider>
                             <Tooltip>
                                 <TooltipTrigger asChild>
-                                    <Button variant="outline" size="sm" onClick={() => setShowHistoryDialog(true)}>
+                                    <Button className="cursor-pointer" variant="outline" size="sm" onClick={() => setShowHistoryDialog(true)}>
                                         <Clock className="h-4 w-4 mr-1" /> History
                                     </Button>
                                 </TooltipTrigger>
@@ -336,8 +336,8 @@ export function AddEditProduct({ productId }: { productId?: string }) {
                         <TooltipProvider>
                             <Tooltip>
                                 <TooltipTrigger asChild>
-                                    <Button variant="outline" size="sm" onClick={() => setShowPreviewDialog(true)}>
-                                        <Eye className="h-4 w-4 mr-1" /> Preview
+                                    <Button className="cursor-pointer" variant="outline" size="sm" onClick={() => setShowPreviewDialog(true)}>
+                                        <Eye className="h-4 w-4 mr-1 " /> Preview
                                     </Button>
                                 </TooltipTrigger>
                                 <TooltipContent>

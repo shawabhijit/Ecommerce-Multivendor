@@ -3,6 +3,7 @@ import { SellerDashboard } from './dashboard/SellerDashboard';
 import { OrderManagement } from './orders/OrderManagement';
 import { ProductManagement } from './products/ProductsManagement';
 import { AddEditProduct } from './products/AddEditProducts/SellerAddProduct';
+import SellerEarnings from './earnings/SellerEarnings';
 
 
 
@@ -16,7 +17,8 @@ const SellerIndex = ({isLogedin}) => {
                     {/* <SellerDashboard /> */}
                     {/* <OrderManagement /> */}
                     {/* <ProductManagement /> */}
-                    <AddEditProduct />
+                    {/* <AddEditProduct /> */}
+                    <SellerEarnings />
                 </div>
             </main>
         </>
