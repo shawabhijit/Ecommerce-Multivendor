@@ -67,11 +67,11 @@ const SellerNav = ({ isLogedin }: any) => {
 
 
     const navigation = [
-        { name: "Dashboard", href: "/dashboard", icon: Home },
-        { name: "Products", href: "/products", icon: Package },
-        { name: "Orders", href: "/orders", icon: ShoppingCart },
-        { name: "Analytics", href: "/analytics", icon: BarChart3 },
-        { name: "Earnings", href: "/earnings", icon: CreditCard },
+        { name: "Dashboard", href: "/seller", icon: Home },
+        { name: "Products", href: "/seller/products", icon: Package },
+        { name: "Orders", href: "/seller/orders", icon: ShoppingCart },
+        { name: "Analytics", href: "/seller/analytics", icon: BarChart3 },
+        { name: "Earnings", href: "/seller/earnings", icon: CreditCard },
     ]
 
     return (
@@ -121,7 +121,7 @@ const SellerNav = ({ isLogedin }: any) => {
                                             }`}
                                     >
                                         <item.icon
-                                            className={`mr-3 h-5 w-5 ${false ? "text-white" : "text-gray-500 group-hover:text-[#F97316]"}`}
+                                            className={`mr-3 h-5 w-5 ${false ? "text-white" : "text-gray-500 group-hover:text-[#3B82F6]"}`}
                                         />
                                         {item.name}
                                     </Link>
@@ -134,15 +134,6 @@ const SellerNav = ({ isLogedin }: any) => {
                     {/* User Actions */}
                     <div className="hidden md:flex items-center gap-6">
                         <div className="relative w-[350px]">
-                            <div className="relative">
-                                <Search className="absolute left-3 top-2.5 text-gray-400 h-5 w-5" />
-                                <Input
-                                    placeholder="Search Categories or Products"
-                                    className="pl-10 pr-4 py-2 bg-gray-100 rounded-md"
-                                    value={searchValue}
-                                    onChange={(e) => setSearchValue(e.target.value)}
-                                />
-                            </div>
                             {
                                 filteredResults && (
                                     <div className="absolute top-0 mt-10 bg-white w-full rounded-md">
@@ -199,7 +190,7 @@ const SellerNav = ({ isLogedin }: any) => {
                                                         <span>Settings</span>
                                                     </DropdownMenuItem>
                                                     <DropdownMenuSeparator />
-                                                    <DropdownMenuItem>
+                                                    <DropdownMenuItem onClick={() => navigate("/seller/login")}>
                                                         <LogOut className="mr-2 h-4 w-4" />
                                                         <span>Logout</span>
                                                     </DropdownMenuItem>
@@ -228,18 +219,6 @@ const SellerNav = ({ isLogedin }: any) => {
                                 )
                             }
                         </div>
-                    </div>
-                </div>
-
-                {/* Mobile Search - shown below header on mobile */}
-                <div className="md:hidden py-2 pb-3">
-                    <div className="flex w-full relative">
-                        <input
-                            type="text"
-                            placeholder="Search..."
-                            className="pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-hiakri/50 w-full"
-                        />
-                        <Search className="absolute left-3 top-2.5 text-gray-400 h-5 w-5" />
                     </div>
                 </div>
 

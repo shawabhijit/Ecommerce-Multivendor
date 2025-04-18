@@ -23,7 +23,7 @@ import { mockImagePreviews, mockProductData } from "../../Data/api"
 
 
 export function AddEditProduct({ productId }: { productId?: string }) {
-    const isEditMode = true
+    const isEditMode = !!productId
     const [activeTab, setActiveTab] = useState("basic")
     const [loading, setLoading] = useState(false)
     const [saveSuccess, setSaveSuccess] = useState(false)
@@ -307,10 +307,7 @@ export function AddEditProduct({ productId }: { productId?: string }) {
         <div className="container mx-auto px-4 lg:px-8">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
                 <div className="flex items-center">
-                    <Button variant="ghost" size="icon" /*onClick={() => router.push("/products")}*/ className="mr-4">
-                        <ArrowLeft className="h-5 w-5" />
-                    </Button>
-                    <div>
+                    <div className="pl-2">
                         <h1 className="text-2xl font-bold">{isEditMode ? "Edit Product" : "Add New Product"}</h1>
                         <p className="text-gray-500">
                             {isEditMode ? "Update your product information" : "Create a new product listing"}

@@ -4,6 +4,9 @@ import { OrderManagement } from './orders/OrderManagement';
 import { ProductManagement } from './products/ProductsManagement';
 import { AddEditProduct } from './products/AddEditProducts/SellerAddProduct';
 import SellerEarnings from './earnings/SellerEarnings';
+import SellerAnalytics from './Analytics/SellerAnalytics';
+import { Route, Routes } from 'react-router-dom';
+import SellerOrderStatus from './orders/SellerOrderStatus';
 
 
 
@@ -18,7 +21,17 @@ const SellerIndex = ({isLogedin}) => {
                     {/* <OrderManagement /> */}
                     {/* <ProductManagement /> */}
                     {/* <AddEditProduct /> */}
-                    <SellerEarnings />
+                    {/* <SellerEarnings /> */}
+                    {/* <SellerAnalytics /> */}
+                    <Routes>
+                        <Route path='/' element={<SellerDashboard />} />
+                        <Route path='/orders' element={<OrderManagement />} />
+                        <Route path='/products' element={<ProductManagement />} />
+                        <Route path='/analytics' element={<SellerAnalytics />} />
+                        <Route path='/earnings' element={<SellerEarnings />} />
+                        <Route path='/products/add' element={<AddEditProduct />} />
+                        <Route path='/product/edit/:id' element={<AddEditProduct />} />
+                    </Routes>
                 </div>
             </main>
         </>

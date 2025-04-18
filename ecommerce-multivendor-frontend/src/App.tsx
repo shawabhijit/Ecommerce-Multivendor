@@ -72,7 +72,7 @@ function AppWrapper() {
         </Route>
         <Route path="/seller/signup" element={<SellerSignup />} />
         <Route path="/seller/login" element={<SellerLogin />} />
-        <Route path="/seller" element={<SellerIndex isLogedin={isLogedin} />} />
+        <Route path="/seller/*" element={<SellerIndex isLogedin={isLogedin} />} />
       </Routes>
     </>
   );
