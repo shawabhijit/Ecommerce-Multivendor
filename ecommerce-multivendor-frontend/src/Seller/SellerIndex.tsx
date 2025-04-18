@@ -2,6 +2,7 @@ import SellerNav from './layout/SellerNav';
 import { SellerDashboard } from './dashboard/SellerDashboard';
 import { OrderManagement } from './orders/OrderManagement';
 import { ProductManagement } from './products/ProductsManagement';
+import { AddEditProduct } from './products/AddEditProducts/SellerAddProduct';
 
 
 
@@ -14,7 +15,8 @@ const SellerIndex = ({isLogedin}) => {
                 <div className="container mx-auto px-4 space-y-8 pb-10 pt-28">
                     {/* <SellerDashboard /> */}
                     {/* <OrderManagement /> */}
-                    <ProductManagement />
+                    {/* <ProductManagement /> */}
+                    <AddEditProduct />
                 </div>
             </main>
         </>

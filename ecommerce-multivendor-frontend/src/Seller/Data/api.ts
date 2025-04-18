@@ -407,3 +407,99 @@ export const OrderDates = [
     { id: "last7days", value: "Last 7 Days" },
     { id: "last30days", value: "Last 30 Days" },
 ]
+
+
+// Mock product data for edit mode
+export const mockProductData = {
+    "PROD-001": {
+        id: "PROD-001",
+        title: "Premium Wireless Headphones",
+        description:
+            "Experience crystal-clear sound with our premium wireless headphones. Features active noise cancellation, 30-hour battery life, and comfortable over-ear design for extended listening sessions.",
+        price: "129.99",
+        offerPrice: "99.99",
+        stock: "45",
+        category: "Electronics",
+        status: "active",
+        images: [],
+        variants: [
+            { name: "color", values: "Black, White, Blue" },
+            { name: "size", values: "Standard" },
+        ],
+        seo: {
+            metaTitle: "Premium Wireless Headphones | Best Sound Quality",
+            metaDescription:
+                "Shop our Premium Wireless Headphones with active noise cancellation and 30-hour battery life. Free shipping available.",
+            keywords: "wireless headphones, noise cancellation, premium audio, bluetooth headphones",
+        },
+        shipping: {
+            weight: "0.35",
+            dimensions: {
+                length: "20",
+                width: "18",
+                height: "8",
+            },
+            freeShipping: true,
+        },
+        sku: "WH-PRO-001",
+        barcode: "8901234567890",
+        createdAt: "2023-05-15T10:30:00Z",
+        updatedAt: "2023-08-22T14:45:00Z",
+        ratings: {
+            average: 4.7,
+            count: 128,
+        },
+        tags: ["featured", "bestseller", "premium"],
+    },
+    "PROD-002": {
+        id: "PROD-002",
+        title: "Ergonomic Mechanical Keyboard",
+        description:
+            "Enhance your typing experience with our ergonomic mechanical keyboard. Features customizable RGB lighting, premium Cherry MX switches, and a comfortable wrist rest for extended use.",
+        price: "89.99",
+        offerPrice: "",
+        stock: "32",
+        category: "Electronics",
+        status: "active",
+        images: [],
+        variants: [{ name: "layout", values: "US Layout, UK Layout" }],
+        seo: {
+            metaTitle: "Ergonomic Mechanical Keyboard | Premium Typing Experience",
+            metaDescription:
+                "Shop our Ergonomic Mechanical Keyboard with Cherry MX switches and customizable RGB lighting. Designed for comfort and performance.",
+            keywords: "mechanical keyboard, ergonomic keyboard, cherry mx, rgb keyboard, gaming keyboard",
+        },
+        shipping: {
+            weight: "0.85",
+            dimensions: {
+                length: "44",
+                width: "14",
+                height: "4",
+            },
+            freeShipping: false,
+        },
+        sku: "KB-ERG-002",
+        barcode: "8901234567891",
+        createdAt: "2023-06-10T09:15:00Z",
+        updatedAt: "2023-09-05T11:20:00Z",
+        ratings: {
+            average: 4.5,
+            count: 96,
+        },
+        tags: ["new", "premium"],
+    },
+}
+
+
+// Image placeholders for edit mode
+export const mockImagePreviews = {
+    "PROD-001": [
+        "/placeholder.svg?height=400&width=400",
+        "/placeholder.svg?height=400&width=400&text=Side+View",
+        "/placeholder.svg?height=400&width=400&text=Package",
+    ],
+    "PROD-002": [
+        "/placeholder.svg?height=400&width=400&text=Keyboard",
+        "/placeholder.svg?height=400&width=400&text=RGB+Lighting",
+    ],
+}

@@ -138,7 +138,7 @@ export function ProductManagement() {
                     <p className="text-gray-500">Manage your product inventory and listings</p>
                 </div>
                 <div className="mt-4 md:mt-0">
-                    <Link to="/products/add">
+                    <Link to="seller/products/add">
                         <Button className="flex items-center gap-2">
                             <Plus className="h-4 w-4" /> Add New Product
                         </Button>
