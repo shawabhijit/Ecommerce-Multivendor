@@ -6,7 +6,7 @@ import { AddEditProduct } from './products/AddEditProducts/SellerAddProduct';
 import SellerEarnings from './earnings/SellerEarnings';
 import SellerAnalytics from './Analytics/SellerAnalytics';
 import { Route, Routes } from 'react-router-dom';
-import SellerOrderStatus from './orders/SellerOrderStatus';
+import {SellerProfile} from './SellerProfile/SellerProfile';
 
 
 
@@ -31,6 +31,7 @@ const SellerIndex = ({isLogedin}) => {
                         <Route path='/earnings' element={<SellerEarnings />} />
                         <Route path='/products/add' element={<AddEditProduct />} />
                         <Route path='/product/edit/:id' element={<AddEditProduct />} />
+                        <Route path='/info/:id' element={<SellerProfile />} />
                     </Routes>
                 </div>
             </main>

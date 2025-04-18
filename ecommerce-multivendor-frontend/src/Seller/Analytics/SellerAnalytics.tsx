@@ -9,6 +9,7 @@ import OrderStatusChart from './Charts/OrderStatusChart';
 import EarningsBarChart from './Charts/EarningsBarChart';
 import SalesChart from './Charts/SalessChart';
 import ConversionRateChart from './Charts/ConversionRateChart';
+import TrafficSourceChart from './Charts/TraficSourceChart';
 
 const SellerAnalytics = () => {
     const [timeFilter, setTimeFilter] = useState<'7days' | '30days' | '90days'>('30days');
@@ -164,16 +165,16 @@ const SellerAnalytics = () => {
                     <div className="space-y-4">
                         <Card className="hover:shadow-lg transition-shadow">
                             <CardContent className="p-4 h-full">
-                                <h3 className="text-sm font-semibold mb-2">Order Status</h3>
+                                <h3 className="text-sm font-semibold mb-2">Trafic Source</h3>
                                 <div className="h-[calc(100%-30px)]">
-                                    <OrderStatusChart />
+                                    <TrafficSourceChart />
                                 </div>
                             </CardContent>
                         </Card>
 
                         <Card className="hover:shadow-lg transition-shadow">
                             <CardContent className="p-4 h-full">
-                                <h3 className="text-sm font-semibold mb-2">Order Status</h3>
+                                <h3 className="text-sm font-semibold mb-2">Conversion Rate</h3>
                                 <div className="h-[calc(100%-30px)]">
                                     <ConversionRateChart timeFilter={timeFilter} />
                                 </div>
