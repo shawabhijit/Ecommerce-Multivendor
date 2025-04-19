@@ -19,11 +19,25 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Switch } from "../../../Components/ui/switch"
 import { Separator } from "../../../Components/ui/separator"
 import { mockImagePreviews, mockProductData } from "../../Data/api"
+import { useLocation } from "react-router-dom"
 
 
 
-export function AddEditProduct({ productId }: { productId?: string }) {
+export function AddEditProduct() {
+
+    const location = useLocation();
+
+    // Split the pathname
+    const pathSegments = location.pathname.split('/');
+
+    // Get the last segment
+    const productId = pathSegments[pathSegments.length - 1];
+
     const isEditMode = !!productId
+
+
+
+
     const [activeTab, setActiveTab] = useState("basic")
     const [loading, setLoading] = useState(false)
     const [saveSuccess, setSaveSuccess] = useState(false)

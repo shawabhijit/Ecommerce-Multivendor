@@ -543,8 +543,8 @@ export function SellerSignup() {
     }
 
     return (
-        <div className="min-h-screen flex items-center justify-center px-4 py-4 flex-col relative overflow-auto ">
-            <div className="mb-10 w-[60%] absolute top-5">
+        <div className=" flex items-center justify-center px-4 flex-col overflow-y-hidden container min-h-screen">
+            <div className="mb-10 w-[60%] absolute top-10">
                 <Progress value={(step / totalSteps) * 100} className="h-2" />
                 <div className="flex justify-between mt-2 text-sm text-gray-500">
                     <span className={step >= 1 ? "text-primary font-medium" : ""}>Account</span>
@@ -557,7 +557,7 @@ export function SellerSignup() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
-                className="w-full max-w-2xl absolute top-20"
+                className="w-full max-w-2xl absolute top-32"
             >
                 {/* <div className="text-center">
                     <div className="flex justify-center mb-2">

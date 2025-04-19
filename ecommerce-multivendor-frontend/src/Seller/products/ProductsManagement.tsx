@@ -138,7 +138,7 @@ export function ProductManagement() {
                     <p className="text-gray-500">Manage your product inventory and listings</p>
                 </div>
                 <div className="mt-4 md:mt-0">
-                    <Link to="seller/products/add">
+                    <Link to="/seller/products/add">
                         <Button className="flex items-center gap-2">
                             <Plus className="h-4 w-4" /> Add New Product
                         </Button>
@@ -263,7 +263,7 @@ export function ProductManagement() {
                                             <td className="py-3 px-4">{getStatusBadge(product.status, product.stock)}</td>
                                             <td className="py-3 px-4">
                                                 <div className="flex items-center gap-2">
-                                                    <Link to={`/products/edit/${product.id}`}>
+                                                    <Link to={`/seller/product/edit/${product.id}`}>
                                                         <Button variant="ghost" size="icon" className="h-8 w-8">
                                                             <Edit className="h-4 w-4" />
                                                         </Button>

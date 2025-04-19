@@ -2,8 +2,10 @@ import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { Button } from '../../../../../../Components/ui/button';
 import { Store, ChevronRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const VendorCTASection = () => {
+    const navigate = useNavigate();
     const ref = useRef(null);
     const isInView = useInView(ref, { once: true, margin: "-100px" });
 
@@ -71,6 +73,7 @@ const VendorCTASection = () => {
                                 className="inline-block"
                             >
                                 <Button
+                                    onClick={()=>navigate("/seller/login")}
                                     className="bg-white text-[#3571bb] hover:bg-blue-50 cursor-pointer transition-colors py-6 px-8 text-lg font-medium inline-flex items-center gap-2"
                                 >
                                     <Store className="h-5 w-5" />

@@ -110,8 +110,8 @@ const SellerNav = ({ isLogedin }: any) => {
 
                     {/* Desktop Navigation */}
                     {/* <div className="hidden md:flex items-center flex-1 mx-6"> */}
-                    <div>
-                        <nav className="hidden md:flex items-center space-x-5 font-semibold">
+                    <div className='pl-5'>
+                        <nav className="hidden md:flex items-center space-x-5 font-semibold gap-3">
                             {navigation.map((item) => {
                                 return (
                                     <Link
