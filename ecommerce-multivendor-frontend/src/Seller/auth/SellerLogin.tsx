@@ -49,6 +49,7 @@ export function SellerLogin() {
     })
 
     const value = watch("otp")
+    
     const handleSendOtp = () => {
         setSendOtp(true)
         const email = getValues("email")

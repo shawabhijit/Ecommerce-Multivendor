@@ -637,6 +637,7 @@ export function SellerSignup() {
     };
 
     const nextStep = async () => {
+        // this define that all the filds values are provided or not 
         const isValid = await validateStep(step);
 
         if (isValid) {
