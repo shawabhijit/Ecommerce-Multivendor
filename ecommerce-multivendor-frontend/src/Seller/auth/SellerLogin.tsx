@@ -1,51 +1,84 @@
 "use client"
 
-import type React from "react"
-
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { motion } from "framer-motion"
-import { Eye, EyeOff, ShoppingBag } from "lucide-react"
+import { ShoppingBag } from "lucide-react"
+import { useForm } from "react-hook-form"
+import { z } from "zod"
+import { zodResolver } from "@hookform/resolvers/zod"
 
 import { Button } from "../../Components/ui/button"
 import { Input } from "../../Components/ui/input"
 import { Label } from "../../Components/ui/label"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../../Components/ui/card"
-import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from "../../Components/ui/input-otp"
+import { InputOTP, InputOTPSlot } from "../../Components/ui/input-otp"
+import { useAppDispatch, useAppSelecter} from "../../app/Store"
+import { sendLoginOtp, signIn } from "../../app/authSlice/AuthSlice"
+import { sellerLogin } from "../../app/authSlice/sellerAuthSlice"
+
+const formSchema = z.object({
+    email: z.string().min(1, "Email is required").email("Invalid email"),
+    otp: z.string().min(6,"Opt required 6 vlaues.") ,
+})
+
+type FormData = z.infer<typeof formSchema>
 
 export function SellerLogin() {
-    const router = useNavigate();
+    const navigate = useNavigate()
+
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState("")
-    const [showPassword, setShowPassword] = useState(false)
-    const [sendOtp, setSendOtp] = useState(false);
+    const [sendOtp, setSendOtp] = useState(false)
 
-    const [formData, setFormData] = useState({
-        email: "",
-        otp: "",
+    const dispatch = useAppDispatch();
+
+    const {
+        register,
+        handleSubmit,
+        getValues,
+        setValue,
+        watch,
+        formState: { errors },
+    } = useForm<FormData>({
+        resolver: zodResolver(formSchema),
+        defaultValues: {
+            email: "",
+            otp: "",
+        },
     })
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target
-        setFormData((prev) => ({ ...prev, [name]: value }))
+    const value = watch("otp")
+    const handleSendOtp = () => {
+        setSendOtp(true)
+        const email = getValues("email")
+        dispatch(sendLoginOtp({email}))
     }
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault()
+    const onSubmit = async (data: FormData) => {
         setLoading(true)
         setError("")
+
+        const email = data.email;
+        const otp = data.otp
+        console.log(data.email)
+        console.log(data.otp) 
 
         try {
             // Simulate API call
             await new Promise((resolve) => setTimeout(resolve, 1500))
-
-            // In a real app, you would validate credentials with your backend
+            dispatch(sellerLogin({email,otp}))
+            
         } catch (err) {
             setError("An error occurred. Please try again.")
         } finally {
             setLoading(false)
+            setValue("email", "");
+            setValue("otp", "");
         }
     }
+
+    
 
     return (
         <div className="flex items-center justify-center px-4">
@@ -72,55 +105,48 @@ export function SellerLogin() {
                         <CardDescription>Enter your credentials to access your seller dashboard</CardDescription>
                     </CardHeader>
                     <CardContent>
-                        <form onSubmit={handleSubmit} className="space-y-4">
+                        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                             <div className="space-y-2 relative">
                                 <Label htmlFor="email">Email or Phone</Label>
                                 <Input
                                     id="email"
-                                    name="email"
                                     type="text"
                                     placeholder="seller@example.com"
-                                    required
-                                    value={formData.email}
-                                    onChange={handleChange}
+                                    {...register("email")}
                                 />
-                                {
-                                    !sendOtp ? <button onClick={() => setSendOtp(true)} type="button" className="absolute top-7 right-4 text-sm text-[#10B981] hover:text-[#1D4ED8] hover:scale-[1.01] duration-300 cursor-pointer">
-                                        send otp
-                                    </button> : <button onClick={() => setSendOtp(true)} type="button" className="absolute top-7 right-4 text-sm text-[#10B981] hover:text-[#1D4ED8] hover:scale-[1.1] duration-300 cursor-pointer">
-                                        Resent otp
-                                    </button>
-                                }
-                            </div>
-                            {/* <div className="space-y-2">
-                                <div className="flex items-center justify-between">
-                                    <Label htmlFor="password">Password</Label>
-                                    <Link to="/forgot-password" className="text-sm text-primary hover:underline">
-                                        Forgot Password?
-                                    </Link>
-                                </div>
-                                <div className="relative">
-                                    <Input
-                                        id="password"
-                                        name="password"
-                                        type={showPassword ? "text" : "password"}
-                                        placeholder="••••••••"
-                                        required
-                                        value={formData.password}
-                                        onChange={handleChange}
-                                    />
+                                {errors.email && (
+                                    <p className="text-sm text-red-500 mt-1">{errors.email.message}</p>
+                                )}
+
+                                {!sendOtp ? (
                                     <button
+                                        onClick={() => handleSendOtp()}
                                         type="button"
-                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
-                                        onClick={() => setShowPassword(!showPassword)}
+                                        className="absolute top-7 right-4 text-sm text-[#10B981] hover:text-[#1D4ED8] hover:scale-[1.01] duration-300 cursor-pointer"
                                     >
-                                        {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                        Send OTP
                                     </button>
-                                </div>
-                            </div> */}
-                            {
-                                sendOtp && <div className="w-full flex items-center justify-center">
-                                    <InputOTP maxLength={6} className="gap-2">
+                                ) : (
+                                    <button
+                                        onClick={() => {
+                                            setSendOtp(true)
+                                        }}
+                                        type="button"
+                                        className="absolute top-7 right-4 text-sm text-[#10B981] hover:text-[#1D4ED8] hover:scale-[1.1] duration-300 cursor-pointer"
+                                    >
+                                        Resend OTP
+                                    </button>
+                                )}
+                            </div>
+
+                            {sendOtp && (
+                                <div className="w-full flex flex-col justify-center">
+                                    <InputOTP
+                                        maxLength={6}
+                                        className="gap-2"
+                                        value={value}
+                                        onChange={(value) => setValue("otp", value)}
+                                    >
                                         {[...Array(6)].map((_, i) => (
                                             <InputOTPSlot
                                                 key={i}
@@ -129,8 +155,11 @@ export function SellerLogin() {
                                             />
                                         ))}
                                     </InputOTP>
+                                    {errors.otp && (
+                                        <p className="text-sm text-red-500 mt-1">{errors.otp.message}</p>
+                                    )}
                                 </div>
-                            }
+                            )}
 
                             {error && (
                                 <motion.div

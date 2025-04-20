@@ -18,7 +18,7 @@ import SellerIndex from "./Seller/SellerIndex";
 
 function AppWrapper() {
   const location = useLocation();
-  const isLogedin = true;
+  const isLogedin = false;
 
   // Define paths where Navbar should be hidden
   const hideNavbarRoutes = ["/seller/login", "/seller/signup"];
@@ -66,7 +66,7 @@ function AppWrapper() {
           <Route path="payment" element={<UserOrderPayment />} />
           <Route path="confirmation" element={<Confirmation />} />
         </Route>
-        <Route path="/seller/*" element={<SellerIndex isLogedin={isLogedin} />} />
+        <Route path="/seller/*" element={<SellerIndex />} />
       </Routes>
     </>
   );

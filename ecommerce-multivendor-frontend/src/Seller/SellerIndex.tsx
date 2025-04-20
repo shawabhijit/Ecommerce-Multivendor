@@ -5,14 +5,17 @@ import { ProductManagement } from './products/ProductsManagement';
 import { AddEditProduct } from './products/AddEditProducts/SellerAddProduct';
 import SellerEarnings from './earnings/SellerEarnings';
 import SellerAnalytics from './Analytics/SellerAnalytics';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes} from 'react-router-dom';
 import { SellerProfile } from './SellerProfile/SellerProfile';
 import { SellerSignup } from './auth/SellerSignup';
 import { SellerLogin } from './auth/SellerLogin';
+import { useAppSelecter } from '../app/Store';
 
 
 
-const SellerIndex = ({ isLogedin }) => {
+const SellerIndex = () => {
+
+    const isLogedin = useAppSelecter((state) => state.sellers.isLoggedIn);
 
     // Define paths where Navbar should be hidden
     const hideNavbarRoutes = ["/seller/signup", "/seller/login",];
