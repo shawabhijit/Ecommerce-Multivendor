@@ -4,13 +4,15 @@ import { useScroll, useTransform } from 'motion/react';
 import { motion } from "motion/react"
 import { cn } from '../../lib/utils';
 import { Button } from "../../Components/ui/button"
-import { Badge, BarChart3, Bell, CreditCard, Heart, Home, LogOut, Menu, Package, Search, Settings, ShoppingCart, User, X } from 'lucide-react';
-import { Input } from '../../Components/ui/input';
+import { Badge, BarChart3, Bell, CreditCard, Home, LogOut, Menu, Package, Settings, ShoppingCart, User, X } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from "../../Components/ui/avatar"
 
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '../../Components/ui/dropdown-menu';
 import { useTheme } from '../../context/theme-provider';
 import { DarkMode, LightMode } from '@mui/icons-material';
+import { useAppDispatch, useAppSelecter } from '../../app/Store';
+import { logout } from '../../app/authSlice/sellerAuthSlice';
+import { fetchSellerProfile } from '../../app/seller/SellerSlice';
 
 
 const products = [
@@ -30,18 +32,27 @@ const SellerNav = ({ isLogedin }: any) => {
     const { theme, setTheme } = useTheme();
     const isDark = theme === 'dark';
 
+    const navigate = useNavigate();
+    const dispatch = useAppDispatch()
+    const sellerProfile = useAppSelecter((state) => state.fetchSeller.profile)
+
+    console.log('selller Profile info :', sellerProfile )
+
+
     const [isScrolled, setIsScrolled] = useState(false);
     const [isAccountOpen, setIsAccountOpen] = useState(false);
     const [searchValue, setSearchValue] = useState("");
     const [filteredResults, setFilteredResults] = useState<string[]>([]);
-    const [isOpenSearch, setIsOpenSearch] = useState(false);
     const [isOpen, setIsOpen] = useState(false)
-
-    const navigate = useNavigate();
 
     const { scrollY } = useScroll()
     const headerBackground = useTransform(scrollY, [0, 50], [isDark ? "rgba(0, 0, 0, 0.9)" : "rgba(255, 255, 255, 1)", "rgba(255, 255, 255, 1)"])
     const headerShadow = useTransform(scrollY, [0, 50], ["0 0 0 rgba(0, 0, 0, 0)", "0 4px 6px rgba(0, 0, 0, 0.1)"])
+
+    const handleLogout = () => {
+        console.log("Logged out");
+        dispatch(logout())
+    }
 
     useEffect(() => {
         const handleScroll = () => {
@@ -50,7 +61,6 @@ const SellerNav = ({ isLogedin }: any) => {
 
         if (searchValue.trim() === "") {
             setFilteredResults([]);
-            setIsOpenSearch(false);
             return;
         }
 
@@ -58,13 +68,16 @@ const SellerNav = ({ isLogedin }: any) => {
             item.toLowerCase().includes(searchValue.toLowerCase())
         );
         setFilteredResults(filtered);
-        setIsOpenSearch(filtered.length > 0);
 
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
     }, [searchValue]);
 
-
+    useEffect(() => {
+        dispatch(fetchSellerProfile());
+    }, [dispatch])
+    
+    // console.log("Seller Profile fetch suucessfully ,  Response:", response);
 
     const navigation = [
         { name: "Dashboard", href: "/seller", icon: Home },
@@ -144,7 +157,6 @@ const SellerNav = ({ isLogedin }: any) => {
                                                     onClick={() => {
                                                         console.log("Selected:", item);
                                                         setSearchValue(item);
-                                                        setIsOpenSearch(false);
                                                     }}
                                                     key={index}
                                                 >
@@ -174,14 +186,16 @@ const SellerNav = ({ isLogedin }: any) => {
                                                     <Button variant="ghost" size="icon" className="rounded-full">
                                                         <Avatar className="h-8 w-8">
                                                             <AvatarImage src="/placeholder.svg" />
-                                                            <AvatarFallback>SD</AvatarFallback>
+                                                            <AvatarFallback>
+                                                                <img className="h-8 w-8" src={sellerProfile?.businessAddress?.logo} alt="User" />
+                                                            </AvatarFallback>
                                                         </Avatar>
                                                     </Button>
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent align="end" className='w-[200px] absolute left-[-150px] top-2'>
                                                     <DropdownMenuLabel>My Account</DropdownMenuLabel>
                                                     <DropdownMenuSeparator />
-                                                    <DropdownMenuItem>
+                                                    <DropdownMenuItem onClick={() => navigate("/seller/info/1")}>
                                                         <User className="mr-2 h-4 w-4" />
                                                         <span>Profile</span>
                                                     </DropdownMenuItem>
@@ -190,7 +204,7 @@ const SellerNav = ({ isLogedin }: any) => {
                                                         <span>Settings</span>
                                                     </DropdownMenuItem>
                                                     <DropdownMenuSeparator />
-                                                    <DropdownMenuItem onClick={() => navigate("/seller/login")}>
+                                                    <DropdownMenuItem onClick={handleLogout}>
                                                         <LogOut className="mr-2 h-4 w-4" />
                                                         <span>Logout</span>
                                                     </DropdownMenuItem>

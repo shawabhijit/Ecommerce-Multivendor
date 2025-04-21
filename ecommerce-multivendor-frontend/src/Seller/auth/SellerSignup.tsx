@@ -19,9 +19,9 @@ import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "../../
 
 // Define schema for each step - using schema objects directly without .refine()
 const accountSchemaFields = {
-    fullName: z.string().min(2, { message: "Full name must be at least 2 characters" }),
+    sellerName: z.string().min(2, { message: "Full name must be at least 2 characters" }),
     email: z.string().email({ message: "Please enter a valid email" }),
-    phone: z.string().min(10, { message: "Please enter a valid phone number" }),
+    mobile: z.string().min(10, { message: "Please enter a valid phone number" }),
     password: z.string().min(8, { message: "Password must be at least 8 characters" }),
     confirmPassword: z.string()
 }
@@ -36,13 +36,13 @@ const accountSchema = z.object(accountSchemaFields).refine(
 const businessSchemaFields = {
     businessName: z.string().min(2, { message: "Business name is required" }),
     businessEmail: z.string().email({ message: "Please enter a valid email" }),
-    businessPhone: z.string().min(10, { message: "Please enter a valid phone number" }),
-    address: z.string().min(3, { message: "Address is required" }),
+    businessMobile: z.string().min(10, { message: "Please enter a valid phone number" }),
+    businessAddress: z.string().min(3, { message: "Address is required" }),
     city: z.string().min(2, { message: "City is required" }),
     state: z.string().min(2, { message: "State is required" }),
-    zipCode: z.string().min(5, { message: "Zip code is required" }),
+    businessZipCode: z.string().min(5, { message: "Zip code is required" }),
     businessType: z.string().min(1, { message: "Please select a business type" }),
-    gstin: z.string().optional(),
+    businessGstIn: z.string().optional(),
     logo: z.any().optional(),
     banner: z.any().optional()
 };
@@ -54,18 +54,19 @@ const verificationSchemaFields = {
     ifscCode: z.string().min(1, { message: "IFSC code is required" }),
     accountHolderName: z.string().min(1, { message: "Account holder name is required" }),
     panCard: z.any().optional(),
-    gstCertificate: z.any().optional()
+    GstCertificate: z.any().optional()
 };
 
 const verificationSchema = z.object(verificationSchemaFields);
 
 const pickupAddressSchemaFields = {
-    pickupBusinessName: z.string().min(2, { message: "Business name is required" }),
+    name: z.string().min(2, { message: "Business name is required" }),
     locality: z.string().min(2, { message: "Locality is required" }),
-    pickupPhone: z.string().min(10, { message: "Please enter a valid phone number" }),
-    pickupAddress: z.string().min(3, { message: "Address is required" }),
-    pickupCity: z.string().min(2, { message: "City is required" }),
-    pickupState: z.string().min(2, { message: "State is required" }),
+    mobilePickup: z.string().min(10, { message: "Please enter a valid phone number" }),
+    address: z.string().min(3, { message: "Address is required" }),
+    cityPickup: z.string().min(2, { message: "City is required" }),
+    statePickup: z.string().min(2, { message: "State is required" }),
+    pinCode: z.string().min(5, { message: "Pin code is required" }),
     pickupZipCode: z.string().min(5, { message: "Zip code is required" })
 };
 
@@ -95,7 +96,7 @@ const AccountFormFields = () => {
         >
             <FormField
                 control={control}
-                name="fullName"
+                name="sellerName"
                 render={({ field }) => (
                     <FormItem className="space-y-2">
                         <FormLabel>Full Name</FormLabel>
@@ -123,7 +124,7 @@ const AccountFormFields = () => {
 
             <FormField
                 control={control}
-                name="phone"
+                name="mobile"
                 render={({ field }) => (
                     <FormItem className="space-y-2 relative">
                         <FormLabel>Phone</FormLabel>
@@ -274,7 +275,7 @@ const BusinessFormFields = () => {
 
                 <FormField
                     control={control}
-                    name="businessPhone"
+                    name="businessMobile"
                     render={({ field }) => (
                         <FormItem className="space-y-2">
                             <FormLabel>Business Mobile</FormLabel>
@@ -289,7 +290,7 @@ const BusinessFormFields = () => {
 
             <FormField
                 control={control}
-                name="address"
+                name="businessAddress"
                 render={({ field }) => (
                     <FormItem className="space-y-2">
                         <FormLabel>Business Address</FormLabel>
@@ -334,7 +335,7 @@ const BusinessFormFields = () => {
             <div className="grid grid-cols-2 gap-4">
                 <FormField
                     control={control}
-                    name="zipCode"
+                    name="businessZipCode"
                     render={({ field }) => (
                         <FormItem className="space-y-2">
                             <FormLabel>Zip Code</FormLabel>
@@ -373,7 +374,7 @@ const BusinessFormFields = () => {
 
             <FormField
                 control={control}
-                name="gstin"
+                name="businessGstIn"
                 render={({ field }) => (
                     <FormItem className="space-y-2">
                         <FormLabel>GSTIN (optional)</FormLabel>
@@ -391,7 +392,7 @@ const BusinessFormFields = () => {
 const VerificationFormFields = () => {
     const { control, register, watch } = useFormContext<FormValues>();
     const panCard = watch("panCard");
-    const gstCertificate = watch("gstCertificate");
+    const gstCertificate = watch("GstCertificate");
 
     return (
         <motion.div
@@ -488,7 +489,7 @@ const VerificationFormFields = () => {
                                 id="gstCertificate"
                                 type="file"
                                 className="hidden"
-                                {...register("gstCertificate")}
+                                {...register("GstCertificate")}
                             />
                             <Button
                                 type="button"
@@ -526,7 +527,7 @@ const PickupAddressFormFields = () => {
         >
             <FormField
                 control={control}
-                name="pickupBusinessName"
+                name="name"
                 render={({ field }) => (
                     <FormItem className="space-y-2">
                         <FormLabel>Business Name</FormLabel>
@@ -555,7 +556,7 @@ const PickupAddressFormFields = () => {
 
                 <FormField
                     control={control}
-                    name="pickupPhone"
+                    name="mobilePickup"
                     render={({ field }) => (
                         <FormItem className="space-y-2">
                             <FormLabel>Business Mobile</FormLabel>
@@ -570,7 +571,7 @@ const PickupAddressFormFields = () => {
 
             <FormField
                 control={control}
-                name="pickupAddress"
+                name="address"
                 render={({ field }) => (
                     <FormItem className="space-y-2">
                         <FormLabel>Business Address</FormLabel>
@@ -585,7 +586,7 @@ const PickupAddressFormFields = () => {
             <div className="grid grid-cols-2 gap-4">
                 <FormField
                     control={control}
-                    name="pickupCity"
+                    name="cityPickup"
                     render={({ field }) => (
                         <FormItem className="space-y-2">
                             <FormLabel>City</FormLabel>
@@ -599,7 +600,7 @@ const PickupAddressFormFields = () => {
 
                 <FormField
                     control={control}
-                    name="pickupState"
+                    name="statePickup"
                     render={({ field }) => (
                         <FormItem className="space-y-2">
                             <FormLabel>State</FormLabel>
@@ -639,32 +640,40 @@ export function SellerSignup() {
         resolver: zodResolver(formSchema),
         mode: "onChange",
         defaultValues: {
-            fullName: "",
+            sellerName: "",
             email: "",
-            phone: "",
             password: "",
-            confirmPassword: "",
+            mobile: "",
+
+            // Business Details
             businessName: "",
-            banner:"",
-            logo:"",
             businessEmail: "",
-            businessPhone: "",
-            address: "",
+            businessMobile: "",
+            businessAddress: "",
+            businessZipCode: "",
+            businessType: "",
+            businessGstIn: "",
+            logo: "",
+            banner: "",
             city: "",
             state: "",
-            zipCode: "",
-            businessType: "",
-            gstin: "",
+
+            // Bank Details
             accountNumber: "",
-            ifscCode: "",
             accountHolderName: "",
-            pickupBusinessName: "",
+            ifscCode: "",
+            panCard: "",
+            GstCertificate: "",
+
+            // Pickup Address
+            name: "",
             locality: "",
-            pickupPhone: "",
-            pickupAddress: "",
-            pickupCity: "",
-            pickupState: "",
-            pickupZipCode: ""
+            address: "",
+            cityPickup: "",
+            statePickup: "",
+            pinCode: "",
+            mobilePickup: "",
+            pickupZipCode: "",
         }
     });
 

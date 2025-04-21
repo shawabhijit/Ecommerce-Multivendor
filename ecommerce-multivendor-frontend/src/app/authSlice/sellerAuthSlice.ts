@@ -7,34 +7,44 @@ interface LoginRequest {
     otp: string;
 }
 
-interface SigninRequest {
-    fullName: string; //
-    email: string; //
-    phone: string; //
-    password: string; //
-    confirmPassword: string;  // dont need 
-    businessName: string; //
-    logo:string; //
-    banner:string; //
-    businessEmail: string; //
-    businessPhone: string; //
-    address: string; //
-    city: string; //
-    state: string; //
-    zipCode: string; //
-    businessType: string; //
-    gstin: string; //
-    accountNumber: string; //
-    ifscCode: string; //
-    accountHolderName: string; //
-    pickupBusinessName: string; //
-    locality: string; //
-    pickupPhone: string;
-    pickupAddress: string; //
-    pickupCity: string; //
-    pickupState: string; //
-    pickupZipCode:string; //
+export interface SellerSignupRequest {
+    // Seller Info
+    sellerName: string;
+    email: string;
+    password: string;
+    mobile: string;
+
+    // Business Details
+    businessName: string;
+    businessEmail: string;
+    businessMobile: string;
+    businessAddress: string;
+    businessZipCode: string;
+    businessType: string;
+    businessGstIn: string;
+    logo: string;
+    banner: string;
+    city: string;
+    state: string;
+
+    // Bank Details
+    accountNumber: string;
+    accountHolderName: string;
+    ifscCode: string;
+    panCard: string;
+    GstCertificate: string | null;
+
+    // Pickup Address
+    name: string;
+    locality: string;
+    address: string;
+    cityPickup: string;      
+    statePickup: string;     
+    pinCode: string;
+    mobilePickup: string; 
+    pickupZipCode: string;
 }
+
 
 export const sellerLogin = createAsyncThunk("/sellers/sellerLogin", async (loginRequest: LoginRequest, { rejectWithValue }) => {
     try {
@@ -51,7 +61,7 @@ export const sellerLogin = createAsyncThunk("/sellers/sellerLogin", async (login
 })
 
 
-export const sellerSignin = createAsyncThunk("/sellers/sellerSignin", async (signinRequest:SigninRequest, { rejectWithValue }) => {
+export const sellerSignin = createAsyncThunk("/sellers/sellerSignin", async (signinRequest: SellerSignupRequest, { rejectWithValue }) => {
     try {
         const response = await api.post("/sellers/create", signinRequest);
         console.log('response: ', response.data)

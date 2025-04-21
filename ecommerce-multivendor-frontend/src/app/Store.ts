@@ -3,6 +3,7 @@ import {TypedUseSelectorHook, useDispatch, useSelector} from "react-redux"
 import sellerLoginReducer from "./authSlice/sellerAuthSlice"
 import storage from "redux-persist/lib/storage"
 import { persistStore , persistReducer } from "redux-persist"
+import sellerSlice from "./seller/SellerSlice"
 
 
 const persistConfig = {
@@ -12,7 +13,8 @@ const persistConfig = {
 }
 
 const rootReducer = combineReducers({
-    sellers : sellerLoginReducer
+    sellers : sellerLoginReducer,
+    fetchSeller : sellerSlice
 }) 
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)
