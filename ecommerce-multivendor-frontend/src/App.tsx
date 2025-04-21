@@ -14,6 +14,9 @@ import Index from "./Customer/Components/Pages/Home/Index";
 import { ThemeProvider } from "./context/theme-provider";
 import { use, useEffect, useState } from "react";
 import SellerIndex from "./Seller/SellerIndex";
+import { Provider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
+import store, { persistor } from "./app/Store";
 // import { QueryClientProvider } from "@tanstack/react-query";
 
 function AppWrapper() {
@@ -75,11 +78,15 @@ function AppWrapper() {
 function App() {
   return (
     // <QueryClientProvider>
-    <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
-      <BrowserRouter>
-        <AppWrapper />
-      </BrowserRouter>
-    </ThemeProvider>
+    <Provider store={store}>
+      <PersistGate loading={<div className="w-full h-[100vh] flex items-center justify-center">Loading...</div>} persistor={persistor}>
+        <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
+          <BrowserRouter>
+            <AppWrapper />
+          </BrowserRouter>
+        </ThemeProvider>
+      </PersistGate>
+    </Provider>
     // </QueryClientProvider>
   );
 }

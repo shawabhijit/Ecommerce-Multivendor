@@ -25,10 +25,9 @@ const formSchema = z.object({
 type FormData = z.infer<typeof formSchema>
 
 export function SellerLogin() {
+    const { isLoggedIn, loading: storeLoading, error: storeError } = useAppSelecter((state) => state.sellers);
+    const navigate = useNavigate();
     // const isLogedin = useAppSelecter((state) => state.sellers.isLoggedIn);
-    const {sellers} = useAppSelecter((store) => store);
-    const navigate = useNavigate()
-
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState("")
     const [sendOtp, setSendOtp] = useState(false)
@@ -71,7 +70,7 @@ export function SellerLogin() {
             // Simulate API call
             await new Promise((resolve) => setTimeout(resolve, 1500))
             dispatch(sellerLogin({email,otp}))
-            console.log('first', sellers.isLoggedIn);
+            console.log('Logged In :', isLoggedIn);
         } catch (err) {
             setError("An error occurred. Please try again.")
         } finally {
@@ -81,11 +80,12 @@ export function SellerLogin() {
         }
     }
 
-    // useEffect(()=> {
-    //     if (isLogedin.sellers.isLoggedIn) {
-    //         navigate("/seller/")
-    //     }
-    // },[isLogedin.sellers.isLoggedIn])
+    useEffect(() => {
+        if (isLoggedIn) {
+            // Redirect to dashboard or appropriate page
+            navigate('/seller/');
+        }
+    }, [isLoggedIn, navigate]);
 
     return (
         <div className="flex items-center justify-center px-4">
