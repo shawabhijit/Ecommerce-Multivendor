@@ -169,7 +169,9 @@ const AccountFormFields = () => {
 };
 
 const BusinessFormFields = () => {
-    const { control } = useFormContext<FormValues>();
+    const { control, watch, register } = useFormContext<FormValues>();
+    const logo = watch("logo");
+    const banner = watch("banner")
 
     return (
         <motion.div
@@ -180,16 +182,65 @@ const BusinessFormFields = () => {
             className="space-y-4"
         >
             <div className="flex gap-4">
-                <ImageUploader
-                    label="Add Logo"
-                    placeholderUrl="/logo-placeholder.png"
-                // We'd need to integrate this with react-hook-form
-                />
-                <ImageUploader
-                    label="Add Banner"
-                    placeholderUrl="/banner-placeholder.jpg"
-                // We'd need to integrate this with react-hook-form
-                />
+                
+                    <div className="border rounded-lg p-3 bg-gray-50">
+                        <Label htmlFor="logo" className="text-sm font-medium">
+                            PAN Card
+                        </Label>
+                        <div className="mt-1 items-center gap-2">
+                            <input
+                                id="logo"
+                                type="file"
+                                className="hidden"
+                                // value={logo as string}
+                                {...register("logo")}
+                            />
+                            <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                onClick={() => document.getElementById("logo")?.click()}
+                                className="flex items-center gap-2"
+                            >
+                                <Upload size={16} />
+                                {logo?.[0]?.name ? "Change File" : "Upload File"}
+                            </Button>
+                            {logo?.[0]?.name && (
+                                <span className="text-sm text-green-600 flex items-center gap-1">
+                                    <CheckCircle size={14} /> {logo[0].name}
+                                </span>
+                            )}
+                        </div>
+                    </div>
+                    <div className="border rounded-lg p-3 bg-gray-50">
+                        <Label htmlFor="banner" className="text-sm font-medium">
+                            GST Certificate (if applicable)
+                        </Label>
+                        <div className="mt-1 items-center gap-2">
+                            <input
+                                id="banner"
+                                type="file"
+                                className="hidden"
+                                // value={banner as string}
+                                {...register("banner")}
+                            />
+                            <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                onClick={() => document.getElementById("banner")?.click()}
+                                className="flex items-center gap-2"
+                            >
+                                <Upload size={16} />
+                                {banner?.[0]?.name ? "Change File" : "Upload File"}
+                            </Button>
+                            {banner?.[0]?.name && (
+                                <span className="text-sm text-green-600 flex items-center gap-1">
+                                    <CheckCircle size={14} /> {banner[0].name}
+                                </span>
+                            )}
+                        </div>
+                    </div>
             </div>
 
             <FormField
@@ -594,6 +645,8 @@ export function SellerSignup() {
             password: "",
             confirmPassword: "",
             businessName: "",
+            banner:"",
+            logo:"",
             businessEmail: "",
             businessPhone: "",
             address: "",

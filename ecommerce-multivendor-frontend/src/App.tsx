@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
+import { BrowserRouter, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import NotFound from "./Components/Pages/NotFoundPage/NotFound";
 import ProductsPage from "./Customer/Components/Pages/Products/ProductsPage";
 import ProductDetailsWrapper from "./Customer/Components/Pages/ProductDetails/ProductDetailsWrapper";
@@ -12,13 +12,13 @@ import UserOrderPayment from "./Customer/Components/Pages/CartPage/UserOrderPaym
 import Confirmation from "./Customer/Components/Pages/CartPage/Confirmation";
 import Index from "./Customer/Components/Pages/Home/Index";
 import { ThemeProvider } from "./context/theme-provider";
-import { useEffect } from "react";
+import { use, useEffect, useState } from "react";
 import SellerIndex from "./Seller/SellerIndex";
 // import { QueryClientProvider } from "@tanstack/react-query";
 
 function AppWrapper() {
   const location = useLocation();
-  const isLogedin = false;
+  const [isLogedin , setIslogedin ]= useState(false);
 
   // Define paths where Navbar should be hidden
   const hideNavbarRoutes = ["/seller/login", "/seller/signup"];
