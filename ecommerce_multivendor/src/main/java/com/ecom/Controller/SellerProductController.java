@@ -30,10 +30,11 @@ public class SellerProductController {
         return ResponseEntity.ok().body(products);
     }
 
-    @PostMapping()
+    @PostMapping("/create")
     public ResponseEntity<?> createProduct (
             @RequestBody CreateProductRequest createProductRequest,
-            @RequestHeader("Authorization") String jwt
+//            @RequestHeader("Authorization") String jwt
+            @CookieValue(name = "jwt" , required = false) String jwt
     ) throws ProductException, SellerException {
 
         SellerEntity seller = sellerService.getSellerProfile(jwt);

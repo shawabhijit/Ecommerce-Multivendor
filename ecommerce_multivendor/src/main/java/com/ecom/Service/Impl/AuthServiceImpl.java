@@ -17,6 +17,7 @@ import com.ecom.Service.AuthService;
 import com.ecom.Service.EmailService;
 import com.ecom.Utils.OtpUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.Cookie;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -77,10 +78,10 @@ public class AuthServiceImpl implements AuthService {
 
         String otp = OtpUtil.generateOtp();
 
-        VerificationCode verificationCode = new VerificationCode();
-        verificationCode.setEmail(email);
-        verificationCode.setOtp(otp);
-        verificationCodeRepo.save(verificationCode);
+        VerificationCode code = new VerificationCode();
+        code.setEmail(email);
+        code.setOtp(otp);
+        verificationCodeRepo.save(code);
 
         String sub = "Login / Sign up OTP For Your HikariHub! ";
         String text = "We’re excited to welcome you back! To ensure a safe login, use the following OTP:" + otp;

@@ -8,6 +8,8 @@ import com.ecom.Response.ApiResponse;
 import com.ecom.Response.AuthResponse;
 import com.ecom.Response.SignUpRequest;
 import com.ecom.Service.AuthService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,26 +37,35 @@ public class AuthController {
         return ResponseEntity.ok().body(authResponse);
     }
 
-    @PostMapping("/signup/sent_otp")
+    @PostMapping("/signup/sent-otp")
     public ResponseEntity<?> sentOtpHandler (@RequestBody LoginOtpRequest req) throws Exception {
+
+        System.out.println(req.getEmail());
 
         authService.sentLoginOtp(req.getEmail(),req.getRole());
 
         ApiResponse authResponse = new ApiResponse();
-        authResponse.setMessage("register success.");
+        authResponse.setMessage("Otp Sent Successfully.");
 
 
         return ResponseEntity.ok().body(authResponse);
     }
 
     @PostMapping("/signing")
-    public ResponseEntity<?> loginHandler (@RequestBody LoginRequest req) throws Exception {
+    public ResponseEntity<?> loginHandler (@RequestBody LoginRequest req , HttpServletResponse response) throws Exception {
 
-        AuthResponse response = authService.signing(req);
+        System.out.println(req.getEmail());
 
-        return ResponseEntity.ok().body(response);
+        AuthResponse auth = authService.signing(req);
+
+        Cookie cookie = new Cookie("jwt", auth.getToken());
+        cookie.setPath("/");
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
+        cookie.setMaxAge((24 * 60 * 60)*2);   // 2 day
+
+        response.addCookie(cookie);
+
+        return ResponseEntity.ok().body(auth);
     }
-
-
-
 }

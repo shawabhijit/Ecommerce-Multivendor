@@ -20,14 +20,16 @@ public class SellerEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String sellerName;
+    private String fullName;
 
     @Column(nullable = false , unique = true)
     private String email;
 
     private String password;
 
-    private String mobile;
+    private String confirmPassword;
+
+    private String phone;
 
     @Embedded
     private BusinessDetails businessDetails = new BusinessDetails();

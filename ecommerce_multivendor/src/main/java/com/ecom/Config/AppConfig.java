@@ -18,6 +18,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -30,6 +31,7 @@ public class AppConfig {
                 management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(requests ->
                         requests.requestMatchers(new AntPathRequestMatcher("/api/**")).authenticated()
+                                .requestMatchers(new AntPathRequestMatcher("/seller/**")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/api/products/*/reviews")).permitAll()
                                 .anyRequest().permitAll()
                 ).csrf(AbstractHttpConfigurer::disable)
@@ -44,11 +46,11 @@ public class AppConfig {
             @Override
             public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
                 CorsConfiguration config = new CorsConfiguration();
-                config.setAllowedOrigins(Collections.singletonList("*"));
+                config.setAllowedOrigins(List.of("http://localhost:5173"));
                 config.setAllowedMethods(Collections.singletonList("*"));
                 config.setAllowedHeaders(Collections.singletonList("*"));
                 config.setAllowCredentials(true);
-                config.setExposedHeaders(Collections.singletonList("Authorization"));
+                config.setExposedHeaders(List.of("Authorization", "Cache-Control", "Content-Type"));
                 config.setMaxAge(3600L);
                 return config;
             }

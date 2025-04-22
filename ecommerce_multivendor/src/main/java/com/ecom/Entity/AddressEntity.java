@@ -17,17 +17,19 @@ public class AddressEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private String name;
+    private String pickupBusinessName;
 
     private String locality;
 
-    private String address;
+    private String pickupAddress;
 
-    private String city;
+    private String pickupCity;
 
-    private String state;
+    private String pickupState;
 
     private String pinCode;
 
-    private String mobile;
+    private String pickupPhone;
+
+    private String pickupZipCode;
 }

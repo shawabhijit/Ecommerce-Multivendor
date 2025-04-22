@@ -6,8 +6,11 @@ import lombok.Data;
 public class BusinessDetails {
     private String businessName;
     private String businessEmail;
-    private String businessMobile;
-    private String businessAddress;
-    private String logo;
-    private String banner;
+    private String businessPhone;
+    private String address;
+    private String zipCode;
+    private String businessType;
+    private String gstin;
+    private String city;
+    private String state;
 }

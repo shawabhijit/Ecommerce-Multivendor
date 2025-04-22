@@ -46,10 +46,10 @@ public class SellerServiceImpl implements SellerService {
         SellerEntity newSeller = new SellerEntity();
         newSeller.setEmail(seller.getEmail());
         newSeller.setPassword(passwordEncoder.encode(seller.getPassword()));
-        newSeller.setSellerName(seller.getSellerName());
+        newSeller.setFullName(seller.getFullName());
+        newSeller.setPhone(seller.getPhone());
         newSeller.setPickupAddress(address);
         newSeller.setRole(UserRole.ROLE_SELLER);
-        newSeller.setMobile(seller.getMobile());
         newSeller.setBankDetails(seller.getBankDetails());
         newSeller.setBusinessDetails(seller.getBusinessDetails());
 
@@ -80,11 +80,11 @@ public class SellerServiceImpl implements SellerService {
     public SellerEntity updateSeller(Long id, SellerEntity seller) throws SellerException {
         SellerEntity oldSeller = this.getSellerById(id);
 
-        if (seller.getSellerName() != null) {
-            oldSeller.setSellerName(seller.getSellerName());
+        if (seller.getFullName() != null) {
+            oldSeller.setFullName(seller.getFullName());
         }
-        if (seller.getMobile() != null) {
-            oldSeller.setMobile(seller.getMobile());
+        if (seller.getPhone() != null) {
+            oldSeller.setPhone(seller.getPhone());
         }
         if (seller.getEmail() != null) {
             oldSeller.setEmail(seller.getEmail());
@@ -105,17 +105,17 @@ public class SellerServiceImpl implements SellerService {
         }
 
         if (seller.getPickupAddress() != null
-                && seller.getPickupAddress().getCity() != null
-                && seller.getPickupAddress().getState() != null
-                && seller.getPickupAddress().getAddress() != null
-                && seller.getPickupAddress().getMobile() != null
+                && seller.getPickupAddress().getPickupCity() != null
+                && seller.getPickupAddress().getPickupState() != null
+                && seller.getPickupAddress().getPickupAddress() != null
+                && seller.getPickupAddress().getPickupPhone() != null
                 && seller.getPickupAddress().getPinCode() != null
         ) {
-            oldSeller.getPickupAddress().setCity(seller.getPickupAddress().getCity());
-            oldSeller.getPickupAddress().setState(seller.getPickupAddress().getState());
-            oldSeller.getPickupAddress().setAddress(seller.getPickupAddress().getAddress());
-            oldSeller.getPickupAddress().setMobile(seller.getPickupAddress().getMobile());
-            oldSeller.getPickupAddress().setPinCode(seller.getPickupAddress().getPinCode());
+            oldSeller.getPickupAddress().setPickupCity(seller.getPickupAddress().getPickupCity());
+            oldSeller.getPickupAddress().setPickupState(seller.getPickupAddress().getPickupState());
+            oldSeller.getPickupAddress().setPickupAddress(seller.getPickupAddress().getPickupAddress());
+            oldSeller.getPickupAddress().setPickupPhone(seller.getPickupAddress().getPickupPhone());
+            oldSeller.getPickupAddress().setPickupZipCode(seller.getPickupAddress().getPickupZipCode());
         }
 
         return sellerRepo.save(oldSeller);

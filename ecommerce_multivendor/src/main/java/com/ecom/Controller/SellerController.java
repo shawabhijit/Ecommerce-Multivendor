@@ -16,6 +16,8 @@ import com.ecom.Service.SellerReportService;
 import com.ecom.Service.SellerService;
 import com.ecom.Utils.OtpUtil;
 import jakarta.mail.MessagingException;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +39,7 @@ public class SellerController {
 
 
     @PostMapping("/login")
-    public ResponseEntity<?> loginSeller (@RequestBody LoginRequest request) throws Exception {
+    public ResponseEntity<?> loginSeller (@RequestBody LoginRequest request , HttpServletResponse res) throws Exception {
 
         String otp = request.getOtp();
         String email = request.getEmail();
@@ -49,6 +51,14 @@ public class SellerController {
 //        }
         request.setEmail("seller_" + email);
         AuthResponse authResponse = authService.signing(request);
+
+        Cookie sellerCookie = new Cookie("jwt", authResponse.getToken());
+        sellerCookie.setPath("/");
+        sellerCookie.setHttpOnly(true);
+        sellerCookie.setSecure(false);
+        sellerCookie.setMaxAge((24 * 60 * 60)*2);   // 2 day
+
+        res.addCookie(sellerCookie);
 
         return ResponseEntity.ok().body(authResponse);
 
@@ -67,7 +77,7 @@ public class SellerController {
         return ResponseEntity.ok().body(seller);
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<?> createSeller (@RequestBody SellerEntity seller) throws SellerException , MessagingException {
 
         SellerEntity savedSeller = sellerService.createSeller(seller);
@@ -94,7 +104,10 @@ public class SellerController {
     }
 
     @GetMapping("/profile")
-    public ResponseEntity<?> getSellerByJwt (@RequestHeader("Authorization") String jwt) throws SellerException {
+    public ResponseEntity<?> getSellerByJwt (@CookieValue(name = "jwt" , required = false) String jwt) throws SellerException {
+        if (jwt == null || jwt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("JWT token is missing");
+        }
         SellerEntity seller = sellerService.getSellerProfile(jwt);
         return ResponseEntity.ok().body(seller);
     }
