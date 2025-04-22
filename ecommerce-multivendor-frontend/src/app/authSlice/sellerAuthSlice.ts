@@ -8,41 +8,36 @@ interface LoginRequest {
 }
 
 export interface SellerSignupRequest {
-    // Seller Info
-    sellerName: string;
-    email: string;
-    password: string;
-    mobile: string;
-
-    // Business Details
-    businessName: string;
-    businessEmail: string;
-    businessMobile: string;
-    businessAddress: string;
-    businessZipCode: string;
-    businessType: string;
-    businessGstIn: string;
-    logo: string;
-    banner: string;
-    city: string;
-    state: string;
-
-    // Bank Details
-    accountNumber: string;
-    accountHolderName: string;
-    ifscCode: string;
-    panCard: string;
-    GstCertificate: string | null;
-
-    // Pickup Address
-    name: string;
-    locality: string;
-    address: string;
-    cityPickup: string;      
-    statePickup: string;     
-    pinCode: string;
-    mobilePickup: string; 
-    pickupZipCode: string;
+    fullName: string; //
+    email: string; //
+    phone: string; //
+    password: string; //
+    confirmPassword: string;  // dont need 
+    businessDetails: {
+        businessName: string; //
+        businessEmail: string; //
+        businessPhone: string; //
+        address: string; //
+        city: string; //
+        state: string; //
+        zipCode: string; //
+        businessType: string; //
+        gstin?: string | undefined; //
+    },
+    bankDetails : {
+        accountNumber: string; //
+        ifscCode: string; //
+        accountHolderName: string; //
+    }
+    pickupAddress : {
+        pickupBusinessName: string; //
+        locality: string; //
+        pickupPhone: string;
+        pickupAddress: string; //
+        pickupCity: string; //
+        pickupState: string; //
+        pickupZipCode: string; //
+    }
 }
 
 
@@ -65,6 +60,7 @@ export const sellerSignin = createAsyncThunk("/sellers/sellerSignin", async (sig
     try {
         const response = await api.post("/sellers/create", signinRequest);
         console.log('response: ', response.data)
+        return response.data;
     }
     catch (error) {
         console.log('sign in error :', error)
@@ -131,7 +127,7 @@ const sellerLoginSlice = createSlice({
                 state.error = null;
                 // You might want to auto-login after signup or not
                 // state.isLoggedIn = true;
-                // state.selectedSeller = action.payload;
+                state.selectedSeller = action.payload;
             })
             .addCase(sellerSignin.rejected, (state, action) => {
                 state.loading = false;

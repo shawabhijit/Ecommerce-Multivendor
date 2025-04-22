@@ -14,14 +14,15 @@ import { Label } from "../../Components/ui/label"
 import { Card, CardContent, CardFooter} from "../../Components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../Components/ui/select"
 import { Progress } from "../../Components/ui/progress"
-import { ImageUploader } from "../../Components/Pages/ImageUploader/ImageUploader"
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "../../Components/ui/form"
+import { useAppDispatch, useAppSelecter } from "../../app/Store"
+import { sellerSignin } from "../../app/authSlice/sellerAuthSlice"
 
 // Define schema for each step - using schema objects directly without .refine()
 const accountSchemaFields = {
-    sellerName: z.string().min(2, { message: "Full name must be at least 2 characters" }),
+    fullName: z.string().min(2, { message: "Full name must be at least 2 characters" }),
     email: z.string().email({ message: "Please enter a valid email" }),
-    mobile: z.string().min(10, { message: "Please enter a valid phone number" }),
+    phone: z.string().min(10, { message: "Please enter a valid phone number" }),
     password: z.string().min(8, { message: "Password must be at least 8 characters" }),
     confirmPassword: z.string()
 }
@@ -36,15 +37,13 @@ const accountSchema = z.object(accountSchemaFields).refine(
 const businessSchemaFields = {
     businessName: z.string().min(2, { message: "Business name is required" }),
     businessEmail: z.string().email({ message: "Please enter a valid email" }),
-    businessMobile: z.string().min(10, { message: "Please enter a valid phone number" }),
-    businessAddress: z.string().min(3, { message: "Address is required" }),
+    businessPhone: z.string().min(10, { message: "Please enter a valid phone number" }),
+    address: z.string().min(3, { message: "Address is required" }),
     city: z.string().min(2, { message: "City is required" }),
     state: z.string().min(2, { message: "State is required" }),
-    businessZipCode: z.string().min(5, { message: "Zip code is required" }),
+    zipCode: z.string().min(5, { message: "Zip code is required" }),
     businessType: z.string().min(1, { message: "Please select a business type" }),
-    businessGstIn: z.string().optional(),
-    logo: z.any().optional(),
-    banner: z.any().optional()
+    gstin: z.string().optional(),
 };
 
 const businessSchema = z.object(businessSchemaFields);
@@ -53,20 +52,17 @@ const verificationSchemaFields = {
     accountNumber: z.string().min(1, { message: "Account number is required" }),
     ifscCode: z.string().min(1, { message: "IFSC code is required" }),
     accountHolderName: z.string().min(1, { message: "Account holder name is required" }),
-    panCard: z.any().optional(),
-    GstCertificate: z.any().optional()
 };
 
 const verificationSchema = z.object(verificationSchemaFields);
 
 const pickupAddressSchemaFields = {
-    name: z.string().min(2, { message: "Business name is required" }),
+    pickupBusinessName: z.string().min(2, { message: "Business name is required" }),
     locality: z.string().min(2, { message: "Locality is required" }),
-    mobilePickup: z.string().min(10, { message: "Please enter a valid phone number" }),
-    address: z.string().min(3, { message: "Address is required" }),
-    cityPickup: z.string().min(2, { message: "City is required" }),
-    statePickup: z.string().min(2, { message: "State is required" }),
-    pinCode: z.string().min(5, { message: "Pin code is required" }),
+    pickupPhone: z.string().min(10, { message: "Please enter a valid phone number" }),
+    pickupAddress: z.string().min(3, { message: "Address is required" }),
+    pickupCity: z.string().min(2, { message: "City is required" }),
+    pickupState: z.string().min(2, { message: "State is required" }),
     pickupZipCode: z.string().min(5, { message: "Zip code is required" })
 };
 
@@ -96,7 +92,7 @@ const AccountFormFields = () => {
         >
             <FormField
                 control={control}
-                name="sellerName"
+                name="fullName"
                 render={({ field }) => (
                     <FormItem className="space-y-2">
                         <FormLabel>Full Name</FormLabel>
@@ -124,12 +120,12 @@ const AccountFormFields = () => {
 
             <FormField
                 control={control}
-                name="mobile"
+                name="phone"
                 render={({ field }) => (
                     <FormItem className="space-y-2 relative">
                         <FormLabel>Phone</FormLabel>
                         <FormControl>
-                            <Input placeholder="+1 (555) 000-0000" {...field} />
+                            <Input placeholder="+91 10-digits number" {...field} />
                         </FormControl>
                         <FormMessage />
                     </FormItem>
@@ -171,8 +167,6 @@ const AccountFormFields = () => {
 
 const BusinessFormFields = () => {
     const { control, watch, register } = useFormContext<FormValues>();
-    const logo = watch("logo");
-    const banner = watch("banner")
 
     return (
         <motion.div
@@ -182,68 +176,6 @@ const BusinessFormFields = () => {
             transition={{ duration: 0.3 }}
             className="space-y-4"
         >
-            <div className="flex gap-4">
-                
-                    <div className="border rounded-lg p-3 bg-gray-50">
-                        <Label htmlFor="logo" className="text-sm font-medium">
-                            PAN Card
-                        </Label>
-                        <div className="mt-1 items-center gap-2">
-                            <input
-                                id="logo"
-                                type="file"
-                                className="hidden"
-                                // value={logo as string}
-                                {...register("logo")}
-                            />
-                            <Button
-                                type="button"
-                                variant="outline"
-                                size="sm"
-                                onClick={() => document.getElementById("logo")?.click()}
-                                className="flex items-center gap-2"
-                            >
-                                <Upload size={16} />
-                                {logo?.[0]?.name ? "Change File" : "Upload File"}
-                            </Button>
-                            {logo?.[0]?.name && (
-                                <span className="text-sm text-green-600 flex items-center gap-1">
-                                    <CheckCircle size={14} /> {logo[0].name}
-                                </span>
-                            )}
-                        </div>
-                    </div>
-                    <div className="border rounded-lg p-3 bg-gray-50">
-                        <Label htmlFor="banner" className="text-sm font-medium">
-                            GST Certificate (if applicable)
-                        </Label>
-                        <div className="mt-1 items-center gap-2">
-                            <input
-                                id="banner"
-                                type="file"
-                                className="hidden"
-                                // value={banner as string}
-                                {...register("banner")}
-                            />
-                            <Button
-                                type="button"
-                                variant="outline"
-                                size="sm"
-                                onClick={() => document.getElementById("banner")?.click()}
-                                className="flex items-center gap-2"
-                            >
-                                <Upload size={16} />
-                                {banner?.[0]?.name ? "Change File" : "Upload File"}
-                            </Button>
-                            {banner?.[0]?.name && (
-                                <span className="text-sm text-green-600 flex items-center gap-1">
-                                    <CheckCircle size={14} /> {banner[0].name}
-                                </span>
-                            )}
-                        </div>
-                    </div>
-            </div>
-
             <FormField
                 control={control}
                 name="businessName"
@@ -275,7 +207,7 @@ const BusinessFormFields = () => {
 
                 <FormField
                     control={control}
-                    name="businessMobile"
+                    name="businessPhone"
                     render={({ field }) => (
                         <FormItem className="space-y-2">
                             <FormLabel>Business Mobile</FormLabel>
@@ -290,7 +222,7 @@ const BusinessFormFields = () => {
 
             <FormField
                 control={control}
-                name="businessAddress"
+                name="address"
                 render={({ field }) => (
                     <FormItem className="space-y-2">
                         <FormLabel>Business Address</FormLabel>
@@ -335,7 +267,7 @@ const BusinessFormFields = () => {
             <div className="grid grid-cols-2 gap-4">
                 <FormField
                     control={control}
-                    name="businessZipCode"
+                    name="zipCode"
                     render={({ field }) => (
                         <FormItem className="space-y-2">
                             <FormLabel>Zip Code</FormLabel>
@@ -353,7 +285,7 @@ const BusinessFormFields = () => {
                     render={({ field }) => (
                         <FormItem className="space-y-2">
                             <FormLabel>Business Type</FormLabel>
-                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <Select onValueChange={field.onChange} defaultValue={field.value ?? ""}>
                                 <FormControl>
                                     <SelectTrigger>
                                         <SelectValue placeholder="Select type" />
@@ -374,7 +306,7 @@ const BusinessFormFields = () => {
 
             <FormField
                 control={control}
-                name="businessGstIn"
+                name="gstin"
                 render={({ field }) => (
                     <FormItem className="space-y-2">
                         <FormLabel>GSTIN (optional)</FormLabel>
@@ -391,8 +323,6 @@ const BusinessFormFields = () => {
 
 const VerificationFormFields = () => {
     const { control, register, watch } = useFormContext<FormValues>();
-    const panCard = watch("panCard");
-    const gstCertificate = watch("GstCertificate");
 
     return (
         <motion.div
@@ -445,71 +375,6 @@ const VerificationFormFields = () => {
                     )}
                 />
             </div>
-
-            <div className="space-y-2">
-                <Label>Document Upload</Label>
-                <p className="text-sm text-gray-500 mb-2">Please upload the following documents for verification</p>
-
-                <div className="space-y-3">
-                    <div className="border rounded-lg p-3 bg-gray-50">
-                        <Label htmlFor="panCard" className="text-sm font-medium">
-                            PAN Card
-                        </Label>
-                        <div className="mt-1 flex items-center gap-2">
-                            <input
-                                id="panCard"
-                                type="file"
-                                className="hidden"
-                                {...register("panCard")}
-                            />
-                            <Button
-                                type="button"
-                                variant="outline"
-                                size="sm"
-                                onClick={() => document.getElementById("panCard")?.click()}
-                                className="flex items-center gap-2"
-                            >
-                                <Upload size={16} />
-                                {panCard?.[0]?.name ? "Change File" : "Upload File"}
-                            </Button>
-                            {panCard?.[0]?.name && (
-                                <span className="text-sm text-green-600 flex items-center gap-1">
-                                    <CheckCircle size={14} /> {panCard[0].name}
-                                </span>
-                            )}
-                        </div>
-                    </div>
-
-                    <div className="border rounded-lg p-3 bg-gray-50">
-                        <Label htmlFor="gstCertificate" className="text-sm font-medium">
-                            GST Certificate (if applicable)
-                        </Label>
-                        <div className="mt-1 flex items-center gap-2">
-                            <input
-                                id="gstCertificate"
-                                type="file"
-                                className="hidden"
-                                {...register("GstCertificate")}
-                            />
-                            <Button
-                                type="button"
-                                variant="outline"
-                                size="sm"
-                                onClick={() => document.getElementById("gstCertificate")?.click()}
-                                className="flex items-center gap-2"
-                            >
-                                <Upload size={16} />
-                                {gstCertificate?.[0]?.name ? "Change File" : "Upload File"}
-                            </Button>
-                            {gstCertificate?.[0]?.name && (
-                                <span className="text-sm text-green-600 flex items-center gap-1">
-                                    <CheckCircle size={14} /> {gstCertificate[0].name}
-                                </span>
-                            )}
-                        </div>
-                    </div>
-                </div>
-            </div>
         </motion.div>
     );
 };
@@ -527,7 +392,7 @@ const PickupAddressFormFields = () => {
         >
             <FormField
                 control={control}
-                name="name"
+                name="pickupBusinessName"
                 render={({ field }) => (
                     <FormItem className="space-y-2">
                         <FormLabel>Business Name</FormLabel>
@@ -556,7 +421,7 @@ const PickupAddressFormFields = () => {
 
                 <FormField
                     control={control}
-                    name="mobilePickup"
+                    name="pickupPhone"
                     render={({ field }) => (
                         <FormItem className="space-y-2">
                             <FormLabel>Business Mobile</FormLabel>
@@ -571,7 +436,7 @@ const PickupAddressFormFields = () => {
 
             <FormField
                 control={control}
-                name="address"
+                name="pickupAddress"
                 render={({ field }) => (
                     <FormItem className="space-y-2">
                         <FormLabel>Business Address</FormLabel>
@@ -586,7 +451,7 @@ const PickupAddressFormFields = () => {
             <div className="grid grid-cols-2 gap-4">
                 <FormField
                     control={control}
-                    name="cityPickup"
+                    name="pickupCity"
                     render={({ field }) => (
                         <FormItem className="space-y-2">
                             <FormLabel>City</FormLabel>
@@ -600,7 +465,7 @@ const PickupAddressFormFields = () => {
 
                 <FormField
                     control={control}
-                    name="statePickup"
+                    name="pickupState"
                     render={({ field }) => (
                         <FormItem className="space-y-2">
                             <FormLabel>State</FormLabel>
@@ -632,48 +497,41 @@ const PickupAddressFormFields = () => {
 
 export function SellerSignup() {
     const navigate = useNavigate();
+    const dispatch = useAppDispatch();
     const [step, setStep] = useState(1);
     const [loading, setLoading] = useState(false);
     const totalSteps = 4;
+
+    const seller = useAppSelecter((state) => state.sellers);
 
     const methods = useForm<FormValues>({
         resolver: zodResolver(formSchema),
         mode: "onChange",
         defaultValues: {
-            sellerName: "",
+            fullName: "",
             email: "",
             password: "",
-            mobile: "",
-
-            // Business Details
+            confirmPassword: "",
+            phone: "",
             businessName: "",
             businessEmail: "",
-            businessMobile: "",
-            businessAddress: "",
-            businessZipCode: "",
+            businessPhone: "",
+            address: "",
+            zipCode: "",
             businessType: "",
-            businessGstIn: "",
-            logo: "",
-            banner: "",
+            gstin: "",
             city: "",
             state: "",
-
-            // Bank Details
             accountNumber: "",
             accountHolderName: "",
             ifscCode: "",
-            panCard: "",
-            GstCertificate: "",
-
-            // Pickup Address
-            name: "",
+            pickupBusinessName: "",
             locality: "",
-            address: "",
-            cityPickup: "",
-            statePickup: "",
-            pinCode: "",
-            mobilePickup: "",
-            pickupZipCode: "",
+            pickupPhone: "",
+            pickupAddress: "",
+            pickupCity: "",
+            pickupState: "",
+            pickupZipCode: ""
         }
     });
 
@@ -718,17 +576,73 @@ export function SellerSignup() {
     const onSubmit: SubmitHandler<FormValues> = async (data) => {
         setLoading(true);
 
+        const isStepOneValid = await methods.trigger(getFieldsForStep(1) as any);
+        const isStepTwoValid = await methods.trigger(getFieldsForStep(2) as any);
+        const isStepThreeValid = await methods.trigger(getFieldsForStep(3) as any);
+        const isStepFourValid = await methods.trigger(getFieldsForStep(4) as any);
+
+        if (!isStepOneValid || !isStepTwoValid || !isStepThreeValid || !isStepFourValid) {
+            console.error("Form validation failed");
+            setLoading(false);
+            return;
+        }
+        
+
+        const transformedData = {
+            fullName: data.fullName,
+            email: data.email,
+            password: data.password,
+            confirmPassword: data.confirmPassword,
+            phone: data.phone,
+            businessDetails: {
+                businessName: data.businessName,
+                businessEmail: data.businessEmail,
+                businessPhone: data.businessPhone,
+                address: data.address,
+                city: data.city,
+                state: data.state,
+                zipCode: data.zipCode,
+                businessType: data.businessType,
+                gstin: data.gstin,
+            },
+            bankDetails: {
+                accountNumber: data.accountNumber,
+                accountHolderName: data.accountHolderName,
+                ifscCode: data.ifscCode,
+            },
+            pickupAddress: {
+                pickupBusinessName: data.pickupBusinessName,
+                locality: data.locality,
+                pickupPhone: data.pickupPhone,
+                pickupAddress: data.pickupAddress,
+                pickupCity: data.pickupCity,
+                pickupState: data.pickupState,
+                pickupZipCode: data.pickupZipCode,
+            }
+        };
+
+
         try {
             // Simulate API call
             await new Promise((resolve) => setTimeout(resolve, 2000));
-            console.log("Form submitted successfully:", data);
+            // console.log("Form submitted successfully:", data);
             // Navigate to next page or show success message
+            const response = await dispatch(sellerSignin(transformedData));
+            console.log("response: ", response);
+            console.log("response payload: ", response.payload);
+            console.log("response payload success: ", response.payload?.success);
+            console.log("selected selller : " , seller.selectedSeller)
+            if (response.payload?.success || seller.selectedSeller) { // Adjust condition based on your API response structure
+                navigate("/seller/login");
+            }
         } catch (err) {
             console.error("Error submitting form:", err);
         } finally {
             setLoading(false);
         }
     };
+
+    
 
     const renderStepContent = () => {
         switch (step) {
@@ -790,7 +704,11 @@ export function SellerSignup() {
                                         </motion.div>
                                     ) : (
                                         <motion.div whileTap={{ scale: 0.98 }}>
-                                            <Button type="submit" className="flex items-center gap-2" disabled={loading}>
+                                            <Button
+                                                type="submit"
+                                                className="flex items-center gap-2"
+                                                disabled={loading}
+                                            >
                                                 {loading ? "Creating Account..." : "Create Account"}
                                             </Button>
                                         </motion.div>
@@ -799,7 +717,6 @@ export function SellerSignup() {
                             </form>
                         </FormProvider>
                     </CardContent>
-
                     <CardFooter className="flex justify-center">
                         <p className="text-sm text-gray-600">
                             Already have a seller account?{" "}

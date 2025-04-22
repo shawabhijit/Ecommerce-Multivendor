@@ -54,6 +54,8 @@ const SellerNav = ({ isLogedin }: any) => {
         dispatch(logout())
     }
 
+    console.log("seller Image :" , sellerProfile?.businessDetails?.logo)
+
     useEffect(() => {
         const handleScroll = () => {
             setIsScrolled(window.scrollY > 10);
@@ -187,7 +189,7 @@ const SellerNav = ({ isLogedin }: any) => {
                                                         <Avatar className="h-8 w-8">
                                                             <AvatarImage src="/placeholder.svg" />
                                                             <AvatarFallback>
-                                                                <img className="h-8 w-8" src={sellerProfile?.businessAddress?.logo} alt="User" />
+                                                                <img className="h-8 w-8" src={sellerProfile?.businessDetails?.logo} alt="User" />
                                                             </AvatarFallback>
                                                         </Avatar>
                                                     </Button>
