@@ -65,24 +65,20 @@ public class ProductEntity {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ReviewEntity> reviews = new ArrayList<>();
 
-    // ✅ Nested POJO fields stored as JSON
 
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "jsonb")
     private List<Variant> variants = new ArrayList<>();
 
-//    @JdbcTypeCode(SqlTypes.JSON)
-//    @Column(columnDefinition = "jsonb")
-    @Embedded
-    private SEO seo;
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(columnDefinition = "jsonb")
+    private SEO seo = new SEO();
 
-//    @JdbcTypeCode(SqlTypes.JSON)
-//    @Column(columnDefinition = "jsonb")
-    @Embedded
-    private Shipping shipping;
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(columnDefinition = "jsonb")
+    private Shipping shipping = new Shipping();
 
-//    @JdbcTypeCode(SqlTypes.JSON)
-//    @Column(columnDefinition = "jsonb")
-    @Embedded
-    private Ratings ratings;
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(columnDefinition = "jsonb")
+    private Ratings ratings = new Ratings();
 }
