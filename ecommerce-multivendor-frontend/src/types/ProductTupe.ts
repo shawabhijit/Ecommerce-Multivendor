@@ -7,7 +7,6 @@ export interface Products {
     sellingPrice: number;
     discountPrice: number;
     quantity: number;
-    color: string;
     images: string[];
     status:string;
     sku:string;
@@ -17,7 +16,6 @@ export interface Products {
     tags: string[];
     numRatings: number;
     category: Categories;
-    sizes: string[];
     varianta: variants[];
     seo?: SEO;
     shipping?: Shipping;
@@ -39,7 +37,7 @@ interface variants {
 interface SEO {
     metaTitle: string;
     metaDescription: string;
-    keywords?:string[];
+    keywords?:string | null;
 }
 
 interface Shipping {

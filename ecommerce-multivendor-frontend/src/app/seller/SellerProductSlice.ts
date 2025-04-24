@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { api } from "../../config/api";
 import { Products } from "../../types/ProductTupe";
+import { ProductFormValues } from "../../Seller/products/AddEditProducts/SellerAddProduct";
 
 
 
@@ -18,7 +19,7 @@ export const fetchSellerProducts = createAsyncThunk<Products[] , any>("/sellerPr
     }
 })
 
-export const createProduct = createAsyncThunk<Products , {request:any }>("/sellerProduct/createProduct", async (request , { rejectWithValue }) => {
+export const createProduct = createAsyncThunk("/sellerProduct/createProduct", async (request : ProductFormValues , { rejectWithValue }) => {
     try {
         const response = await api.post("/api/sellers/products/create", request,{
             withCredentials: true

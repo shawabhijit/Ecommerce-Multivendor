@@ -4,7 +4,7 @@ import type React from "react"
 
 import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
-import { ArrowLeft, Check, Clock, Eye, Plus, Save, Trash2, Upload, X, Info } from "lucide-react"
+import { Check, Clock, Eye, Plus, Save, Trash2, Upload, X, Info } from "lucide-react"
 import { Button } from "../../../Components/ui/button"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../../../Components/ui/tooltip"
 import { Alert, AlertDescription, AlertTitle } from "../../../Components/ui/alert"
@@ -17,12 +17,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { Badge } from "../../../Components/ui/badge"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "../../../Components/ui/dialog"
 import { Switch } from "../../../Components/ui/switch"
-import { Separator } from "../../../Components/ui/separator"
-import { useLocation } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import { z } from "zod"
 import { Controller, useFieldArray, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import ProductPreview from "./ProductPreview"
+import { uploadToCloudninary } from "../../../util/CloudinarySupport"
+import { useAppDispatch } from "../../../app/Store"
+import { createProduct } from "../../../app/seller/SellerProductSlice"
 
 
 const productSchema = z.object({
@@ -30,10 +32,9 @@ const productSchema = z.object({
     description: z.string().min(10, "Description must be at least 10 characters"),
     mrpPrice: z.coerce.number().positive("MRP price must be positive"),
     sellingPrice: z.coerce.number().positive("Selling price must be positive"),
-    discountPrice: z.coerce.number().nonnegative("Discount price cannot be negative"),
+    discountPrice: z.coerce.number().nonnegative("Discount price cannot be negative").optional(),
     quantity: z.coerce.number().int().nonnegative("Quantity must be a positive integer"),
-    color: z.string().optional(),
-    images: z.array(z.string()).min(1, "At least one image is required").or(z.array(z.instanceof(File))),
+    images: z.array(z.string()).min(1, "At least one image is required"),
     status: z.string().optional(),
     sku: z.string().optional().nullable(),
     barcode: z.string().optional().nullable(),
@@ -43,13 +44,8 @@ const productSchema = z.object({
     category: z.object({
         name: z.string().min(1, "Category name is required"),
         categoryId: z.string().optional(),
-        parentCategory: z.string().optional(),
-        level: z.number().optional()
     }),
-
-    sizes: z.array(z.string()),
-
-    varianta: z.array(
+    variants: z.array(
         z.object({
             name: z.string().min(1, "Variant name is required"),
             value: z.string().min(1, "Variant value is required")
@@ -59,7 +55,7 @@ const productSchema = z.object({
     seo: z.object({
         metaTitle: z.string().max(60, "Meta title should be under 60 characters").optional(),
         metaDescription: z.string().max(160, "Meta description should be under 160 characters").optional(),
-        keywords: z.array(z.string()).optional()
+        keywords: z.string().optional()
     }).optional(),
 
     shipping: z.object({
@@ -78,7 +74,7 @@ const productSchema = z.object({
     }).optional()
 });
 
-type ProductFormValues = z.infer<typeof productSchema>;
+export type ProductFormValues = z.infer<typeof productSchema>;
 
 
 const CATEGORIES = [
@@ -103,6 +99,9 @@ const VARIANT_TYPES = [
 
 export function AddEditProduct() {
 
+    const dispatch = useAppDispatch();
+
+    const navigae = useNavigate();
     const location = useLocation();
     const pathSegments = location.pathname.split('/');
     const productId = pathSegments[pathSegments.length - 1];
@@ -127,37 +126,34 @@ export function AddEditProduct() {
         setValue,
         watch,
         reset,
-        formState: { errors, isDirty }
+        formState: { errors, isDirty, isSubmitting, isValid }
     } = useForm<ProductFormValues>({
         resolver: zodResolver(productSchema),
+        mode: "onChange", // This will validate on change
         defaultValues: {
             title: "",
             description: "",
             mrpPrice: 0,
             sellingPrice: 0,
-            discountPrice: 0,
+            discountPrice:0,
             quantity: 0,
-            color: "",
             images: [],
             status: "inactive",
             sku: "",
             barcode: "",
             tags: [],
+            numRatings: 0,
             category: {
                 name: "",
                 categoryId: "",
-                parentCategory: "",
-                level: 1
             },
-            sizes: [],
-            varianta: [{
-                name: "",
-                value: ""
-            }],
+            variants: [
+                { name: "", value: ""}
+            ],
             seo: {
                 metaTitle: "",
                 metaDescription: "",
-                keywords: []
+                keywords: ""
             },
             shipping: {
                 weight: 0,
@@ -167,6 +163,10 @@ export function AddEditProduct() {
                     height: 0
                 },
                 freeShipping: false
+            },
+            ratings: {
+                average: 0,
+                count: 0
             }
         }
     });
@@ -177,11 +177,17 @@ export function AddEditProduct() {
         remove: removeVariant
     } = useFieldArray({
         control,
-        name: "varianta"
+        name: "variants"
     });
 
     const watchStatus = watch("status");
     const watchTags = watch("tags");
+
+    useEffect(() => {
+        if (Object.keys(errors).length > 0) {
+            console.log("Form errors:", errors);
+        }
+    }, [errors])
 
     useEffect(() => {
         if (isDirty) {
@@ -201,7 +207,6 @@ export function AddEditProduct() {
                     sellingPrice: 149.99,
                     discountPrice: 50,
                     quantity: 100,
-                    color: "Black",
                     images: ["https://example.com/headphones1.jpg", "https://example.com/headphones2.jpg"],
                     status: "active",
                     sku: "WH-PRO-001",
@@ -213,14 +218,14 @@ export function AddEditProduct() {
                         parentCategory: "",
                         level: 0
                     },
-                    varianta: [
+                    variants: [
                         { name: "color", value: "Black,White,Blue" },
                         { name: "size", value: "Small,Medium,Large" }
                     ],
                     seo: {
                         metaTitle: "Premium Wireless Headphones with Noise Cancellation",
                         metaDescription: "Experience crystal clear sound with our premium wireless headphones featuring advanced noise cancellation technology.",
-                        keywords: ["wireless", "headphones", "noise cancellation"]
+                        keywords: "wireless, headphones, noise cancellation"
                     },
                     shipping: {
                         weight: 0.5,
@@ -245,39 +250,45 @@ export function AddEditProduct() {
     }, [isEditMode, productId, reset]);
 
     // Handle image upload
-    const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files.length > 0) {
             const newFiles = Array.from(e.target.files);
+            const uploadedUrls: string[] = [];
 
-            // Update form value
+            for (const file of newFiles) {
+                try {
+                    const url = await uploadToCloudninary(file);
+                    if (url) {
+                        uploadedUrls.push(url);
+                    }
+                } catch (error) {
+                    console.error("Upload failed for image:", file.name, error);
+                }
+            }
+
+            // Update form value (cloudinary image URLs)
             const currentImages = watch("images") || [];
-            // setValue("images", [...currentImages, ...newFiles], { shouldDirty: true });
+            setValue("images", [...currentImages, ...uploadedUrls], { shouldDirty: true });
 
-            // Create preview URLs
-            const newPreviews = newFiles.map(file => URL.createObjectURL(file));
-            setImagePreviews(prev => [...prev, ...newPreviews]);
+            setImagePreviews(prev => [...prev, ...uploadedUrls]);
 
             setFormChanged(true);
         }
     };
 
-    // Remove image
     const removeImage = (index: number) => {
         const currentImages = watch("images") || [];
         const newImages = [...currentImages];
         newImages.splice(index, 1);
-
-        // setValue("images", newImages, { shouldDirty: true });
+        setValue("images", newImages, { shouldDirty: true });
 
         const newPreviews = [...imagePreviews];
-        if (newPreviews[index] && newPreviews[index].startsWith("blob:")) {
-            URL.revokeObjectURL(newPreviews[index]);
-        }
         newPreviews.splice(index, 1);
         setImagePreviews(newPreviews);
 
         setFormChanged(true);
     };
+
 
     // Handle tag addition
     const handleTagAdd = (tag: string) => {
@@ -303,21 +314,21 @@ export function AddEditProduct() {
         setLoading(true);
 
         try {
-            // Simulate API call
             await new Promise(resolve => setTimeout(resolve, 1500));
 
             console.log("Form submitted:", data);
 
-            // Show success message
+            const product = await dispatch(createProduct(data));
+
+            console.log("Product created successfully:", product);
+
             setSaveSuccess(true);
             setFormChanged(false);
 
-            // Hide success message after 3 seconds
             setTimeout(() => {
                 setSaveSuccess(false);
             }, 3000);
 
-            // If not in edit mode, redirect to products page
             if (!isEditMode) {
                 // router.push("/products");
                 console.log("Redirecting to products page");
@@ -334,11 +345,9 @@ export function AddEditProduct() {
         setLoading(true);
 
         try {
-            // Simulate API call
             await new Promise(resolve => setTimeout(resolve, 1000));
 
             setShowDeleteDialog(false);
-            // router.push("/products");
             console.log("Product deleted, redirecting to products page");
         } catch (err) {
             console.error("Error deleting product:", err);
@@ -347,7 +356,6 @@ export function AddEditProduct() {
         }
     };
 
-    // Mock revision history data
     const revisionHistory = [
         { id: 1, date: "2023-10-15 14:30", user: "John Doe", changes: "Updated product description and price" },
         { id: 2, date: "2023-09-22 10:15", user: "Jane Smith", changes: "Added new product variants" },
@@ -420,11 +428,11 @@ export function AddEditProduct() {
                     <div className="lg:col-span-2 space-y-6">
                         <Tabs value={activeTab} onValueChange={setActiveTab}>
                             <TabsList className="grid grid-cols-5 mb-4 w-full">
-                                <TabsTrigger className={`${activeTab == "basic" ? "hiakri-dark-bg" : ""}`} value="basic">Basic Info</TabsTrigger>
-                                <TabsTrigger className={`${activeTab == "images" ? "hiakri-dark-bg" : ""}`} value="images">Images</TabsTrigger>
-                                <TabsTrigger className={`${activeTab == "variants" ? "hiakri-dark-bg" : ""}`} value="variants">Variants</TabsTrigger>
-                                <TabsTrigger className={`${activeTab == "inventory" ? "hiakri-dark-bg" : ""}`} value="inventory">Inventory</TabsTrigger>
-                                <TabsTrigger className={`${activeTab == "advanced" ? "hiakri-dark-bg" : ""}`} value="advanced">Advanced</TabsTrigger>
+                                <TabsTrigger className={`${activeTab == "basic" ? "hiakri-dark-bg text-white" : ""}`} value="basic">Basic Info</TabsTrigger>
+                                <TabsTrigger className={`${activeTab == "images" ? "hiakri-dark-bg text-white" : ""}`} value="images">Images</TabsTrigger>
+                                <TabsTrigger className={`${activeTab == "variants" ? "hiakri-dark-bg text-white" : ""}`} value="variants">Variants</TabsTrigger>
+                                <TabsTrigger className={`${activeTab == "inventory" ? "hiakri-dark-bg text-white" : ""}`} value="inventory">Inventory</TabsTrigger>
+                                <TabsTrigger className={`${activeTab == "advanced" ? "hiakri-dark-bg text-white" : ""}`} value="advanced">Advanced</TabsTrigger>
                             </TabsList>
 
                             <TabsContent  value="basic" className="space-y-4">
@@ -459,31 +467,42 @@ export function AddEditProduct() {
                                             />
                                         </div>
 
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                             <div className="space-y-2">
                                                 <Label htmlFor="price">
-                                                    Regular Price ($) <span className="text-red-500">*</span>
+                                                    Regular Price (₹) <span className="text-red-500">*</span>
                                                 </Label>
                                                 <Input
                                                     id="price"
                                                     type="number"
                                                     step="0.01"
                                                     min="0"
-                                                    placeholder="e.g. 99.99"
+                                                    placeholder="e.g. 9999"
                                                     required
                                                     {...register("mrpPrice")}
                                                 />
                                             </div>
 
                                             <div className="space-y-2">
-                                                <Label htmlFor="offerPrice">Sale Price ($)</Label>
+                                                <Label htmlFor="offerPrice">Sale Price (₹) <span className="text-red-500">*</span></Label>
                                                 <Input
                                                     id="offerPrice"
                                                     type="number"
                                                     step="0.01"
                                                     min="0"
-                                                    placeholder="e.g. 79.99 (optional)"
+                                                    placeholder="e.g. 7999"
                                                     {...register("sellingPrice")}
+                                                />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <Label htmlFor="offerPrice">Discount (₹)</Label>
+                                                <Input
+                                                    id="offerPrice"
+                                                    type="number"
+                                                    step="0.01"
+                                                    min="0"
+                                                    placeholder="e.g. 20 (optional)"
+                                                    {...register("discountPrice")}
                                                 />
                                             </div>
                                         </div>
@@ -502,7 +521,7 @@ export function AddEditProduct() {
                                                             onValueChange={(value) => {
                                                                 field.onChange(value);
                                                                 // Also set categoryId based on selection
-                                                                setValue("category.categoryId", `cat-${value.toLowerCase().replace(/\s+/g, '-')}`, { shouldDirty: true });
+                                                                setValue("category.categoryId", `cat-${value.toLowerCase().replace(/\s+/g, '-') + Math.random() * 100}`, { shouldDirty: true });
                                                             }}
                                                         >
                                                             <SelectTrigger id="category">
@@ -566,7 +585,7 @@ export function AddEditProduct() {
                                                         onCheckedChange={(checked) => {
                                                             field.onChange(checked ? "active" : "inactive");
                                                         }}
-                                                        className="hiakri-dark-bg"
+                                                        className={`${field.value === "active" ? "hiakri-dark-bg" : ""}`}
                                                     />
                                                 )}
                                             />
@@ -664,7 +683,7 @@ export function AddEditProduct() {
                                                     <div className="space-y-2">
                                                         <Label htmlFor={`variant-name-${index}`}>Variant Type</Label>
                                                         <Controller
-                                                            name={`varianta.${index}.name`}
+                                                            name={`variants.${index}.name`}
                                                             control={control}
                                                             render={({ field }) => (
                                                                 <Select
@@ -684,15 +703,15 @@ export function AddEditProduct() {
                                                                 </Select>
                                                             )}
                                                         />
-                                                        {errors.varianta?.[index]?.name && (
-                                                            <p className="text-red-500 text-sm mt-1">{errors.varianta[index].name.message}</p>
+                                                        {errors.variants?.[index]?.name && (
+                                                            <p className="text-red-500 text-sm mt-1">{errors.variants[index].name.message}</p>
                                                         )}
                                                     </div>
 
                                                     <div className="space-y-2">
                                                         <Label htmlFor={`variant-values-${index}`}>Values</Label>
                                                         <Controller
-                                                            name={`varianta.${index}.value`}
+                                                            name={`variants.${index}.value`}
                                                             control={control}
                                                             render={({ field }) => (
                                                                 <Input
@@ -702,8 +721,8 @@ export function AddEditProduct() {
                                                                 />
                                                             )}
                                                         />
-                                                        {errors.varianta?.[index]?.value && (
-                                                            <p className="text-red-500 text-sm mt-1">{errors.varianta[index].value.message}</p>
+                                                        {errors.variants?.[index]?.value && (
+                                                            <p className="text-red-500 text-sm mt-1">{errors.variants[index].value.message}</p>
                                                         )}
                                                     </div>
 
@@ -911,7 +930,7 @@ export function AddEditProduct() {
                                             id="status-switch"
                                             checked={watch("status") === "active"}
                                             onCheckedChange={(checked) => setValue("status", checked ? "active" : "inactive")}
-                                            className="hiakri-dark-bg"
+                                            className={`${watch("status") === "active" ? "hiakri-dark-bg" : ""}`}
                                         />
                                     </div>
                                     <p className="text-sm text-gray-500">
@@ -941,7 +960,7 @@ export function AddEditProduct() {
                                         </>
                                     )}
                                 </Button>
-                                <Button type="button" variant="outline" className="w-full" /*onClick={() => router.push("/products")}*/>
+                                <Button type="button" variant="outline" className="w-full" onClick={() => navigae("/seller/products")}>
                                     Cancel
                                 </Button>
                             </CardContent>
