@@ -287,7 +287,7 @@ export const recentOrders = [
 
 export const mockProducts = [
     {
-        id: "PROD-001",
+        id: "01",
         title: "Premium Wireless Headphones",
         image: "/placeholder.svg",
         price: 129.99,

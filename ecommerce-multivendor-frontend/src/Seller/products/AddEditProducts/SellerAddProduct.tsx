@@ -18,296 +18,334 @@ import { Badge } from "../../../Components/ui/badge"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "../../../Components/ui/dialog"
 import { Switch } from "../../../Components/ui/switch"
 import { Separator } from "../../../Components/ui/separator"
-import { mockImagePreviews, mockProductData } from "../../Data/api"
 import { useLocation } from "react-router-dom"
+import { z } from "zod"
+import { Controller, useFieldArray, useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import ProductPreview from "./ProductPreview"
 
+
+const productSchema = z.object({
+    title: z.string().min(1, "Product title is required"),
+    description: z.string().min(10, "Description must be at least 10 characters"),
+    mrpPrice: z.coerce.number().positive("MRP price must be positive"),
+    sellingPrice: z.coerce.number().positive("Selling price must be positive"),
+    discountPrice: z.coerce.number().nonnegative("Discount price cannot be negative"),
+    quantity: z.coerce.number().int().nonnegative("Quantity must be a positive integer"),
+    color: z.string().optional(),
+    images: z.array(z.string()).min(1, "At least one image is required").or(z.array(z.instanceof(File))),
+    status: z.string().optional(),
+    sku: z.string().optional().nullable(),
+    barcode: z.string().optional().nullable(),
+    tags: z.array(z.string()),
+    numRatings: z.number().int().nonnegative(),
+
+    category: z.object({
+        name: z.string().min(1, "Category name is required"),
+        categoryId: z.string().optional(),
+        parentCategory: z.string().optional(),
+        level: z.number().optional()
+    }),
+
+    sizes: z.array(z.string()),
+
+    varianta: z.array(
+        z.object({
+            name: z.string().min(1, "Variant name is required"),
+            value: z.string().min(1, "Variant value is required")
+        })
+    ),
+
+    seo: z.object({
+        metaTitle: z.string().max(60, "Meta title should be under 60 characters").optional(),
+        metaDescription: z.string().max(160, "Meta description should be under 160 characters").optional(),
+        keywords: z.array(z.string()).optional()
+    }).optional(),
+
+    shipping: z.object({
+        weight: z.coerce.number().positive("Weight must be positive").optional(),
+        dimensions: z.object({
+            length: z.coerce.number().positive("Length must be positive").optional(),
+            width: z.coerce.number().positive("Width must be positive").optional(),
+            height: z.coerce.number().positive("Height must be positive").optional()
+        }).optional(),
+        freeShipping: z.boolean()
+    }).optional(),
+
+    ratings: z.object({
+        average: z.number().min(0).max(5),
+        count: z.number().int().nonnegative()
+    }).optional()
+});
+
+type ProductFormValues = z.infer<typeof productSchema>;
+
+
+const CATEGORIES = [
+    "Electronics",
+    "Clothing",
+    "Home & Kitchen",
+    "Beauty",
+    "Toys",
+    "Sports",
+    "Books"
+];
+
+// List of variant types
+const VARIANT_TYPES = [
+    "color",
+    "size",
+    "material",
+    "style",
+    "layout"
+];
 
 
 export function AddEditProduct() {
 
     const location = useLocation();
-
-    // Split the pathname
     const pathSegments = location.pathname.split('/');
-
-    // Get the last segment
     const productId = pathSegments[pathSegments.length - 1];
+    // console.log("Product ID:", productId);
+    const isEditMode = productId && productId !== "add";
 
-    const isEditMode = !!productId
+    const [activeTab, setActiveTab] = useState("basic");
+    const [loading, setLoading] = useState(false);
+    const [saveSuccess, setSaveSuccess] = useState(false);
+    const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+    const [showPreviewDialog, setShowPreviewDialog] = useState(false);
+    const [showHistoryDialog, setShowHistoryDialog] = useState(false);
+    const [formChanged, setFormChanged] = useState(false);
+    const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+    const [tagInput, setTagInput] = useState("");
 
-
-
-
-    const [activeTab, setActiveTab] = useState("basic")
-    const [loading, setLoading] = useState(false)
-    const [saveSuccess, setSaveSuccess] = useState(false)
-    const [showDeleteDialog, setShowDeleteDialog] = useState(false)
-    const [showPreviewDialog, setShowPreviewDialog] = useState(false)
-    const [showHistoryDialog, setShowHistoryDialog] = useState(false)
-    const [formChanged, setFormChanged] = useState(false)
-
-    // Form state
-    const [formData, setFormData] = useState({
-        id: "",
-        title: "",
-        description: "",
-        price: "",
-        offerPrice: "",
-        stock: "",
-        category: "",
-        status: "active",
-        images: [] as File[],
-        variants: [{ name: "", values: "" }],
-        seo: {
-            metaTitle: "",
-            metaDescription: "",
-            keywords: "",
-        },
-        shipping: {
-            weight: "",
-            dimensions: {
-                length: "",
-                width: "",
-                height: "",
+    // Initialize form with React Hook Form and Zod resolver
+    const {
+        register,
+        handleSubmit,
+        control,
+        setValue,
+        watch,
+        reset,
+        formState: { errors, isDirty }
+    } = useForm<ProductFormValues>({
+        resolver: zodResolver(productSchema),
+        defaultValues: {
+            title: "",
+            description: "",
+            mrpPrice: 0,
+            sellingPrice: 0,
+            discountPrice: 0,
+            quantity: 0,
+            color: "",
+            images: [],
+            status: "inactive",
+            sku: "",
+            barcode: "",
+            tags: [],
+            category: {
+                name: "",
+                categoryId: "",
+                parentCategory: "",
+                level: 1
             },
-            freeShipping: false,
-        },
-        sku: "",
-        barcode: "",
-        tags: [] as string[],
-    })
-
-    // Preview images
-    const [imagePreviews, setImagePreviews] = useState<string[]>([])
-
-    // Fetch product data in edit mode
-    useEffect(() => {
-        if (isEditMode && productId && mockProductData[productId as keyof typeof mockProductData]) {
-            // Simulate API fetch
-            const fetchData = async () => {
-                try {
-                    // In a real app, you would fetch from an API
-                    await new Promise((resolve) => setTimeout(resolve, 500))
-
-                    const productData = mockProductData[productId as keyof typeof mockProductData]
-                    setFormData({
-                        ...formData,
-                        ...productData,
-                        tags: productData.tags || [],
-                    })
-
-                    // Set image previews
-                    if (mockImagePreviews[productId as keyof typeof mockImagePreviews]) {
-                        setImagePreviews(mockImagePreviews[productId as keyof typeof mockImagePreviews])
-                    }
-                } catch (error) {
-                    console.error("Error fetching product data:", error)
-                }
-            }
-
-            fetchData()
-        }
-    }, [isEditMode, productId])
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const { name, value } = e.target;
-        setFormChanged(true);
-
-        if (name.includes(".")) {
-            const [parent, child] = name.split(".");
-            setFormData({
-                ...formData,
-                [parent]: {
-                    ...(formData[parent as keyof typeof formData] as any),
-                    [child]: value,
+            sizes: [],
+            varianta: [{
+                name: "",
+                value: ""
+            }],
+            seo: {
+                metaTitle: "",
+                metaDescription: "",
+                keywords: []
+            },
+            shipping: {
+                weight: 0,
+                dimensions: {
+                    length: 0,
+                    width: 0,
+                    height: 0
                 },
-            });
-        } else {
-            setFormData({
-                ...formData,
-                [name]: value,
-            });
+                freeShipping: false
+            }
+        }
+    });
+
+    const {
+        fields: variantFields,
+        append: appendVariant,
+        remove: removeVariant
+    } = useFieldArray({
+        control,
+        name: "varianta"
+    });
+
+    const watchStatus = watch("status");
+    const watchTags = watch("tags");
+
+    useEffect(() => {
+        if (isDirty) {
+            setFormChanged(true);
+        }
+    }, [isDirty]);
+
+    useEffect(() => {
+        if (isEditMode && productId) {
+            setLoading(true);
+
+            setTimeout(() => {
+                const mockProduct = {
+                    title: "Premium Wireless Headphones",
+                    description: "High-quality wireless headphones with noise cancellation.",
+                    mrpPrice: 199.99,
+                    sellingPrice: 149.99,
+                    discountPrice: 50,
+                    quantity: 100,
+                    color: "Black",
+                    images: ["https://example.com/headphones1.jpg", "https://example.com/headphones2.jpg"],
+                    status: "active",
+                    sku: "WH-PRO-001",
+                    barcode: "8901234567890",
+                    tags: ["wireless", "headphones", "audio"],
+                    category: {
+                        name: "Electronics",
+                        categoryId: "cat-123",
+                        parentCategory: "",
+                        level: 0
+                    },
+                    varianta: [
+                        { name: "color", value: "Black,White,Blue" },
+                        { name: "size", value: "Small,Medium,Large" }
+                    ],
+                    seo: {
+                        metaTitle: "Premium Wireless Headphones with Noise Cancellation",
+                        metaDescription: "Experience crystal clear sound with our premium wireless headphones featuring advanced noise cancellation technology.",
+                        keywords: ["wireless", "headphones", "noise cancellation"]
+                    },
+                    shipping: {
+                        weight: 0.5,
+                        dimensions: {
+                            length: 20,
+                            width: 15,
+                            height: 10
+                        },
+                        freeShipping: true
+                    }
+                };
+
+                // Reset form with fetched data
+                reset(mockProduct);
+
+                // Set image previews
+                setImagePreviews(mockProduct.images as string[]);
+
+                setLoading(false);
+            }, 1000);
+        }
+    }, [isEditMode, productId, reset]);
+
+    // Handle image upload
+    const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files.length > 0) {
+            const newFiles = Array.from(e.target.files);
+
+            // Update form value
+            const currentImages = watch("images") || [];
+            // setValue("images", [...currentImages, ...newFiles], { shouldDirty: true });
+
+            // Create preview URLs
+            const newPreviews = newFiles.map(file => URL.createObjectURL(file));
+            setImagePreviews(prev => [...prev, ...newPreviews]);
+
+            setFormChanged(true);
         }
     };
 
-
-    const handleDimensionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target
-        setFormChanged(true)
-
-        setFormData({
-            ...formData,
-            shipping: {
-                ...formData.shipping,
-                dimensions: {
-                    ...formData.shipping.dimensions,
-                    [name]: value,
-                },
-            },
-        })
-    }
-
-    const handleSelectChange = (name: string, value: string) => {
-        setFormChanged(true)
-
-        setFormData({
-            ...formData,
-            [name]: value,
-        })
-    }
-
-    const handleSwitchChange = (name: string, checked: boolean) => {
-        setFormChanged(true)
-
-        if (name.includes(".")) {
-            const [parent, child] = name.split(".")
-            setFormData({
-                ...formData,
-                [parent]: {
-                    [child]: checked,
-                },
-            })
-        } else {
-            setFormData({
-                ...formData,
-                [name]: checked,
-            })
-        }
-    }
-
-    const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files) {
-            setFormChanged(true)
-
-            const newFiles = Array.from(e.target.files)
-            setFormData({
-                ...formData,
-                images: [...formData.images, ...newFiles],
-            })
-
-            // Create preview URLs
-            const newPreviews = newFiles.map((file) => URL.createObjectURL(file))
-            setImagePreviews([...imagePreviews, ...newPreviews])
-        }
-    }
-
+    // Remove image
     const removeImage = (index: number) => {
-        setFormChanged(true)
+        const currentImages = watch("images") || [];
+        const newImages = [...currentImages];
+        newImages.splice(index, 1);
 
-        const newImages = [...formData.images]
-        newImages.splice(index, 1)
+        // setValue("images", newImages, { shouldDirty: true });
 
-        const newPreviews = [...imagePreviews]
-        if (newPreviews[index].startsWith("blob:")) {
-            URL.revokeObjectURL(newPreviews[index])
+        const newPreviews = [...imagePreviews];
+        if (newPreviews[index] && newPreviews[index].startsWith("blob:")) {
+            URL.revokeObjectURL(newPreviews[index]);
         }
-        newPreviews.splice(index, 1)
+        newPreviews.splice(index, 1);
+        setImagePreviews(newPreviews);
 
-        setFormData({
-            ...formData,
-            images: newImages,
-        })
-        setImagePreviews(newPreviews)
-    }
+        setFormChanged(true);
+    };
 
-    const addVariant = () => {
-        setFormChanged(true)
-
-        setFormData({
-            ...formData,
-            variants: [...formData.variants, { name: "", values: "" }],
-        })
-    }
-
-    const removeVariant = (index: number) => {
-        setFormChanged(true)
-
-        const newVariants = [...formData.variants]
-        newVariants.splice(index, 1)
-        setFormData({
-            ...formData,
-            variants: newVariants,
-        })
-    }
-
-    const handleVariantChange = (index: number, field: string, value: string) => {
-        setFormChanged(true)
-
-        const newVariants = [...formData.variants]
-        newVariants[index] = {
-            ...newVariants[index],
-            [field]: value,
-        }
-        setFormData({
-            ...formData,
-            variants: newVariants,
-        })
-    }
-
+    // Handle tag addition
     const handleTagAdd = (tag: string) => {
-        if (!formData.tags.includes(tag)) {
-            setFormChanged(true)
-            setFormData({
-                ...formData,
-                tags: [...formData.tags, tag],
-            })
+        if (tag && !watchTags.includes(tag)) {
+            setValue("tags", [...watchTags, tag], { shouldDirty: true });
+            setTagInput("");
+            setFormChanged(true);
         }
-    }
+    };
 
+    // Handle tag removal
     const handleTagRemove = (tag: string) => {
-        setFormChanged(true)
-        setFormData({
-            ...formData,
-            tags: formData.tags.filter((t) => t !== tag),
-        })
-    }
+        setValue(
+            "tags",
+            watchTags.filter(t => t !== tag),
+            { shouldDirty: true }
+        );
+        setFormChanged(true);
+    };
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault()
-        setLoading(true)
+    // Submit form
+    const onSubmit = async (data: ProductFormValues) => {
+        setLoading(true);
 
         try {
             // Simulate API call
-            await new Promise((resolve) => setTimeout(resolve, 1500))
+            await new Promise(resolve => setTimeout(resolve, 1500));
 
-            // In a real app, you would send the form data to your backend
-            console.log("Form submitted:", formData)
+            console.log("Form submitted:", data);
 
             // Show success message
-            setSaveSuccess(true)
-            setFormChanged(false)
+            setSaveSuccess(true);
+            setFormChanged(false);
 
             // Hide success message after 3 seconds
             setTimeout(() => {
-                setSaveSuccess(false)
-            }, 3000)
+                setSaveSuccess(false);
+            }, 3000);
 
             // If not in edit mode, redirect to products page
             if (!isEditMode) {
-                //routing
+                // router.push("/products");
+                console.log("Redirecting to products page");
             }
         } catch (err) {
-            console.error("Error submitting form:", err)
+            console.error("Error submitting form:", err);
         } finally {
-            setLoading(false)
+            setLoading(false);
         }
-    }
+    };
 
+    // Handle product deletion
     const handleDelete = async () => {
-        setLoading(true)
+        setLoading(true);
 
         try {
             // Simulate API call
-            await new Promise((resolve) => setTimeout(resolve, 1000))
+            await new Promise(resolve => setTimeout(resolve, 1000));
 
-            setShowDeleteDialog(false)
-            // routing
+            setShowDeleteDialog(false);
+            // router.push("/products");
+            console.log("Product deleted, redirecting to products page");
         } catch (err) {
-            console.error("Error deleting product:", err)
+            console.error("Error deleting product:", err);
         } finally {
-            setLoading(false)
+            setLoading(false);
         }
-    }
+    };
 
     // Mock revision history data
     const revisionHistory = [
@@ -315,7 +353,7 @@ export function AddEditProduct() {
         { id: 2, date: "2023-09-22 10:15", user: "Jane Smith", changes: "Added new product variants" },
         { id: 3, date: "2023-08-05 16:45", user: "John Doe", changes: "Updated product images" },
         { id: 4, date: "2023-07-18 09:20", user: "Admin", changes: "Product created" },
-    ]
+    ];
 
     return (
         <div className="container mx-auto px-4 lg:px-8">
@@ -377,19 +415,19 @@ export function AddEditProduct() {
                 </motion.div>
             )}
 
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <div className="lg:col-span-2 space-y-6">
                         <Tabs value={activeTab} onValueChange={setActiveTab}>
                             <TabsList className="grid grid-cols-5 mb-4 w-full">
-                                <TabsTrigger value="basic">Basic Info</TabsTrigger>
-                                <TabsTrigger value="images">Images</TabsTrigger>
-                                <TabsTrigger value="variants">Variants</TabsTrigger>
-                                <TabsTrigger value="inventory">Inventory</TabsTrigger>
-                                <TabsTrigger value="advanced">Advanced</TabsTrigger>
+                                <TabsTrigger className={`${activeTab == "basic" ? "hiakri-dark-bg" : ""}`} value="basic">Basic Info</TabsTrigger>
+                                <TabsTrigger className={`${activeTab == "images" ? "hiakri-dark-bg" : ""}`} value="images">Images</TabsTrigger>
+                                <TabsTrigger className={`${activeTab == "variants" ? "hiakri-dark-bg" : ""}`} value="variants">Variants</TabsTrigger>
+                                <TabsTrigger className={`${activeTab == "inventory" ? "hiakri-dark-bg" : ""}`} value="inventory">Inventory</TabsTrigger>
+                                <TabsTrigger className={`${activeTab == "advanced" ? "hiakri-dark-bg" : ""}`} value="advanced">Advanced</TabsTrigger>
                             </TabsList>
 
-                            <TabsContent value="basic" className="space-y-4">
+                            <TabsContent  value="basic" className="space-y-4">
                                 <Card>
                                     <CardHeader>
                                         <CardTitle>Basic Information</CardTitle>
@@ -402,11 +440,9 @@ export function AddEditProduct() {
                                             </Label>
                                             <Input
                                                 id="title"
-                                                name="title"
-                                                value={formData.title}
-                                                onChange={handleChange}
                                                 placeholder="e.g. Premium Wireless Headphones"
                                                 required
+                                                {...register("title")}
                                             />
                                         </div>
 
@@ -416,12 +452,10 @@ export function AddEditProduct() {
                                             </Label>
                                             <Textarea
                                                 id="description"
-                                                name="description"
-                                                value={formData.description}
-                                                onChange={handleChange}
                                                 placeholder="Describe your product in detail"
                                                 rows={5}
                                                 required
+                                                {...register("description")}
                                             />
                                         </div>
 
@@ -432,14 +466,12 @@ export function AddEditProduct() {
                                                 </Label>
                                                 <Input
                                                     id="price"
-                                                    name="price"
                                                     type="number"
                                                     step="0.01"
                                                     min="0"
-                                                    value={formData.price}
-                                                    onChange={handleChange}
                                                     placeholder="e.g. 99.99"
                                                     required
+                                                    {...register("mrpPrice")}
                                                 />
                                             </div>
 
@@ -447,13 +479,11 @@ export function AddEditProduct() {
                                                 <Label htmlFor="offerPrice">Sale Price ($)</Label>
                                                 <Input
                                                     id="offerPrice"
-                                                    name="offerPrice"
                                                     type="number"
                                                     step="0.01"
                                                     min="0"
-                                                    value={formData.offerPrice}
-                                                    onChange={handleChange}
                                                     placeholder="e.g. 79.99 (optional)"
+                                                    {...register("sellingPrice")}
                                                 />
                                             </div>
                                         </div>
@@ -463,30 +493,40 @@ export function AddEditProduct() {
                                                 <Label htmlFor="category">
                                                     Category <span className="text-red-500">*</span>
                                                 </Label>
-                                                <Select
-                                                    value={formData.category}
-                                                    onValueChange={(value) => handleSelectChange("category", value)}
-                                                    required
-                                                >
-                                                    <SelectTrigger id="category">
-                                                        <SelectValue placeholder="Select category" />
-                                                    </SelectTrigger>
-                                                    <SelectContent>
-                                                        <SelectItem value="Electronics">Electronics</SelectItem>
-                                                        <SelectItem value="Clothing">Clothing</SelectItem>
-                                                        <SelectItem value="Home & Kitchen">Home & Kitchen</SelectItem>
-                                                        <SelectItem value="Beauty">Beauty</SelectItem>
-                                                        <SelectItem value="Toys">Toys</SelectItem>
-                                                        <SelectItem value="Sports">Sports</SelectItem>
-                                                        <SelectItem value="Books">Books</SelectItem>
-                                                    </SelectContent>
-                                                </Select>
+                                                <Controller
+                                                    name="category.name"
+                                                    control={control}
+                                                    render={({ field }) => (
+                                                        <Select
+                                                            value={field.value}
+                                                            onValueChange={(value) => {
+                                                                field.onChange(value);
+                                                                // Also set categoryId based on selection
+                                                                setValue("category.categoryId", `cat-${value.toLowerCase().replace(/\s+/g, '-')}`, { shouldDirty: true });
+                                                            }}
+                                                        >
+                                                            <SelectTrigger id="category">
+                                                                <SelectValue placeholder="Select category" />
+                                                            </SelectTrigger>
+                                                            <SelectContent>
+                                                                {CATEGORIES.map((category) => (
+                                                                    <SelectItem key={category} value={category}>
+                                                                        {category}
+                                                                    </SelectItem>
+                                                                ))}
+                                                            </SelectContent>
+                                                        </Select>
+                                                    )}
+                                                />
+                                                {errors.category?.name && (
+                                                    <p className="text-red-500 text-sm mt-1">{errors.category.name.message}</p>
+                                                )}
                                             </div>
 
                                             <div className="space-y-2">
                                                 <Label>Tags</Label>
                                                 <div className="flex flex-wrap gap-2 border rounded-md p-2 min-h-[42px]">
-                                                    {formData.tags.map((tag) => (
+                                                    {watchTags.map((tag) => (
                                                         <Badge key={tag} variant="secondary" className="flex items-center gap-1">
                                                             {tag}
                                                             <button
@@ -501,11 +541,12 @@ export function AddEditProduct() {
                                                     <input
                                                         className="flex-1 min-w-[100px] outline-none text-sm"
                                                         placeholder="Add tag and press Enter"
+                                                        value={tagInput}
+                                                        onChange={(e) => setTagInput(e.target.value)}
                                                         onKeyDown={(e) => {
-                                                            if (e.key === "Enter" && (e.target as HTMLInputElement).value.trim()) {
-                                                                e.preventDefault()
-                                                                handleTagAdd((e.target as HTMLInputElement).value.trim())
-                                                                    ; (e.target as HTMLInputElement).value = ""
+                                                            if (e.key === "Enter" && tagInput.trim()) {
+                                                                e.preventDefault();
+                                                                handleTagAdd(tagInput.trim());
                                                             }
                                                         }}
                                                     />
@@ -515,12 +556,21 @@ export function AddEditProduct() {
                                         </div>
 
                                         <div className="flex items-center space-x-2">
-                                            <Switch
-                                                id="status"
-                                                checked={formData.status === "active"}
-                                                onCheckedChange={(checked) => handleSelectChange("status", checked ? "active" : "inactive")}
+                                            <Controller
+                                                name="status"
+                                                control={control}
+                                                render={({ field }) => (
+                                                    <Switch
+                                                        id="status"
+                                                        checked={field.value === "active"}
+                                                        onCheckedChange={(checked) => {
+                                                            field.onChange(checked ? "active" : "inactive");
+                                                        }}
+                                                        className="hiakri-dark-bg"
+                                                    />
+                                                )}
                                             />
-                                            <Label htmlFor="status">Product is {formData.status === "active" ? "active" : "inactive"}</Label>
+                                            <Label htmlFor="status">Product is {watchStatus === "active" ? "active" : "inactive"}</Label>
                                         </div>
                                     </CardContent>
                                 </Card>
@@ -604,7 +654,7 @@ export function AddEditProduct() {
                                     </CardHeader>
                                     <CardContent>
                                         <div className="space-y-4">
-                                            {formData.variants.map((variant, index) => (
+                                            {variantFields.map((variant, index) => (
                                                 <motion.div
                                                     key={index}
                                                     initial={{ opacity: 0, y: 10 }}
@@ -613,34 +663,51 @@ export function AddEditProduct() {
                                                 >
                                                     <div className="space-y-2">
                                                         <Label htmlFor={`variant-name-${index}`}>Variant Type</Label>
-                                                        <Select
-                                                            value={variant.name}
-                                                            onValueChange={(value) => handleVariantChange(index, "name", value)}
-                                                        >
-                                                            <SelectTrigger id={`variant-name-${index}`}>
-                                                                <SelectValue placeholder="Select type" />
-                                                            </SelectTrigger>
-                                                            <SelectContent>
-                                                                <SelectItem value="color">Color</SelectItem>
-                                                                <SelectItem value="size">Size</SelectItem>
-                                                                <SelectItem value="material">Material</SelectItem>
-                                                                <SelectItem value="style">Style</SelectItem>
-                                                                <SelectItem value="layout">Layout</SelectItem>
-                                                            </SelectContent>
-                                                        </Select>
+                                                        <Controller
+                                                            name={`varianta.${index}.name`}
+                                                            control={control}
+                                                            render={({ field }) => (
+                                                                <Select
+                                                                    value={field.value}
+                                                                    onValueChange={field.onChange}
+                                                                >
+                                                                    <SelectTrigger id={`variant-name-${index}`}>
+                                                                        <SelectValue placeholder="Select type" />
+                                                                    </SelectTrigger>
+                                                                    <SelectContent>
+                                                                        {VARIANT_TYPES.map((type) => (
+                                                                            <SelectItem key={type} value={type}>
+                                                                                {type.charAt(0).toUpperCase() + type.slice(1)}
+                                                                            </SelectItem>
+                                                                        ))}
+                                                                    </SelectContent>
+                                                                </Select>
+                                                            )}
+                                                        />
+                                                        {errors.varianta?.[index]?.name && (
+                                                            <p className="text-red-500 text-sm mt-1">{errors.varianta[index].name.message}</p>
+                                                        )}
                                                     </div>
 
                                                     <div className="space-y-2">
                                                         <Label htmlFor={`variant-values-${index}`}>Values</Label>
-                                                        <Input
-                                                            id={`variant-values-${index}`}
-                                                            value={variant.values}
-                                                            onChange={(e) => handleVariantChange(index, "values", e.target.value)}
-                                                            placeholder="e.g. Red, Blue, Green (comma separated)"
+                                                        <Controller
+                                                            name={`varianta.${index}.value`}
+                                                            control={control}
+                                                            render={({ field }) => (
+                                                                <Input
+                                                                    id={`variant-value-${index}`}
+                                                                    {...field}
+                                                                    placeholder="e.g. Red, Blue, Green (comma separated)"
+                                                                />
+                                                            )}
                                                         />
+                                                        {errors.varianta?.[index]?.value && (
+                                                            <p className="text-red-500 text-sm mt-1">{errors.varianta[index].value.message}</p>
+                                                        )}
                                                     </div>
 
-                                                    {formData.variants.length > 1 && (
+                                                    {variantFields.length > 1 && (
                                                         <Button
                                                             type="button"
                                                             variant="ghost"
@@ -657,7 +724,7 @@ export function AddEditProduct() {
                                             <Button
                                                 type="button"
                                                 variant="outline"
-                                                onClick={addVariant}
+                                                onClick={() => appendVariant({name:"" , value:""})}
                                                 className="w-full flex items-center justify-center gap-2"
                                             >
                                                 <Plus className="h-4 w-4" /> Add Variant
@@ -681,13 +748,11 @@ export function AddEditProduct() {
                                                 </Label>
                                                 <Input
                                                     id="stock"
-                                                    name="stock"
                                                     type="number"
                                                     min="0"
-                                                    value={formData.stock}
-                                                    onChange={handleChange}
                                                     placeholder="e.g. 100"
                                                     required
+                                                    {...register("quantity", { valueAsNumber: true })}
                                                 />
                                             </div>
 
@@ -695,10 +760,8 @@ export function AddEditProduct() {
                                                 <Label htmlFor="sku">SKU (Stock Keeping Unit)</Label>
                                                 <Input
                                                     id="sku"
-                                                    name="sku"
-                                                    value={formData.sku}
-                                                    onChange={handleChange}
                                                     placeholder="e.g. WH-PRO-001"
+                                                    {...register("sku")}
                                                 />
                                             </div>
                                         </div>
@@ -707,10 +770,8 @@ export function AddEditProduct() {
                                             <Label htmlFor="barcode">Barcode (ISBN, UPC, GTIN, etc.)</Label>
                                             <Input
                                                 id="barcode"
-                                                name="barcode"
-                                                value={formData.barcode}
-                                                onChange={handleChange}
                                                 placeholder="e.g. 8901234567890"
+                                                {...register("barcode")}
                                             />
                                         </div>
 
@@ -741,10 +802,8 @@ export function AddEditProduct() {
                                             <Label htmlFor="seo.metaTitle">Meta Title</Label>
                                             <Input
                                                 id="seo.metaTitle"
-                                                name="seo.metaTitle"
-                                                value={formData.seo.metaTitle}
-                                                onChange={handleChange}
                                                 placeholder="SEO optimized title"
+                                                {...register("seo.metaTitle")}
                                             />
                                         </div>
 
@@ -752,11 +811,9 @@ export function AddEditProduct() {
                                             <Label htmlFor="seo.metaDescription">Meta Description</Label>
                                             <Textarea
                                                 id="seo.metaDescription"
-                                                name="seo.metaDescription"
-                                                value={formData.seo.metaDescription}
-                                                onChange={handleChange}
                                                 placeholder="Brief description for search results"
                                                 rows={3}
+                                                {...register("seo.metaDescription")}
                                             />
                                         </div>
 
@@ -764,10 +821,8 @@ export function AddEditProduct() {
                                             <Label htmlFor="seo.keywords">Keywords</Label>
                                             <Input
                                                 id="seo.keywords"
-                                                name="seo.keywords"
-                                                value={formData.seo.keywords}
-                                                onChange={handleChange}
                                                 placeholder="e.g. wireless, headphones, bluetooth (comma separated)"
+                                                {...register("seo.keywords")}
                                             />
                                         </div>
                                     </CardContent>
@@ -783,13 +838,11 @@ export function AddEditProduct() {
                                             <Label htmlFor="shipping.weight">Weight (kg)</Label>
                                             <Input
                                                 id="shipping.weight"
-                                                name="shipping.weight"
                                                 type="number"
                                                 step="0.01"
                                                 min="0"
-                                                value={formData.shipping.weight}
-                                                onChange={handleChange}
                                                 placeholder="e.g. 0.5"
+                                                {...register("shipping.weight")}
                                             />
                                         </div>
 
@@ -799,37 +852,31 @@ export function AddEditProduct() {
                                                 <div>
                                                     <Input
                                                         id="length"
-                                                        name="length"
                                                         type="number"
                                                         step="0.1"
                                                         min="0"
-                                                        value={formData.shipping.dimensions.length}
-                                                        onChange={handleDimensionChange}
                                                         placeholder="Length"
+                                                        {...register("shipping.dimensions.length")}
                                                     />
                                                 </div>
                                                 <div>
                                                     <Input
                                                         id="width"
-                                                        name="width"
                                                         type="number"
                                                         step="0.1"
                                                         min="0"
-                                                        value={formData.shipping.dimensions.width}
-                                                        onChange={handleDimensionChange}
                                                         placeholder="Width"
+                                                        {...register("shipping.dimensions.width")}
                                                     />
                                                 </div>
                                                 <div>
                                                     <Input
                                                         id="height"
-                                                        name="height"
                                                         type="number"
                                                         step="0.1"
                                                         min="0"
-                                                        value={formData.shipping.dimensions.height}
-                                                        onChange={handleDimensionChange}
                                                         placeholder="Height"
+                                                        {...register("shipping.dimensions.height")}
                                                     />
                                                 </div>
                                             </div>
@@ -838,8 +885,10 @@ export function AddEditProduct() {
                                         <div className="flex items-center space-x-2">
                                             <Switch
                                                 id="shipping.freeShipping"
-                                                checked={formData.shipping.freeShipping}
-                                                onCheckedChange={(checked) => handleSwitchChange("shipping.freeShipping", checked)}
+                                                checked={watch("shipping.freeShipping")}
+                                                onCheckedChange={(checked) => {
+                                                    setValue("shipping.freeShipping", checked, { shouldDirty: true });
+                                                }}
                                             />
                                             <Label htmlFor="shipping.freeShipping">Offer free shipping</Label>
                                         </div>
@@ -860,12 +909,13 @@ export function AddEditProduct() {
                                         <Label htmlFor="status-switch">Product Status</Label>
                                         <Switch
                                             id="status-switch"
-                                            checked={formData.status === "active"}
-                                            onCheckedChange={(checked) => handleSelectChange("status", checked ? "active" : "inactive")}
+                                            checked={watch("status") === "active"}
+                                            onCheckedChange={(checked) => setValue("status", checked ? "active" : "inactive")}
+                                            className="hiakri-dark-bg"
                                         />
                                     </div>
                                     <p className="text-sm text-gray-500">
-                                        {formData.status === "active"
+                                        {watch("status") === "active"
                                             ? "Your product will be visible to customers"
                                             : "Your product will be hidden from customers"}
                                     </p>
@@ -878,7 +928,7 @@ export function AddEditProduct() {
                                 <CardTitle>Save Product</CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-4">
-                                <Button type="submit" className="w-full flex items-center gap-2" disabled={loading}>
+                                <Button type="submit" className="w-full flex items-center gap-2 hiakri-dark-bg cursor-pointer" disabled={loading}>
                                     {loading ? (
                                         <>
                                             <span className="animate-spin">⏳</span>
@@ -907,13 +957,13 @@ export function AddEditProduct() {
                         {isEditMode && (
                             <Card className="border-red-200">
                                 <CardHeader>
-                                    <CardTitle className="text-red-600">Danger Zone</CardTitle>
+                                    <CardTitle className="text-[#F97316]">Danger Zone</CardTitle>
                                 </CardHeader>
                                 <CardContent>
                                     <Button
                                         type="button"
                                         variant="destructive"
-                                        className="w-full flex items-center gap-2"
+                                        className="w-full flex items-center gap-2 bg-[#F97316]"
                                         onClick={() => setShowDeleteDialog(true)}
                                     >
                                         <Trash2 className="h-4 w-4" /> Delete Product
@@ -938,7 +988,7 @@ export function AddEditProduct() {
                         <Button variant="outline" onClick={() => setShowDeleteDialog(false)}>
                             Cancel
                         </Button>
-                        <Button variant="destructive" onClick={handleDelete} disabled={loading}>
+                        <Button variant="destructive" className="bg-blue-700" onClick={handleDelete} disabled={loading}>
                             {loading ? "Deleting..." : "Delete"}
                         </Button>
                     </DialogFooter>
@@ -946,70 +996,7 @@ export function AddEditProduct() {
             </Dialog>
 
             {/* Product Preview Dialog */}
-            <Dialog open={showPreviewDialog} onOpenChange={setShowPreviewDialog}>
-                <DialogContent className="max-w-3xl">
-                    <DialogHeader>
-                        <DialogTitle>Product Preview</DialogTitle>
-                        <DialogDescription>This is how your product will appear to customers</DialogDescription>
-                    </DialogHeader>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
-                        <div>
-                            {imagePreviews.length > 0 ? (
-                                <img
-                                    src={imagePreviews[0] || "/placeholder.svg"}
-                                    alt={formData.title}
-                                    className="w-full h-auto rounded-md"
-                                />
-                            ) : (
-                                <div className="w-full aspect-square bg-gray-100 rounded-md flex items-center justify-center">
-                                    <p className="text-gray-400">No image available</p>
-                                </div>
-                            )}
-                        </div>
-                        <div>
-                            <h2 className="text-xl font-bold">{formData.title || "Product Title"}</h2>
-
-                            <div className="flex items-center gap-2 mt-2">
-                                {formData.offerPrice ? (
-                                    <>
-                                        <span className="text-lg font-bold">${formData.offerPrice}</span>
-                                        <span className="text-gray-500 line-through">${formData.price}</span>
-                                        <Badge className="bg-red-500">Sale</Badge>
-                                    </>
-                                ) : (
-                                    <span className="text-lg font-bold">${formData.price || "0.00"}</span>
-                                )}
-                            </div>
-
-                            <Separator className="my-4" />
-
-                            <div className="prose prose-sm max-w-none">
-                                <p>{formData.description || "No description available."}</p>
-                            </div>
-
-                            {formData.variants.length > 0 && formData.variants[0].name && (
-                                <div className="mt-4">
-                                    <h3 className="font-medium mb-2">
-                                        {formData.variants[0].name.charAt(0).toUpperCase() + formData.variants[0].name.slice(1)}:
-                                    </h3>
-                                    <div className="flex flex-wrap gap-2">
-                                        {formData.variants[0].values.split(",").map((value, i) => (
-                                            <Badge key={i} variant="outline" className="cursor-pointer hover:bg-gray-100">
-                                                {value.trim()}
-                                            </Badge>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
-
-                            <div className="mt-6 flex gap-2">
-                                <Button className="flex-1">Add to Cart</Button>
-                                <Button variant="outline">Buy Now</Button>
-                            </div>
-                        </div>
-                    </div>
-                </DialogContent>
-            </Dialog>
+            <ProductPreview imagePreviews={imagePreviews} setShowPreviewDialog={setShowPreviewDialog} showPreviewDialog={showPreviewDialog} />
 
             {/* Revision History Dialog */}
             <Dialog open={showHistoryDialog} onOpenChange={setShowHistoryDialog}>

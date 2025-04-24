@@ -3,26 +3,13 @@
 import { useState } from "react"
 import {Link} from "react-router-dom"
 import { motion, AnimatePresence } from "framer-motion"
-import { ChevronLeft, ChevronRight, Edit, MoreHorizontal, Package, Plus, Trash2 } from "lucide-react"
+import { Edit, MoreHorizontal, Package, Plus, Trash2 } from "lucide-react"
 
 import { Button } from "../../Components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../Components/ui/card"
 import { Badge } from "../../Components/ui/badge"
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from "../../Components/ui/dropdown-menu"
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from "../../Components/ui/dialog"
+import {DropdownMenu,DropdownMenuContent,DropdownMenuItem,DropdownMenuSeparator,DropdownMenuTrigger} from "../../Components/ui/dropdown-menu"
+import {Dialog,DialogContent,DialogDescription,DialogFooter,DialogHeader,DialogTitle} from "../../Components/ui/dialog"
 import { Checkbox } from "../../Components/ui/checkbox"
 import { mockProducts, productCategories, productStatus } from "../Data/api"
 import FilterSearch from "../Components/FilterSearch/FilterSearch"

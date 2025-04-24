@@ -4,7 +4,7 @@ import sellerLoginReducer from "./authSlice/sellerAuthSlice"
 import storage from "redux-persist/lib/storage"
 import { persistStore , persistReducer } from "redux-persist"
 import sellerSlice from "./seller/SellerSlice"
-
+import sellerProductReducer from "./seller/SellerProductSlice"
 
 const persistConfig = {
     key: 'root',
@@ -14,7 +14,8 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
     sellers : sellerLoginReducer,
-    fetchSeller : sellerSlice
+    fetchSeller : sellerSlice,
+    sellerProducs: sellerProductReducer,
 }) 
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)

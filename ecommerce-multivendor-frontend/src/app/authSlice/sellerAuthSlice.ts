@@ -1,43 +1,11 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { api } from "../../config/api";
+import { SellerSignupRequest } from "../../types/SellerType";
 
 
 interface LoginRequest {
     email: string;
     otp: string;
-}
-
-export interface SellerSignupRequest {
-    fullName: string; //
-    email: string; //
-    phone: string; //
-    password: string; //
-    confirmPassword: string;  // dont need 
-    businessDetails: {
-        businessName: string; //
-        businessEmail: string; //
-        businessPhone: string; //
-        address: string; //
-        city: string; //
-        state: string; //
-        zipCode: string; //
-        businessType: string; //
-        gstin?: string | undefined; //
-    },
-    bankDetails : {
-        accountNumber: string; //
-        ifscCode: string; //
-        accountHolderName: string; //
-    }
-    pickupAddress : {
-        pickupBusinessName: string; //
-        locality: string; //
-        pickupPhone: string;
-        pickupAddress: string; //
-        pickupCity: string; //
-        pickupState: string; //
-        pickupZipCode: string; //
-    }
 }
 
 
