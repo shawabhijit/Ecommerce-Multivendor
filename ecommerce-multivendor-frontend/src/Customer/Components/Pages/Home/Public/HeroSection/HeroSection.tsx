@@ -1,5 +1,5 @@
 import React from 'react'
-import {motion } from "motion/react"
+import { motion } from "motion/react"
 import { Button } from '../../../../../../Components/ui/button'
 import { ShoppingBag, Users } from 'lucide-react';
 

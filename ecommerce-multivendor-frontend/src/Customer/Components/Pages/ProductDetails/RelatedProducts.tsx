@@ -11,7 +11,7 @@ interface RelatedProductsProps {
 }
 
 export default function RelatedProducts({ products }: RelatedProductsProps) {
-    const scrollContainerRef = useRef < HTMLDivElement > (null)
+    const scrollContainerRef = useRef<HTMLDivElement>(null)
 
     const scroll = (direction: "left" | "right") => {
         if (scrollContainerRef.current) {

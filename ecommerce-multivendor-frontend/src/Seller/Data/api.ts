@@ -378,17 +378,17 @@ export const mockProducts = [
 
 
 export const productStatus = [
-    {id : "all" , value:"All Status"},
-    {id : "active" , value:"Active"},
-    {id : "inactive" , value:"Inactive"},
-    {id : "in_stock" , value:"In Strock"},
-    {id : "out_in_stock" , value:"Out of stock"}
+    { id: "all", value: "All Status" },
+    { id: "active", value: "Active" },
+    { id: "inactive", value: "Inactive" },
+    { id: "in_stock", value: "In Strock" },
+    { id: "out_in_stock", value: "Out of stock" }
 ]
 export const productCategories = [
-    {id : "all" , value:"All Categories"},
-    {id : "electronics" , value:"Electronics"},
-    {id : "smart home" , value:"Smart Home"},
-    {id : "wearables" , value:"Wearables"},
+    { id: "all", value: "All Categories" },
+    { id: "electronics", value: "Electronics" },
+    { id: "smart home", value: "Smart Home" },
+    { id: "wearables", value: "Wearables" },
 ]
 
 export const OrderStatus = [
@@ -535,7 +535,7 @@ export const sellerData = {
         accountNumber: "XXXX-XXXX-XXXX-1234",
         bankName: "Chase Bank",
         ifscCode: "CHAS0123456",
-        upiId: "johndoe@upi",
+        upiid: "johndoe@upi",
     },
     storeSettings: {
         storeUrl: "tech-gadgets-store",

@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import {ShoppingBag} from "lucide-react"
+import { ShoppingBag } from "lucide-react"
 import PriceDetails from "./PriceDetails"
 import { Outlet, useLocation } from "react-router-dom"
 import { CartContext } from "./Context/CartContext"
@@ -41,12 +41,12 @@ export default function UserCheckoutPage() {
 
 
 
-    const updateQuantity = (id : number, newQuantity: number) => {
+    const updateQuantity = (id: number, newQuantity: number) => {
         if (newQuantity < 1) return
         setCartItems(cartItems.map((item) => (item.id === id ? { ...item, quantity: newQuantity } : item)))
     }
 
-    const removeItem = (id : number) => {
+    const removeItem = (id: number) => {
         setCartItems(cartItems.filter((item) => item.id !== id))
     }
 

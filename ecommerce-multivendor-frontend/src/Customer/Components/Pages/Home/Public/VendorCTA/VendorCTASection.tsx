@@ -73,7 +73,7 @@ const VendorCTASection = () => {
                                 className="inline-block"
                             >
                                 <Button
-                                    onClick={()=>navigate("/seller/login")}
+                                    onClick={() => navigate("/seller/login")}
                                     className="bg-white text-[#3571bb] hover:bg-blue-50 cursor-pointer transition-colors py-6 px-8 text-lg font-medium inline-flex items-center gap-2"
                                 >
                                     <Store className="h-5 w-5" />

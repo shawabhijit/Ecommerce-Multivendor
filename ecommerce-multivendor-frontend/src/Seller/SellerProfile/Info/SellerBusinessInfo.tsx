@@ -11,72 +11,72 @@ import { Separator } from '../../../Components/ui/separator'
 import { sellerData } from '../../Data/api'
 
 const SellerBusinessInfo = ({
-    handleInputChange , 
-    handleNestedInputChange ,
-    handleCancel , 
-    handleEdit , 
+    handleInputChange,
+    handleNestedInputChange,
+    handleCancel,
+    handleEdit,
     handleSave,
     isEditing
 }) => {
 
     const [seller, setSeller] = useState(sellerData)
     const [saveSuccess, setSaveSuccess] = useState<string | null>(null)
-    
+
     const logoInputRef = useRef<HTMLInputElement>(null);
     const bannerInputRef = useRef<HTMLInputElement>(null);
 
 
     const handleBannerUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-            if (e.target.files && e.target.files[0]) {
-                const file = e.target.files[0]
-                const reader = new FileReader()
-    
-                reader.onload = (event) => {
-                    if (event.target?.result) {
-                        setSeller((prev) => ({
-                            ...prev,
-                            business: {
-                                ...prev.business,
-                                banner: event.target?.result as string,
-                            },
-                        }))
-                        setSaveSuccess("Store banner updated successfully!")
-    
-                        setTimeout(() => {
-                            setSaveSuccess(null)
-                        }, 3000)
-                    }
+        if (e.target.files && e.target.files[0]) {
+            const file = e.target.files[0]
+            const reader = new FileReader()
+
+            reader.onload = (event) => {
+                if (event.target?.result) {
+                    setSeller((prev) => ({
+                        ...prev,
+                        business: {
+                            ...prev.business,
+                            banner: event.target?.result as string,
+                        },
+                    }))
+                    setSaveSuccess("Store banner updated successfully!")
+
+                    setTimeout(() => {
+                        setSaveSuccess(null)
+                    }, 3000)
                 }
-    
-                reader.readAsDataURL(file)
             }
+
+            reader.readAsDataURL(file)
         }
-    
-        const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-            if (e.target.files && e.target.files[0]) {
-                const file = e.target.files[0]
-                const reader = new FileReader()
-    
-                reader.onload = (event) => {
-                    if (event.target?.result) {
-                        setSeller((prev) => ({
-                            ...prev,
-                            business: {
-                                ...prev.business,
-                                logo: event.target?.result as string,
-                            },
-                        }))
-                        setSaveSuccess("Store logo updated successfully!")
-    
-                        setTimeout(() => {
-                            setSaveSuccess(null)
-                        }, 3000)
-                    }
+    }
+
+    const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files[0]) {
+            const file = e.target.files[0]
+            const reader = new FileReader()
+
+            reader.onload = (event) => {
+                if (event.target?.result) {
+                    setSeller((prev) => ({
+                        ...prev,
+                        business: {
+                            ...prev.business,
+                            logo: event.target?.result as string,
+                        },
+                    }))
+                    setSaveSuccess("Store logo updated successfully!")
+
+                    setTimeout(() => {
+                        setSaveSuccess(null)
+                    }, 3000)
                 }
-    
-                reader.readAsDataURL(file)
             }
+
+            reader.readAsDataURL(file)
         }
+    }
 
 
     return (

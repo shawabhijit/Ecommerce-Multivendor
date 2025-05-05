@@ -13,13 +13,13 @@ import { Input } from "../../Components/ui/input"
 import { Label } from "../../Components/ui/label"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../../Components/ui/card"
 import { InputOTP, InputOTPSlot } from "../../Components/ui/input-otp"
-import { useAppDispatch, useAppSelecter} from "../../app/Store"
+import { useAppDispatch, useAppSelecter } from "../../app/Store"
 import { sendLoginOtp, signIn } from "../../app/authSlice/AuthSlice"
 import { sellerLogin } from "../../app/authSlice/sellerAuthSlice"
 
 const formSchema = z.object({
     email: z.string().min(1, "Email is required").email("Invalid email"),
-    otp: z.string().min(6,"Opt required 6 vlaues.") ,
+    otp: z.string().min(6, "Opt required 6 vlaues."),
 })
 
 type FormData = z.infer<typeof formSchema>
@@ -50,11 +50,11 @@ export function SellerLogin() {
     })
 
     const value = watch("otp")
-    
+
     const handleSendOtp = () => {
         setSendOtp(true)
         const email = getValues("email")
-        dispatch(sendLoginOtp({email}))
+        dispatch(sendLoginOtp({ email }))
     }
 
     const onSubmit = async (data: FormData) => {
@@ -64,12 +64,12 @@ export function SellerLogin() {
         const email = data.email;
         const otp = data.otp
         console.log(data.email)
-        console.log(data.otp) 
+        console.log(data.otp)
 
         try {
             // Simulate API call
             await new Promise((resolve) => setTimeout(resolve, 1500))
-            dispatch(sellerLogin({email,otp}))
+            dispatch(sellerLogin({ email, otp }))
             console.log('Logged In :', isLoggedIn);
         } catch (err) {
             setError("An error occurred. Please try again.")

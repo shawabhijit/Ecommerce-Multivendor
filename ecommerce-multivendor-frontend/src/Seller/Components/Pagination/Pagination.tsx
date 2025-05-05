@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Button } from '../../../Components/ui/button'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 
-const Pagination = ({filteredOrders , totalPages , indexOfFirstOrder , indexOfLastOrder , currentPage , setCurrentPage}) => {
+const Pagination = ({ filteredOrders, totalPages, indexOfFirstOrder, indexOfLastOrder, currentPage, setCurrentPage }) => {
 
     const paginate = (pageNumber: number) => setCurrentPage(pageNumber)
 

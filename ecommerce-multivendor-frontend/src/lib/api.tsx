@@ -174,7 +174,7 @@ export async function getProducts(): Promise<Product[]> {
     return mockProducts
 }
 
-export async function getProductById(id: string): Promise<Product> {
+export async function getProductByid(id: string): Promise<Product> {
     await delay(600) // Simulate network delay
     const product = mockProducts.find((p) => p.id === id)
 

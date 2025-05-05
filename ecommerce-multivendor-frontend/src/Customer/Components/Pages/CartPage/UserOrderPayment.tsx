@@ -106,7 +106,7 @@ const UserOrderPayment = () => {
                                     className="mt-4 overflow-hidden"
                                 >
                                     <div>
-                                        <Label htmlFor="upi-id">UPI ID</Label>
+                                        <Label htmlFor="upi-id">UPI id</Label>
                                         <input
                                             id="upi-id"
                                             type="text"

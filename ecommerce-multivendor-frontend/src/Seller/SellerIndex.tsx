@@ -5,11 +5,11 @@ import { ProductManagement } from './products/ProductsManagement';
 import { AddEditProduct } from './products/AddEditProducts/SellerAddProduct';
 import SellerEarnings from './earnings/SellerEarnings';
 import SellerAnalytics from './Analytics/SellerAnalytics';
-import { Navigate, Route, Routes} from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import { SellerProfile } from './SellerProfile/SellerProfile';
 import { SellerSignup } from './auth/SellerSignup';
 import { SellerLogin } from './auth/SellerLogin';
-import {useAppSelecter } from '../app/Store';
+import { useAppSelecter } from '../app/Store';
 import { ProtectedRoute } from './auth/ProtectedRoute';
 
 

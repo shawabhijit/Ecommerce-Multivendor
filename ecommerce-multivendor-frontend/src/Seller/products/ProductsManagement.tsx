@@ -1,47 +1,79 @@
 "use client"
 
-import { useState } from "react"
-import {Link} from "react-router-dom"
+import { useEffect, useState } from "react"
+import { Link } from "react-router-dom"
 import { motion, AnimatePresence } from "framer-motion"
 import { Edit, MoreHorizontal, Package, Plus, Trash2 } from "lucide-react"
 
 import { Button } from "../../Components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../Components/ui/card"
 import { Badge } from "../../Components/ui/badge"
-import {DropdownMenu,DropdownMenuContent,DropdownMenuItem,DropdownMenuSeparator,DropdownMenuTrigger} from "../../Components/ui/dropdown-menu"
-import {Dialog,DialogContent,DialogDescription,DialogFooter,DialogHeader,DialogTitle} from "../../Components/ui/dialog"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "../../Components/ui/dropdown-menu"
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "../../Components/ui/dialog"
 import { Checkbox } from "../../Components/ui/checkbox"
-import { mockProducts, productCategories, productStatus } from "../Data/api"
+import { productCategories, productStatus } from "../Data/api"
 import FilterSearch from "../Components/FilterSearch/FilterSearch"
 import Pagination from "../Components/Pagination/Pagination"
+import { useAppDispatch } from "../../app/Store"
+import { fetchSellerProducts } from "../../app/seller/SellerProductSlice"
+import { Products } from "../../types/ProductTupe"
+import { number } from "zod"
 // Mock data for products
 
 
 export function ProductManagement() {
-    const [products, setProducts] = useState(mockProducts)
+    const [products, setProducts] = useState<Products[]>([])
     const [searchQuery, setSearchQuery] = useState("")
     const [statusFilter, setStatusFilter] = useState("all")
     const [categoryFilter, setCategoryFilter] = useState("all")
     const [currentPage, setCurrentPage] = useState(1)
-    const [selectedProducts, setSelectedProducts] = useState<string[]>([])
+    const [selectedProducts, setSelectedProducts] = useState<number[]>([])
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
-    const [productToDelete, setProductToDelete] = useState<string | null>(null)
+    const [productToDelete, setProductToDelete] = useState<number | null>(null)
 
     const productsPerPage = 5
+
+    const dispatch = useAppDispatch();
+
+    const fetchProducts = async () => {
+        const prod = await dispatch(fetchSellerProducts());
+        if (fetchSellerProducts.fulfilled.match(prod)) {
+            const SellerProducts = prod.payload as Products[];
+            console.log("seller products :", SellerProducts);
+            setProducts(SellerProducts);
+        } else {
+            console.error("Failed to fetch seller products:", prod.error);
+        }
+    }
+
+    useEffect(() => {
+        const fetchProducts = async () => {
+            const prod = await dispatch(fetchSellerProducts());
+            if (fetchSellerProducts.fulfilled.match(prod)) {
+                const SellerProducts = prod.payload as Products[];
+                // console.log("seller products :", SellerProducts);
+                setProducts(SellerProducts);
+            } else {
+                console.error("Failed to fetch seller products:", prod.error);
+            }
+        }
+        fetchProducts()
+    }, [products])
 
     // Filter products based on search query and filters
     const filteredProducts = products.filter((product) => {
         const matchesSearch =
             product.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            product.id.toLowerCase().includes(searchQuery.toLowerCase())
+            product.id === +searchQuery ||
+            product.tags.some((tag) => tag.toLowerCase().includes(searchQuery.toLowerCase()))
 
         const matchesStatus =
             statusFilter === "all" ||
-            (statusFilter === "in_stock" && product.stock > 0) ||
-            (statusFilter === "out_of_stock" && product.stock === 0) ||
+            (statusFilter === "in_stock" && product.quantity > 0) ||
+            (statusFilter === "out_of_stock" && product.quantity === 0) ||
             statusFilter === product.status
 
-        const matchesCategory = categoryFilter === "all" || categoryFilter === product.category
+        const matchesCategory = categoryFilter === "all" || categoryFilter === product.category.name
 
         return matchesSearch && matchesStatus && matchesCategory
     })
@@ -62,16 +94,16 @@ export function ProductManagement() {
         }
     }
 
-    const handleSelectProduct = (productId: string, checked: boolean) => {
+    const handleSelectProduct = (id: number, checked: boolean) => {
         if (checked) {
-            setSelectedProducts([...selectedProducts, productId])
+            setSelectedProducts([...selectedProducts, id])
         } else {
-            setSelectedProducts(selectedProducts.filter((id) => id !== productId))
+            setSelectedProducts(selectedProducts.filter((id) => id !== id))
         }
     }
 
-    const handleDeleteProduct = (productId: string) => {
-        setProductToDelete(productId)
+    const handleDeleteProduct = (id: number) => {
+        setProductToDelete(id)
         setIsDeleteDialogOpen(true)
     }
 
@@ -134,11 +166,11 @@ export function ProductManagement() {
             </div>
 
             {/* Filters and Search */}
-            <FilterSearch 
-                data={productStatus} 
+            <FilterSearch
+                data={productStatus}
                 data2={productCategories}
-                searchQuery={searchQuery} 
-                setSearchQuery={setSearchQuery}  
+                searchQuery={searchQuery}
+                setSearchQuery={setSearchQuery}
                 statusFilter={statusFilter}
                 setStatusFilter={setStatusFilter}
                 categoryFilter={categoryFilter}
@@ -206,9 +238,9 @@ export function ProductManagement() {
                                             </td>
                                             <td className="py-3 px-2">
                                                 <div className="h-12 w-12 rounded bg-gray-100 flex items-center justify-center overflow-hidden">
-                                                    {product.image ? (
+                                                    {product.images ? (
                                                         <img
-                                                            src={product.image || "/placeholder.svg"}
+                                                            src={product.images[0] || "/placeholder.svg"}
                                                             alt={product.title}
                                                             className="h-full w-full object-cover"
                                                         />
@@ -221,11 +253,11 @@ export function ProductManagement() {
                                                 <div>
                                                     <p className="font-medium">{product.title}</p>
                                                     <p className="text-xs text-gray-500">{product.id}</p>
-                                                    {product.variants.length > 0 && (
+                                                    {product.variants?.length > 0 && (
                                                         <div className="flex gap-1 mt-1">
                                                             {product.variants.map((variant, idx) => (
                                                                 <Badge key={idx} variant="outline" className="text-xs">
-                                                                    {variant}
+                                                                    {variant.name}
                                                                 </Badge>
                                                             ))}
                                                         </div>
@@ -234,20 +266,20 @@ export function ProductManagement() {
                                             </td>
                                             <td className="py-3 px-4">
                                                 <div>
-                                                    {product.offerPrice ? (
+                                                    {product.sellingPrice ? (
                                                         <>
-                                                            <p className="font-medium">${product.offerPrice.toFixed(2)}</p>
-                                                            <p className="text-xs text-gray-500 line-through">${product.price.toFixed(2)}</p>
+                                                            <p className="font-medium">${product.sellingPrice.toFixed(2)}</p>
+                                                            <p className="text-xs text-gray-500 line-through">${product.mrpPrice.toFixed(2)}</p>
                                                         </>
                                                     ) : (
-                                                        <p className="font-medium">${product.price.toFixed(2)}</p>
+                                                        <p className="font-medium">${product.mrpPrice.toFixed(2)}</p>
                                                     )}
                                                 </div>
                                             </td>
                                             <td className="py-3 px-4">
-                                                <p className="font-medium">{product.stock}</p>
+                                                <p className="font-medium">{product.quantity}</p>
                                             </td>
-                                            <td className="py-3 px-4">{getStatusBadge(product.status, product.stock)}</td>
+                                            <td className="py-3 px-4">{getStatusBadge(product.status, product.quantity)}</td>
                                             <td className="py-3 px-4">
                                                 <div className="flex items-center gap-2">
                                                     <Link to={`/seller/product/edit/${product.id}`}>

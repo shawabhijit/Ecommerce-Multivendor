@@ -1,5 +1,5 @@
 import { WalletCards, DollarSign } from "lucide-react";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle} from '../../Components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '../../Components/ui/dialog';
 import { Button } from '../../Components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../../Components/ui/form';
 import { Input } from '../../Components/ui/input';
@@ -7,7 +7,7 @@ import { Input } from '../../Components/ui/input';
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { motion} from "motion/react";
+import { motion } from "motion/react";
 
 const formSchema = z.object({
     amount: z.string().refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
@@ -22,7 +22,7 @@ interface RequestPayoutDialogProps {
     setOpenRequestPayout: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const RequestPayoutDialog = ({ availableBalance , openRequestPayout , setOpenRequestPayout }: RequestPayoutDialogProps) => {
+const RequestPayoutDialog = ({ availableBalance, openRequestPayout, setOpenRequestPayout }: RequestPayoutDialogProps) => {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -33,14 +33,14 @@ const RequestPayoutDialog = ({ availableBalance , openRequestPayout , setOpenReq
 
     const onSubmit = (values: z.infer<typeof formSchema>) => {
         // Here you would typically make an API call to process the payout
-        
+
     };
 
     return (
         <motion.div
             transition={{
-                duration:4,
-                delay:1
+                duration: 4,
+                delay: 1
             }}
         >
             <Dialog open={openRequestPayout} onOpenChange={setOpenRequestPayout}>

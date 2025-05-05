@@ -56,9 +56,9 @@ const useFormField = () => {
   return {
     id,
     name: fieldContext.name,
-    formItemId: `${id}-form-item`,
-    formDescriptionId: `${id}-form-item-description`,
-    formMessageId: `${id}-form-item-message`,
+    formItemid: `${id}-form-item`,
+    formDescriptionid: `${id}-form-item-description`,
+    formMessageid: `${id}-form-item-message`,
     ...fieldState,
   }
 }
@@ -72,7 +72,7 @@ const FormItemContext = React.createContext<FormItemContextValue>(
 )
 
 function FormItem({ className, ...props }: React.ComponentProps<"div">) {
-  const id = React.useId()
+  const id = React.useid()
 
   return (
     <FormItemContext.Provider value={{ id }}>
@@ -89,30 +89,30 @@ function FormLabel({
   className,
   ...props
 }: React.ComponentProps<typeof LabelPrimitive.Root>) {
-  const { error, formItemId } = useFormField()
+  const { error, formItemid } = useFormField()
 
   return (
     <Label
       data-slot="form-label"
       data-error={!!error}
       className={cn("data-[error=true]:text-destructive", className)}
-      htmlFor={formItemId}
+      htmlFor={formItemid}
       {...props}
     />
   )
 }
 
 function FormControl({ ...props }: React.ComponentProps<typeof Slot>) {
-  const { error, formItemId, formDescriptionId, formMessageId } = useFormField()
+  const { error, formItemid, formDescriptionid, formMessageid } = useFormField()
 
   return (
     <Slot
       data-slot="form-control"
-      id={formItemId}
+      id={formItemid}
       aria-describedby={
         !error
-          ? `${formDescriptionId}`
-          : `${formDescriptionId} ${formMessageId}`
+          ? `${formDescriptionid}`
+          : `${formDescriptionid} ${formMessageid}`
       }
       aria-invalid={!!error}
       {...props}
@@ -121,12 +121,12 @@ function FormControl({ ...props }: React.ComponentProps<typeof Slot>) {
 }
 
 function FormDescription({ className, ...props }: React.ComponentProps<"p">) {
-  const { formDescriptionId } = useFormField()
+  const { formDescriptionid } = useFormField()
 
   return (
     <p
       data-slot="form-description"
-      id={formDescriptionId}
+      id={formDescriptionid}
       className={cn("text-muted-foreground text-sm", className)}
       {...props}
     />
@@ -134,7 +134,7 @@ function FormDescription({ className, ...props }: React.ComponentProps<"p">) {
 }
 
 function FormMessage({ className, ...props }: React.ComponentProps<"p">) {
-  const { error, formMessageId } = useFormField()
+  const { error, formMessageid } = useFormField()
   const body = error ? String(error?.message ?? "") : props.children
 
   if (!body) {
@@ -144,7 +144,7 @@ function FormMessage({ className, ...props }: React.ComponentProps<"p">) {
   return (
     <p
       data-slot="form-message"
-      id={formMessageId}
+      id={formMessageid}
       className={cn("text-destructive text-sm", className)}
       {...props}
     >

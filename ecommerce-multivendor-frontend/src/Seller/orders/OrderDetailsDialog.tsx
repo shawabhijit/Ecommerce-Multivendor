@@ -6,7 +6,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Button } from '../../Components/ui/button'
 import { Badge } from '../../Components/ui/badge'
 
-const OrderDetailsDialog = ({selectedOrder , formatDate , getStatusBadge , setIsOrderDetailsOpen , isOrderDetailsOpen , openUpdateStatus}) => {
+const OrderDetailsDialog = ({ selectedOrder, formatDate, getStatusBadge, setIsOrderDetailsOpen, isOrderDetailsOpen, openUpdateStatus }) => {
     return (
         <Dialog open={isOrderDetailsOpen} onOpenChange={setIsOrderDetailsOpen}>
             <DialogContent className="min-w-4xl">

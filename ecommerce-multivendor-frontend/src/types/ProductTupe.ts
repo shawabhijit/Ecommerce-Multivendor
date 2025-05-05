@@ -1,30 +1,51 @@
 import { SellerSignupRequest } from "./SellerType";
 
-export interface Products {
+export type Products = {
+    id: number;
     title: string;
     description: string;
     mrpPrice: number;
     sellingPrice: number;
-    discountPrice: number;
+    discountPrice?: number;
     quantity: number;
     images: string[];
-    status:string;
-    sku:string;
-    barcode:string;
-    updateAt?: string;
-    createdAt?: string;
+    status: string;
+    sku?: string | null;
+    barcode?: string | null;
     tags: string[];
     numRatings: number;
-    category: Categories;
-    varianta: variants[];
-    seo?: SEO;
-    shipping?: Shipping;
-    ratings?: Ratings;
-}
+    category: {
+        name: string;
+        categoryid?: string;
+    };
+    variants: {
+        name: string;
+        value: string;
+    }[];
+    seo?: {
+        metaTitle?: string;
+        metaDescription?: string;
+        keywords?: string;
+    };
+    shipping?: {
+        weight?: number;
+        dimensions?: {
+            length?: number;
+            width?: number;
+            height?: number;
+        };
+        freeShipping: boolean;
+    };
+    ratings?: {
+        average: number;
+        count: number;
+    };
+};
+
 
 interface Categories {
     name: string;
-    categoryId: string;
+    categoryid: string;
     parentCategory: string;
     level: number;
 }
@@ -37,7 +58,7 @@ interface variants {
 interface SEO {
     metaTitle: string;
     metaDescription: string;
-    keywords?:string | null;
+    keywords?: string | null;
 }
 
 interface Shipping {

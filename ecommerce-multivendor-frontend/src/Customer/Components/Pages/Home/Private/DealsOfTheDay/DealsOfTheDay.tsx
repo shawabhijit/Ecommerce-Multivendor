@@ -158,7 +158,7 @@ export default function DealsOfTheDay() {
             variants={containerVariants}
             className="p-6 bg-white"
         >
-            
+
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
                 <div>
                     <h2 className="text-2xl font-bold">Deals of the Day</h2>

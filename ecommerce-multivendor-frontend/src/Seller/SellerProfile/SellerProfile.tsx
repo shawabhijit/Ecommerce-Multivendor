@@ -19,7 +19,7 @@ import {
 import { Badge } from "../../Components/ui/badge"
 import { Alert, AlertDescription } from "../../Components/ui/alert"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../Components/ui/tabs"
-import { Card, CardContent, CardDescription,CardHeader, CardTitle } from "../../Components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../Components/ui/card"
 import { Button } from "../../Components/ui/button"
 import { Label } from "../../Components/ui/label"
 import { Input } from "../../Components/ui/input"
@@ -259,11 +259,11 @@ export function SellerProfile() {
                             </div>
 
                             <div className="space-y-2">
-                                <Label htmlFor="upiId">UPI ID (Optional)</Label>
+                                <Label htmlFor="upiid">UPI id (Optional)</Label>
                                 <Input
-                                    id="upiId"
-                                    value={seller.bankDetails.upiId}
-                                    onChange={(e) => handleInputChange("bankDetails", "upiId", e.target.value)}
+                                    id="upiid"
+                                    value={seller.bankDetails.upiid}
+                                    onChange={(e) => handleInputChange("bankDetails", "upiid", e.target.value)}
                                     disabled={!isEditing.banking}
                                 />
                             </div>

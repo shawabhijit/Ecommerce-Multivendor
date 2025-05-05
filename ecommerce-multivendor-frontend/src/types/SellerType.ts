@@ -33,8 +33,8 @@ export interface SellerSignupRequest {
 
 
 export interface SellerReport {
-    id:number;
-    seller : SellerSignupRequest;
+    id: number;
+    seller: SellerSignupRequest;
     totalEarnings: number;
     totalSales: number;
     totalRefunds: number;

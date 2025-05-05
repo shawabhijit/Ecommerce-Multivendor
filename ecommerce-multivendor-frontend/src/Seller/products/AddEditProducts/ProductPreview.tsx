@@ -4,7 +4,7 @@ import { Separator } from '../../../Components/ui/separator'
 import { Button } from '../../../Components/ui/button'
 import { Badge } from '../../../Components/ui/badge'
 
-const ProductPreview = ({showPreviewDialog , setShowPreviewDialog , imagePreviews}) => {
+const ProductPreview = ({ showPreviewDialog, setShowPreviewDialog, imagePreviews }) => {
 
     const formData = {
         title: "Sample Product",

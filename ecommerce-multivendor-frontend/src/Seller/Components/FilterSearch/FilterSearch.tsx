@@ -7,10 +7,10 @@ import { Button } from '../../../Components/ui/button'
 
 type State = {
     id: string;
-    value:string;
+    value: string;
 }
 
-const FilterSearch = ({data , data2 , searchQuery , setSearchQuery , statusFilter , setStatusFilter , categoryFilter , setCategoryFilter}) => {
+const FilterSearch = ({ data, data2, searchQuery, setSearchQuery, statusFilter, setStatusFilter, categoryFilter, setCategoryFilter }) => {
     return (
         <Card className="mb-6">
             <CardContent className="p-4">

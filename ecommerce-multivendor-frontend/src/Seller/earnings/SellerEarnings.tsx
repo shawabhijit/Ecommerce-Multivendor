@@ -11,7 +11,7 @@ const SellerEarnings = () => {
     const threshold = 100; // Example threshold
     const availableBalance = 150; // Example balance
 
-    const [openRequestPayout , setOpenRequestPayout] = useState(false);
+    const [openRequestPayout, setOpenRequestPayout] = useState(false);
 
     const handlePayoutRequest = () => {
         setOpenRequestPayout(true)

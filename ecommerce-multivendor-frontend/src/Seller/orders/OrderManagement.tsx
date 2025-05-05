@@ -229,7 +229,7 @@ export function OrderManagement() {
                         <div className="flex-1 relative">
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                             <Input
-                                placeholder="Search orders by ID, customer name or email..."
+                                placeholder="Search orders by id, customer name or email..."
                                 className="pl-9"
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -304,7 +304,7 @@ export function OrderManagement() {
                         <table className="w-full">
                             <thead>
                                 <tr className="border-b">
-                                    <th className="py-3 px-4 text-left">Order ID</th>
+                                    <th className="py-3 px-4 text-left">Order id</th>
                                     <th className="py-3 px-4 text-left">Customer</th>
                                     <th className="py-3 px-4 text-left">Date</th>
                                     <th className="py-3 px-4 text-left">Total</th>
@@ -380,7 +380,7 @@ export function OrderManagement() {
 
                     {/* Pagination */}
                     {totalPages > 1 && (
-                        <Pagination 
+                        <Pagination
                             filteredOrders={filteredOrders}
                             totalPages={totalPages}
                             indexOfFirstOrder={indexOfFirstOrder}
@@ -393,8 +393,8 @@ export function OrderManagement() {
             </Card>
 
             {/* Order Details Dialog */}
-            <OrderDetailsDialog selectedOrder={selectedOrder} formatDate={formatDate} getStatusBadge={getStatusBadge} setIsOrderDetailsOpen={setIsOrderDetailsOpen} 
-                isOrderDetailsOpen={isOrderDetailsOpen} openUpdateStatus={openUpdateStatus}/>
+            <OrderDetailsDialog selectedOrder={selectedOrder} formatDate={formatDate} getStatusBadge={getStatusBadge} setIsOrderDetailsOpen={setIsOrderDetailsOpen}
+                isOrderDetailsOpen={isOrderDetailsOpen} openUpdateStatus={openUpdateStatus} />
 
             {/* Update Status Dialog */}
             <Dialog open={isUpdateStatusOpen} onOpenChange={setIsUpdateStatusOpen}>

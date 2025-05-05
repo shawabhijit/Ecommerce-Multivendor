@@ -32,8 +32,8 @@ const PayoutHistory = () => {
                                 <Badge
                                     variant="secondary"
                                     className={`${payout.status === 'processed'
-                                            ? 'bg-green-100 text-green-800'
-                                            : 'bg-orange-100 text-orange-800'
+                                        ? 'bg-green-100 text-green-800'
+                                        : 'bg-orange-100 text-orange-800'
                                         }`}
                                 >
                                     {payout.status.charAt(0).toUpperCase() + payout.status.slice(1)}

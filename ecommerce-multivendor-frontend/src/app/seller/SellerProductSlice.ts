@@ -5,16 +5,16 @@ import { ProductFormValues } from "../../Seller/products/AddEditProducts/SellerA
 
 
 
-export const fetchSellerProducts = createAsyncThunk<Products[] , any>("/sellerProduct/fetchSellerProducts", async ( _  , { rejectWithValue }) => {
+export const fetchSellerProducts = createAsyncThunk("/sellerProduct/fetchSellerProducts", async ( _  , { rejectWithValue }) => {
     try {
         const respnse = await api.get("/api/sellers/products", {
             withCredentials: true,
         })
-        console.log("Seller Products fetch successfully ,  Response:", respnse.data);
+        // console.log("Seller Products fetch successfully ,  Response:", respnse.data);
         return respnse.data
     }
     catch (error: any) {
-        console.error("❌ fetchSellerProducts failed:", error);
+        console.error("fetchSellerProducts failed:", error);
         return rejectWithValue(error.response?.data || "Unknown error");
     }
 })
@@ -28,7 +28,7 @@ export const createProduct = createAsyncThunk("/sellerProduct/createProduct", as
         return response.data;
     }
     catch(error: any) {
-        console.error("❌ createProduct failed:", error);
+        console.error("createProduct failed:", error);
         return rejectWithValue(error.response?.data || "Unknown error");
     }
 })

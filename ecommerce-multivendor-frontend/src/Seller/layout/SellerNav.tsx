@@ -36,7 +36,7 @@ const SellerNav = ({ isLogedin }: any) => {
     const dispatch = useAppDispatch()
     const sellerProfile = useAppSelecter((state) => state.fetchSeller.profile)
 
-    console.log('selller Profile info :', sellerProfile )
+    console.log('selller Profile info :', sellerProfile)
 
 
     const [isScrolled, setIsScrolled] = useState(false);
@@ -54,7 +54,7 @@ const SellerNav = ({ isLogedin }: any) => {
         dispatch(logout())
     }
 
-    console.log("seller Image :" , sellerProfile?.businessDetails?.logo)
+    console.log("seller Image :", sellerProfile?.businessDetails?.logo)
 
     useEffect(() => {
         const handleScroll = () => {
@@ -78,7 +78,7 @@ const SellerNav = ({ isLogedin }: any) => {
     useEffect(() => {
         dispatch(fetchSellerProfile());
     }, [dispatch])
-    
+
     // console.log("Seller Profile fetch suucessfully ,  Response:", response);
 
     const navigation = [

@@ -33,12 +33,12 @@ export function ImageUploader({
                     onChange={handleFileChange}
                     className="hidden"
                 />
-                
+
                 <div className="flex w-full h-full flex-col items-center justify-center text-gray-400">
                     <UploadCloud className="w-6 h-6 mb-1" />
                     <span className="text-xs">{label}</span>
                 </div>
-            
+
             </label>
             {fileName && (
                 <p className="text-sm text-gray-500 text-center">{fileName}</p>

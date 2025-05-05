@@ -6,7 +6,7 @@ export default function ProductDetailsWrapper() {
     const { id } = useParams();
 
     if (!id) {
-        return <div>Invalid Product Id</div>
+        return <div>Invalid Product id</div>
     }
 
     return <ProductDetails id={id} />

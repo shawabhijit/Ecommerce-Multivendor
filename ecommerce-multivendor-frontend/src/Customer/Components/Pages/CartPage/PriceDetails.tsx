@@ -11,8 +11,8 @@ const PriceDetails = ({ cartItems }) => {
     const location = useLocation();
     const pathSegment = location.pathname.split('/').pop();
 
-    const subtotal = cartItems.reduce((total , item ) => total + item.price * item.quantity, 0)
-    const discount = cartItems.reduce((total , item ) => total + (item.originalPrice - item.price) * item.quantity, 0)
+    const subtotal = cartItems.reduce((total, item) => total + item.price * item.quantity, 0)
+    const discount = cartItems.reduce((total, item) => total + (item.originalPrice - item.price) * item.quantity, 0)
     const deliveryCharge = subtotal > 1000 ? 0 : 99
     const total = subtotal + deliveryCharge
 

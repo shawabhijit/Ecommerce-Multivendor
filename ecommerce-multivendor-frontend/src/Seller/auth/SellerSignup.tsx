@@ -11,7 +11,7 @@ import * as z from "zod"
 import { Button } from "../../Components/ui/button"
 import { Input } from "../../Components/ui/input"
 import { Label } from "../../Components/ui/label"
-import { Card, CardContent, CardFooter} from "../../Components/ui/card"
+import { Card, CardContent, CardFooter } from "../../Components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../Components/ui/select"
 import { Progress } from "../../Components/ui/progress"
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "../../Components/ui/form"
@@ -586,7 +586,7 @@ export function SellerSignup() {
             setLoading(false);
             return;
         }
-        
+
 
         const transformedData = {
             fullName: data.fullName,
@@ -631,7 +631,7 @@ export function SellerSignup() {
             console.log("response: ", response);
             console.log("response payload: ", response.payload);
             console.log("response payload success: ", response.payload?.success);
-            console.log("selected selller : " , seller.selectedSeller)
+            console.log("selected selller : ", seller.selectedSeller)
             if (response.payload?.success || seller.selectedSeller) { // Adjust condition based on your API response structure
                 navigate("/seller/login");
             }
@@ -642,7 +642,7 @@ export function SellerSignup() {
         }
     };
 
-    
+
 
     const renderStepContent = () => {
         switch (step) {

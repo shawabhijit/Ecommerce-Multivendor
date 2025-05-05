@@ -21,7 +21,7 @@ import store, { persistor } from "./app/Store";
 
 function AppWrapper() {
   const location = useLocation();
-  const [isLogedin , setIslogedin ]= useState(false);
+  const [isLogedin, setIslogedin] = useState(false);
 
   // Define paths where Navbar should be hidden
   const hideNavbarRoutes = ["/seller/login", "/seller/signup"];
@@ -34,7 +34,7 @@ function AppWrapper() {
       if (target.tagName === 'A' && target.getAttribute('href')?.startsWith('#')) {
         e.preventDefault();
         const id = target.getAttribute('href')?.substring(1);
-        const element = document.getElementById(id || '');
+        const element = document.getElementByid(id || '');
 
         if (element) {
           const offset = 80; // Account for fixed header

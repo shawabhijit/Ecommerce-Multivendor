@@ -104,9 +104,9 @@ export function AddEditProduct() {
     const navigae = useNavigate();
     const location = useLocation();
     const pathSegments = location.pathname.split('/');
-    const productId = pathSegments[pathSegments.length - 1];
-    // console.log("Product ID:", productId);
-    const isEditMode = productId && productId !== "add";
+    const id = pathSegments[pathSegments.length - 1];
+    // console.log("Product ID:", id);
+    const isEditMode = id && id !== "add";
 
     const [activeTab, setActiveTab] = useState("basic");
     const [loading, setLoading] = useState(false);
@@ -135,7 +135,7 @@ export function AddEditProduct() {
             description: "",
             mrpPrice: 0,
             sellingPrice: 0,
-            discountPrice:0,
+            discountPrice: 0,
             quantity: 0,
             images: [],
             status: "inactive",
@@ -148,7 +148,7 @@ export function AddEditProduct() {
                 categoryId: "",
             },
             variants: [
-                { name: "", value: ""}
+                { name: "", value: "" }
             ],
             seo: {
                 metaTitle: "",
@@ -196,7 +196,7 @@ export function AddEditProduct() {
     }, [isDirty]);
 
     useEffect(() => {
-        if (isEditMode && productId) {
+        if (isEditMode && id) {
             setLoading(true);
 
             setTimeout(() => {
@@ -247,7 +247,7 @@ export function AddEditProduct() {
                 setLoading(false);
             }, 1000);
         }
-    }, [isEditMode, productId, reset]);
+    }, [isEditMode, id, reset]);
 
     // Handle image upload
     const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -435,7 +435,7 @@ export function AddEditProduct() {
                                 <TabsTrigger className={`${activeTab == "advanced" ? "hiakri-dark-bg text-white" : ""}`} value="advanced">Advanced</TabsTrigger>
                             </TabsList>
 
-                            <TabsContent  value="basic" className="space-y-4">
+                            <TabsContent value="basic" className="space-y-4">
                                 <Card>
                                     <CardHeader>
                                         <CardTitle>Basic Information</CardTitle>
@@ -743,7 +743,7 @@ export function AddEditProduct() {
                                             <Button
                                                 type="button"
                                                 variant="outline"
-                                                onClick={() => appendVariant({name:"" , value:""})}
+                                                onClick={() => appendVariant({ name: "", value: "" })}
                                                 className="w-full flex items-center justify-center gap-2"
                                             >
                                                 <Plus className="h-4 w-4" /> Add Variant

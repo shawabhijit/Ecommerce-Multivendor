@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
-import { getProductById, getProducts } from "../../../../lib/api"
+import { getProductByid, getProducts } from "../../../../lib/api"
 import type { Product } from "../../../../lib/Types"
 import ImageGallery from "./ImageGallery"
 import ProductInfo from "./ProductInfo"
@@ -21,7 +21,7 @@ export default function ProductDetails({ id }: { id: string }) {
             try {
                 setLoading(true)
                 console.log('id', id)
-                const productData = await getProductById(id)
+                const productData = await getProductByid(id)
                 console.log('productData', productData)
                 setProduct(productData)
 
