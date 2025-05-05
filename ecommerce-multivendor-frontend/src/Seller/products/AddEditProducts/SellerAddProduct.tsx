@@ -24,7 +24,8 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import ProductPreview from "./ProductPreview"
 import { uploadToCloudninary } from "../../../util/CloudinarySupport"
 import { useAppDispatch } from "../../../app/Store"
-import { createProduct } from "../../../app/seller/SellerProductSlice"
+import { createProduct, updateProduct } from "../../../app/seller/SellerProductSlice"
+import { api } from "../../../config/api"
 
 
 const productSchema = z.object({
@@ -115,6 +116,7 @@ export function AddEditProduct() {
     const [showPreviewDialog, setShowPreviewDialog] = useState(false);
     const [showHistoryDialog, setShowHistoryDialog] = useState(false);
     const [formChanged, setFormChanged] = useState(false);
+    const [response , setResponse] = useState<any>(null);
     const [imagePreviews, setImagePreviews] = useState<string[]>([]);
     const [tagInput, setTagInput] = useState("");
 
@@ -199,44 +201,8 @@ export function AddEditProduct() {
         if (isEditMode && id) {
             setLoading(true);
 
-            setTimeout(() => {
-                const mockProduct = {
-                    title: "Premium Wireless Headphones",
-                    description: "High-quality wireless headphones with noise cancellation.",
-                    mrpPrice: 199.99,
-                    sellingPrice: 149.99,
-                    discountPrice: 50,
-                    quantity: 100,
-                    images: ["https://example.com/headphones1.jpg", "https://example.com/headphones2.jpg"],
-                    status: "active",
-                    sku: "WH-PRO-001",
-                    barcode: "8901234567890",
-                    tags: ["wireless", "headphones", "audio"],
-                    category: {
-                        name: "Electronics",
-                        categoryId: "cat-123",
-                        parentCategory: "",
-                        level: 0
-                    },
-                    variants: [
-                        { name: "color", value: "Black,White,Blue" },
-                        { name: "size", value: "Small,Medium,Large" }
-                    ],
-                    seo: {
-                        metaTitle: "Premium Wireless Headphones with Noise Cancellation",
-                        metaDescription: "Experience crystal clear sound with our premium wireless headphones featuring advanced noise cancellation technology.",
-                        keywords: "wireless, headphones, noise cancellation"
-                    },
-                    shipping: {
-                        weight: 0.5,
-                        dimensions: {
-                            length: 20,
-                            width: 15,
-                            height: 10
-                        },
-                        freeShipping: true
-                    }
-                };
+            setTimeout( async () => {
+                const mockProduct = await api.get(`/products/${id}`).then((response) => response.data);
 
                 // Reset form with fetched data
                 reset(mockProduct);
@@ -322,6 +288,7 @@ export function AddEditProduct() {
 
             console.log("Product created successfully:", product);
 
+            setResponse(product);
             setSaveSuccess(true);
             setFormChanged(false);
 
@@ -355,6 +322,30 @@ export function AddEditProduct() {
             setLoading(false);
         }
     };
+
+    const updateProductHandle = async () => {
+        setLoading(true);
+
+        try {
+            await new Promise(resolve => setTimeout(resolve, 1000));
+
+            const res = dispatch(updateProduct({ request: watch(), id }));
+
+            console.log("Product updated successfully");
+
+            setResponse(res);
+            setSaveSuccess(true);
+            setFormChanged(false);
+
+            setTimeout(() => {
+                setSaveSuccess(false);
+            }, 3000);
+        } catch (err) {
+            console.error("Error updating product:", err);
+        } finally {
+            setLoading(false);
+        }
+    }
 
     const revisionHistory = [
         { id: 1, date: "2023-10-15 14:30", user: "John Doe", changes: "Updated product description and price" },
@@ -947,7 +938,7 @@ export function AddEditProduct() {
                                 <CardTitle>Save Product</CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-4">
-                                <Button type="submit" className="w-full flex items-center gap-2 hiakri-dark-bg cursor-pointer" disabled={loading}>
+                                <Button onClick={updateProductHandle} type="submit" className="w-full flex items-center gap-2 hiakri-dark-bg cursor-pointer" disabled={loading}>
                                     {loading ? (
                                         <>
                                             <span className="animate-spin">⏳</span>
@@ -1015,7 +1006,7 @@ export function AddEditProduct() {
             </Dialog>
 
             {/* Product Preview Dialog */}
-            <ProductPreview imagePreviews={imagePreviews} setShowPreviewDialog={setShowPreviewDialog} showPreviewDialog={showPreviewDialog} />
+            <ProductPreview id={id} imagePreviews={imagePreviews} setShowPreviewDialog={setShowPreviewDialog} showPreviewDialog={showPreviewDialog}  />
 
             {/* Revision History Dialog */}
             <Dialog open={showHistoryDialog} onOpenChange={setShowHistoryDialog}>

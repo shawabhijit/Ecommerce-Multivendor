@@ -32,6 +32,19 @@ export const createProduct = createAsyncThunk("/sellerProduct/createProduct", as
         return rejectWithValue(error.response?.data || "Unknown error");
     }
 })
+export const updateProduct = createAsyncThunk("/sellerProduct/updateProduct", async ({ request, id }: { request: ProductFormValues; id: string }, { rejectWithValue }) => {
+    try {
+        const response = await api.put(`/api/sellers/products/update/${id}`, request, {
+            withCredentials: true,
+        });
+        console.log("Product updated successfully, Response:", response.data);
+        return response.data;
+    } catch (error: any) {
+        console.error("updateProduct failed:", error);
+        return rejectWithValue(error.response?.data || "Unknown error");
+    }
+});
+
 
 
 interface SellerProductState {

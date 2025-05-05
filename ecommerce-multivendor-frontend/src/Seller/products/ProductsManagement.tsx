@@ -35,17 +35,6 @@ export function ProductManagement() {
 
     const dispatch = useAppDispatch();
 
-    const fetchProducts = async () => {
-        const prod = await dispatch(fetchSellerProducts());
-        if (fetchSellerProducts.fulfilled.match(prod)) {
-            const SellerProducts = prod.payload as Products[];
-            console.log("seller products :", SellerProducts);
-            setProducts(SellerProducts);
-        } else {
-            console.error("Failed to fetch seller products:", prod.error);
-        }
-    }
-
     useEffect(() => {
         const fetchProducts = async () => {
             const prod = await dispatch(fetchSellerProducts());
