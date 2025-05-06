@@ -11,8 +11,8 @@ import {
   type FieldValues,
 } from "react-hook-form"
 
-import { cn } from "@/lib/utils"
-import { Label } from "@/components/ui/label"
+import { cn } from "../../lib/utils"
+import { Label } from "./label"
 
 const Form = FormProvider
 
@@ -72,7 +72,7 @@ const FormItemContext = React.createContext<FormItemContextValue>(
 )
 
 function FormItem({ className, ...props }: React.ComponentProps<"div">) {
-  const id = React.useid()
+  const id = React.useId()
 
   return (
     <FormItemContext.Provider value={{ id }}>

@@ -10,48 +10,54 @@ import WhyChooseUsSection from './Public/WhyChooseUs/WhyChooseUsSection';
 import TestimonialsSection from './Public/TestimonialsSection/TestimonialsSection';
 import VendorCTASection from './Public/VendorCTA/VendorCTASection';
 import Footer from '../../Layout/Footer/Footer';
+import Navbar from '../../Layout/Navbar/Navbar';
 
 
 
 const Index = ({ isLogedin }: any) => {
 
+    const hideNavbarRoutes = ["/login", "/signup"];
+    const shouldHideNavbar = hideNavbarRoutes.includes(location.pathname);
+
     return (
-        <div className="flex flex-col min-h-screen overflow-x-hidden">
-            {/* <Navbar2 isLogedin={isLogedin} /> */}
-            {
-                isLogedin ? (
-                    <main className="flex-grow">
-                        <div className="container mx-auto px-4 space-y-8 pb-10 pt-32">
+        <>
+            {!shouldHideNavbar && <Navbar isLogedin={isLogedin} />}
+            <div className="flex flex-col min-h-screen overflow-x-hidden">
+                {
+                    isLogedin ? (
+                        <main className="flex-grow">
+                            <div className="container mx-auto px-4 space-y-8 pb-10 pt-32">
 
-                            <HeroCarousel />
+                                <HeroCarousel />
 
-                            <DealsOfTheDay />
+                                <DealsOfTheDay />
 
-                            <ProductFeed title="Electronics" category="electronics" />
+                                <ProductFeed title="Electronics" category="electronics" />
 
-                            <ProductFeed title="Fashion" category="fashion" />
+                                <ProductFeed title="Fashion" category="fashion" />
 
-                            <PersonalizedSuggestions />
+                                <PersonalizedSuggestions />
 
-                            <ProductFeed title="Home & Kitchen" category="home" />
-                        </div>
-                    </main>
-                ) : (
-                    <main>
-                        <div className="container mx-auto px-4 space-y-8 pb-10 pt-32">
-                            <HeroCarousel />
-                            <FeaturesSection />
-                            <CategoriesSection />
-                            <DealsOfTheDay />
-                            <WhyChooseUsSection />
-                            <TestimonialsSection />
-                            <VendorCTASection />
-                        </div>
-                    </main>
-                )
-            }
-            <Footer />
-        </div>
+                                <ProductFeed title="Home & Kitchen" category="home" />
+                            </div>
+                        </main>
+                    ) : (
+                        <main>
+                            <div className="container mx-auto px-4 space-y-8 pb-10 pt-32">
+                                <HeroCarousel />
+                                <FeaturesSection />
+                                <CategoriesSection />
+                                <DealsOfTheDay />
+                                <WhyChooseUsSection />
+                                <TestimonialsSection />
+                                <VendorCTASection />
+                            </div>
+                        </main>
+                    )
+                }
+                <Footer />
+            </div>
+        </>
     );
 };
 

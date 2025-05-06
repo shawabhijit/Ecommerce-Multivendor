@@ -10,7 +10,6 @@ import * as z from "zod"
 
 import { Button } from "../../Components/ui/button"
 import { Input } from "../../Components/ui/input"
-import { Label } from "../../Components/ui/label"
 import { Card, CardContent, CardFooter } from "../../Components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../Components/ui/select"
 import { Progress } from "../../Components/ui/progress"

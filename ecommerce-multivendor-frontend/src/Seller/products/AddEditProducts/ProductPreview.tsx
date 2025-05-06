@@ -86,7 +86,7 @@ const ProductPreview = ({ id , showPreviewDialog, setShowPreviewDialog, imagePre
                             <p>{response?.data.description || "No description available."}</p>
                         </div>
 
-                        {response?.data.variants.length > 0 && response?.data.variants[0].name && (
+                        {response?.data.variants?.length > 0 && response?.data.variants[0].name && (
                             <div className="mt-4">
                                 <h3 className="font-medium mb-2">
                                     {response?.data.variants[0].name.charAt(0).toUpperCase() + response?.data.variants[0].name.slice(1)}:

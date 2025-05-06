@@ -17,6 +17,8 @@ import SellerIndex from "./Seller/SellerIndex";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import store, { persistor } from "./app/Store";
+import CustomerLogin from "./Customer/Components/Pages/auth/CustomerLogin";
+import CustomerSignup from "./Customer/Components/Pages/auth/CustomerSignup";
 // import { QueryClientProvider } from "@tanstack/react-query";
 
 function AppWrapper() {
@@ -24,8 +26,7 @@ function AppWrapper() {
   const [isLogedin, setIslogedin] = useState(false);
 
   // Define paths where Navbar should be hidden
-  const hideNavbarRoutes = ["/seller/login", "/seller/signup"];
-  const shouldHideNavbar = hideNavbarRoutes.includes(location.pathname);
+  
 
 
   useEffect(() => {
@@ -34,7 +35,7 @@ function AppWrapper() {
       if (target.tagName === 'A' && target.getAttribute('href')?.startsWith('#')) {
         e.preventDefault();
         const id = target.getAttribute('href')?.substring(1);
-        const element = document.getElementByid(id || '');
+        const element = document.getElementById(id || '');
 
         if (element) {
           const offset = 80; // Account for fixed header
@@ -55,9 +56,10 @@ function AppWrapper() {
 
   return (
     <>
-      {!shouldHideNavbar && <Navbar isLogedin={isLogedin} />}
       <Routes>
         <Route path="/" element={<Index isLogedin={isLogedin} />} />
+        <Route path="/login" element={<CustomerLogin />} />
+        <Route path="/signup" element={<CustomerSignup />} />
         <Route path="*" element={<NotFound />} />
         <Route path="/products/*" element={<ProductsPage />} />
         <Route path="product/:id" element={<ProductDetailsWrapper />} />
