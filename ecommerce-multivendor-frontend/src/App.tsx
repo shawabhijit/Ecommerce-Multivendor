@@ -21,13 +21,7 @@ import CustomerLogin from "./Customer/Components/Pages/auth/CustomerLogin";
 import CustomerSignup from "./Customer/Components/Pages/auth/CustomerSignup";
 // import { QueryClientProvider } from "@tanstack/react-query";
 
-function AppWrapper() {
-  const location = useLocation();
-  const [isLogedin, setIslogedin] = useState(false);
-
-  // Define paths where Navbar should be hidden
-  
-
+function AppWrapper() {  
 
   useEffect(() => {
     const handleAnchorClick = (e: MouseEvent) => {
@@ -57,7 +51,7 @@ function AppWrapper() {
   return (
     <>
       <Routes>
-        <Route path="/" element={<Index isLogedin={isLogedin} />} />
+        <Route path="/" element={<Index />} />
         <Route path="/login" element={<CustomerLogin />} />
         <Route path="/signup" element={<CustomerSignup />} />
         <Route path="*" element={<NotFound />} />

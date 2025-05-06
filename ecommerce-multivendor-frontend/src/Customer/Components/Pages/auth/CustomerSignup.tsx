@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { useState } from 'react'
+import { motion } from 'framer-motion'
 import { z } from 'zod'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../../../../Components/ui/card'
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
@@ -10,13 +10,17 @@ import { useAppDispatch } from '../../../../app/Store'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '../../../../Components/ui/form'
 import { Input } from '../../../../Components/ui/input'
+import { sendLoginOtp } from '../../../../app/authSlice/AuthSlice'
+import { InputOTP, InputOTPSlot } from '../../../../Components/ui/input-otp'
+import { CustomerSignin } from '../../../../app/authSlice/CustomerAuthSlice'
 
 
 const accountSchemaFields = z.object({
-    fullName: z.string().min(2, { message: "Full name must be at least 2 characters" }),
+    username: z.string().min(2, { message: "Full name must be at least 2 characters" }),
     email: z.string().email({ message: "Please enter a valid email" }),
     phone: z.string().min(10, { message: "Please enter a valid phone number" }),
     password: z.string().min(8, { message: "Password must be at least 8 characters" }),
+    otp: z.string().min(6, "Opt required 6 vlaues."),
 })
 
 type signupSchema = z.infer<typeof accountSchemaFields>
@@ -25,36 +29,43 @@ const CustomerSignup = () => {
 
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
-    const [step, setStep] = useState(1);
     const [loading, setLoading] = useState(false);
+    const [isEmailSent, setIsEmailSent] = useState(false);
 
     const methods = useForm<signupSchema>({
         resolver: zodResolver(accountSchemaFields),
         mode: "onChange",
         defaultValues: {
-            fullName: "",
+            username: "",
             email: "",
             password: "",
-            phone: ""
+            phone: "",
+            otp: "",
         }
     });
+    const value = methods.watch("otp")
+
+    const OtpHandler = () => {
+        setIsEmailSent(true);
+        const email = methods.getValues("email");
+        console.log("email: ", email)
+        dispatch(sendLoginOtp({ email }))
+    }
 
     const onSubmit: SubmitHandler<signupSchema> = async (data) => {
         setLoading(true);
 
+        console.log("Form data:", data);
 
         try {
             await new Promise((resolve) => setTimeout(resolve, 2000));
-            // console.log("Form submitted successfully:", data);
-            // Navigate to next page or show success message
-            // const response = await dispatch(sellerSignin(transformedData));
-            // console.log("response: ", response);
-            // console.log("response payload: ", response.payload);
-            // console.log("response payload success: ", response.payload?.success);
-            // console.log("selected selller : ", seller.selectedSeller)
-            // if (response.payload?.success || seller.selectedSeller) { // Adjust condition based on your API response structure
-            //     navigate("/seller/login");
+            console.log("Form submitted successfully:", data);
+            //Navigate to next page or show success message
+            const response = await dispatch(CustomerSignin(data)).unwrap();
+            console.log("response: ", response);
+            // if (response.payload?.success || customer.selectedCustomer) { 
             // }
+            navigate("/login");
         } catch (err) {
             console.error("Error submitting form:", err);
         } finally {
@@ -89,56 +100,81 @@ const CustomerSignup = () => {
                     <CardContent>
                         <FormProvider {...methods}>
                             <form className="space-y-4" onSubmit={methods.handleSubmit(onSubmit)}>
-                                <AnimatePresence mode="wait">
-                                    <FormField
-                                        name="fullName"
-                                        render={({ field }) => (
-                                            <FormItem className="space-y-2">
-                                                <FormLabel>Full Name</FormLabel>
-                                                <FormControl>
-                                                    <Input placeholder="John Doe" {...field} />
-                                                </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
-                                    <FormField
-                                        name="email"
-                                        render={({ field }) => (
-                                            <FormItem className="space-y-2 relative">
-                                                <FormLabel>Email</FormLabel>
-                                                <FormControl>
-                                                    <Input placeholder="seller@example.com" type="email" {...field} />
-                                                </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
-                                    <FormField
-                                        name="phone"
-                                        render={({ field }) => (
-                                            <FormItem className="space-y-2 relative">
-                                                <FormLabel>Phone</FormLabel>
-                                                <FormControl>
-                                                    <Input placeholder="+91 10-digits number" {...field} />
-                                                </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
-                                    <FormField
-                                        name="password"
-                                        render={({ field }) => (
-                                            <FormItem className="space-y-2">
-                                                <FormLabel>Password</FormLabel>
-                                                <FormControl>
-                                                    <Input placeholder="••••••••" type="password" {...field} />
-                                                </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
-                                </AnimatePresence>
+
+                                {
+                                    isEmailSent ? (
+                                        <div className="w-full flex flex-col justify-center items-center">
+                                            <InputOTP
+                                                maxLength={6}
+                                                className="gap-2"
+                                                value={value}
+                                                onChange={(value) => methods.setValue("otp", value)}
+                                            >
+                                                {[...Array(6)].map((_, i) => (
+                                                    <InputOTPSlot
+                                                        key={i}
+                                                        index={i}
+                                                        className="w-12 h-12 border border-gray-300 rounded-md text-center text-xl font-semibold transition-all duration-200 focus:border-primary focus:ring-2 focus:ring-primary/50 bg-white shadow-sm"
+                                                    />
+                                                ))}
+                                            </InputOTP>
+                                            {methods.formState.errors.otp && (
+                                                <p className="text-sm text-red-500 mt-1">{methods.formState.errors.otp.message}</p>
+                                            )}
+                                        </div>
+                                    ) : (
+                                        <div className='space-y-4'>
+                                            <FormField
+                                                name="username"
+                                                render={({ field }) => (
+                                                    <FormItem className="space-y-2">
+                                                        <FormLabel>Full Name</FormLabel>
+                                                        <FormControl>
+                                                            <Input placeholder="John Doe" {...field} />
+                                                        </FormControl>
+                                                        <FormMessage />
+                                                    </FormItem>
+                                                )}
+                                            />
+                                            <FormField
+                                                name="email"
+                                                render={({ field }) => (
+                                                    <FormItem className="space-y-2 relative">
+                                                        <FormLabel>Email</FormLabel>
+                                                        <FormControl>
+                                                            <Input placeholder="seller@example.com" type="email" {...field} />
+                                                        </FormControl>
+                                                        <FormMessage />
+                                                    </FormItem>
+                                                )}
+                                            />
+                                            <FormField
+                                                name="phone"
+                                                render={({ field }) => (
+                                                    <FormItem className="space-y-2 relative">
+                                                        <FormLabel>Phone</FormLabel>
+                                                        <FormControl>
+                                                            <Input placeholder="+91 10-digits number" {...field} />
+                                                        </FormControl>
+                                                        <FormMessage />
+                                                    </FormItem>
+                                                )}
+                                            />
+                                            <FormField
+                                                name="password"
+                                                render={({ field }) => (
+                                                    <FormItem className="space-y-2">
+                                                        <FormLabel>Password</FormLabel>
+                                                        <FormControl>
+                                                            <Input placeholder="••••••••" type="password" {...field} />
+                                                        </FormControl>
+                                                        <FormMessage />
+                                                    </FormItem>
+                                                )}
+                                            />
+                                        </div>
+                                    )
+                                }
 
                                 <div className="flex justify-between mt-6">
                                     <Link to="/login">
@@ -148,15 +184,26 @@ const CustomerSignup = () => {
                                     </Link>
 
                                     <motion.div whileTap={{ scale: 0.98 }}>
-                                        <Button
-                                            type="submit"
-                                            className="flex items-center gap-2"
-                                            disabled={loading}
-                                        >
-                                            {loading ? "Creating Account..." : "Create Account"}
-                                        </Button>
+                                        {
+                                            !isEmailSent ? (
+                                                <Button
+                                                    type="button"
+                                                    className="flex items-center gap-2"
+                                                    onClick={() => OtpHandler()}
+                                                >
+                                                    Varify Email
+                                                </Button>
+                                            ) : (
+                                                <Button
+                                                    type="submit"
+                                                    className="flex items-center gap-2"
+                                                    disabled={loading}
+                                                >
+                                                    {loading ? "Creating Account..." : "Create Account"}
+                                                </Button>
+                                            )
+                                        }
                                     </motion.div>
-
                                 </div>
                             </form>
                         </FormProvider>
@@ -171,7 +218,7 @@ const CustomerSignup = () => {
                     </CardFooter>
                 </Card>
             </motion.div>
-        </div>
+        </div >
     )
 }
 

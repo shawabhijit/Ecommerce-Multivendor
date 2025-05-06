@@ -30,8 +30,9 @@ export const sellerSignin = createAsyncThunk("/sellers/sellerSignin", async (sig
         console.log('response: ', response.data)
         return response.data;
     }
-    catch (error) {
+    catch (error : any) {
         console.log('sign in error :', error)
+        return rejectWithValue(error.response?.data?.message || "Login failed")
     }
 })
 

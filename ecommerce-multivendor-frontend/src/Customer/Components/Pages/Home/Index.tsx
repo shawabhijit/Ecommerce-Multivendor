@@ -1,5 +1,4 @@
 
-import { useEffect } from 'react';
 import HeroCarousel from './Private/HeroCarousel/HeroCarousel';
 import DealsOfTheDay from './Private/DealsOfTheDay/DealsOfTheDay';
 import ProductFeed from './Private/ProductFeed/ProductFeed';
@@ -11,20 +10,23 @@ import TestimonialsSection from './Public/TestimonialsSection/TestimonialsSectio
 import VendorCTASection from './Public/VendorCTA/VendorCTASection';
 import Footer from '../../Layout/Footer/Footer';
 import Navbar from '../../Layout/Navbar/Navbar';
+import { useAppSelecter } from '../../../../app/Store';
 
 
 
-const Index = ({ isLogedin }: any) => {
+const Index = () => {
+
+    const { isLoggedIn } = useAppSelecter((state) => state.customers)
 
     const hideNavbarRoutes = ["/login", "/signup"];
     const shouldHideNavbar = hideNavbarRoutes.includes(location.pathname);
 
     return (
         <>
-            {!shouldHideNavbar && <Navbar isLogedin={isLogedin} />}
+            {!shouldHideNavbar && <Navbar isLogedin={isLoggedIn} />}
             <div className="flex flex-col min-h-screen overflow-x-hidden">
                 {
-                    isLogedin ? (
+                    isLoggedIn ? (
                         <main className="flex-grow">
                             <div className="container mx-auto px-4 space-y-8 pb-10 pt-32">
 

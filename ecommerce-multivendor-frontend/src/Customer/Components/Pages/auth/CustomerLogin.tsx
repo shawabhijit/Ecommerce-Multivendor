@@ -1,24 +1,32 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../../../../Components/ui/card'
+import {
+    Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle
+} from '../../../../Components/ui/card'
 import { ShoppingBag } from 'lucide-react'
 import { Label } from '../../../../Components/ui/label'
 import { Input } from '../../../../Components/ui/input'
 import { InputOTP, InputOTPSlot } from '../../../../Components/ui/input-otp'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '../../../../Components/ui/button'
+import { useAppDispatch } from '../../../../app/Store'
+import { sendLoginOtp } from '../../../../app/authSlice/AuthSlice'
+import { fetchCustomerByEmail } from '../../../../app/customer/CustomerSlice'
+import { CustomerAuthLogin } from '../../../../app/authSlice/CustomerAuthSlice'
 
 const formSchema = z.object({
     email: z.string().min(1, "Email is required").email("Invalid email"),
-    otp: z.string().min(6, "Opt required 6 vlaues."),
+    otp: z.string().optional(), // OTP will be required only after it's sent
 })
 
 type FormData = z.infer<typeof formSchema>
 
 const CustomerLogin = () => {
+    const dispatch = useAppDispatch()
+    const navigate = useNavigate()
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState("")
     const [sendOtp, setSendOtp] = useState(false)
@@ -38,42 +46,52 @@ const CustomerLogin = () => {
         },
     })
 
-    const value = watch("otp")
-
-    const handleSendOtp = () => {
-        setSendOtp(true)
-        const email = getValues("email")
-        // dispatch(sendLoginOtp({ email }))
-    }
+    const otpValue = watch("otp")
 
     const onSubmit = async (data: FormData) => {
         setLoading(true)
         setError("")
 
-        const email = data.email;
-        const otp = data.otp
-        console.log(data.email)
-        console.log(data.otp)
+        const email = data.email
+        const otp = data.otp || ""
 
         try {
+            const customer = await dispatch(fetchCustomerByEmail(email))
+            const customerExists = customer.payload
+
+            if (!customerExists) {
+                navigate("/signup")
+                return
+            }
+
+            if (!sendOtp) {
+                await dispatch(sendLoginOtp({ email }))
+                setSendOtp(true)
+                setError("OTP sent to your email. Please enter it to continue.")
+                return
+            }
+
+            if (otp.length < 6) {
+                setError("Please enter a valid 6-digit OTP.")
+                return
+            }
+
             await new Promise((resolve) => setTimeout(resolve, 1500))
-            // dispatch(sellerLogin({ email, otp }))
-            // console.log('Logged In :', isLoggedIn);
+            const res = await dispatch(CustomerAuthLogin({email,otp}))
+            console.log('response: ', res)
+            
+            // Reset and navigate
+            setValue("email", "")
+            setValue("otp", "")
+            setSendOtp(false)
+            navigate("/")
+
         } catch (err) {
-            setError("An error occurred. Please try again.")
+            setError("Something went wrong. Please try again.")
         } finally {
             setLoading(false)
-            setValue("email", "");
-            setValue("otp", "");
         }
     }
-
-    // useEffect(() => {
-    //     if (isLoggedIn) {
-    //         // Redirect to dashboard or appropriate page
-    //         navigate('/seller/');
-    //     }
-    // }, [isLoggedIn, navigate]);
 
     return (
         <div className="flex items-center justify-center px-4 h-screen">
@@ -96,9 +114,10 @@ const CustomerLogin = () => {
                                 </div>
                             </motion.div>
                         </div>
-                        <CardTitle className="text-2xl font-bold"> Login or Create Account</CardTitle>
+                        <CardTitle className="text-2xl font-bold">Login or Create Account</CardTitle>
                         <CardDescription>Log in to personalize your experience and access exclusive features.</CardDescription>
                     </CardHeader>
+
                     <CardContent>
                         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                             <div className="space-y-2 relative">
@@ -106,8 +125,9 @@ const CustomerLogin = () => {
                                 <Input
                                     id="email"
                                     type="text"
-                                    placeholder="seller@example.com"
+                                    placeholder="customer@example.com"
                                     {...register("email")}
+                                    disabled={sendOtp}
                                 />
                                 {errors.email && (
                                     <p className="text-sm text-red-500 mt-1">{errors.email.message}</p>
@@ -116,10 +136,11 @@ const CustomerLogin = () => {
 
                             {sendOtp && (
                                 <div className="w-full flex flex-col justify-center">
+                                    <Label htmlFor="otp" className='ml-1'>Enter OTP</Label>
                                     <InputOTP
                                         maxLength={6}
                                         className="gap-2"
-                                        value={value}
+                                        value={otpValue}
                                         onChange={(value) => setValue("otp", value)}
                                     >
                                         {[...Array(6)].map((_, i) => (
@@ -147,12 +168,13 @@ const CustomerLogin = () => {
                             )}
 
                             <motion.div whileTap={{ scale: 0.98 }}>
-                                <Button type="submit" className="w-full" disabled={loading}>
-                                    {loading ? "Signing in..." : "Verify your email"}
+                                <Button type="submit" className="w-full cursor-pointer" disabled={loading}>
+                                    {loading ? "Processing..." : sendOtp ? "Verify & Continue" : "Continue"}
                                 </Button>
                             </motion.div>
                         </form>
                     </CardContent>
+
                     <CardFooter className="flex justify-center">
                         <p className="text-sm text-gray-600">
                             Don&apos;t have an account?{" "}
