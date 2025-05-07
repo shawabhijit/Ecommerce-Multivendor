@@ -51,10 +51,10 @@ export default function HomeProductCard({
         <motion.div
             variants={itemVariants}
             whileHover={{ y: -5, transition: { duration: 0.2 } }}
-            className=" min-w-[50%] sm:min-w-[25%] md:min-w-[unset] md:w-[200px] lg:w-[200px] bg-white rounded-lg shadow-sm border overflow-hidden"
+            className=" min-w-[50%] sm:min-w-[25%] md:min-w-[unset] md:w-[200px] lg:w-[220px] bg-white rounded-lg shadow-sm border overflow-hidden"
         >
             <div className="relative cursor-pointer">
-                <img src={"https://rukminim2.flixcart.com/image/612/612/xif0q/smartwatch/c/t/x/-original-imah6s6prqw3w883.jpeg?q=70"} alt={product.name} className="h-full w-full object-cover p-4" />
+                <img src={"https://rukminim2.flixcart.com/image/612/612/xif0q/smartwatch/c/t/x/-original-imah6s6prqw3w883.jpeg?q=70"} alt={product.name} className="h-full w-full object-contain p-4" />
 
                 {showDiscount && product.discount && (
                     <div className="absolute top-2 left-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">

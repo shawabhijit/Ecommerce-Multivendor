@@ -26,7 +26,7 @@ export default function ProductsPage() {
     const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false)
 
     useEffect(() => {
-        window.scrollTo({ top: 0, behavior: "smooth" }) // 👈 this scrolls to top when page mounts
+        window.scrollTo({ top: 0, behavior: "smooth" })
 
         const fetchProducts = async () => {
             try {

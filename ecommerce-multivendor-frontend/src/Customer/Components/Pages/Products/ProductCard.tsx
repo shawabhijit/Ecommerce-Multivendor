@@ -3,12 +3,24 @@
 import { useState } from "react"
 import { Link } from "react-router-dom"
 import { motion } from "framer-motion"
-import { Star, ShoppingCart, Eye } from "lucide-react"
+import { Star, ShoppingCart, Eye, Heart } from "lucide-react"
 import type { Product } from "../../../../lib/Types"
 import ProductDetails from "../ProductDetails/ProductDetails"
+import { useAppDispatch } from "../../../../app/Store"
+import { addProductToWishlist } from "../../../../app/customer/WhishlistSlice"
 
 export default function ProductCard({ product }: { product: Product }) {
+    const dispatch = useAppDispatch();
     const [isHovered, setIsHovered] = useState(false)
+
+    const addToWishlist = async () => {
+        const res = await dispatch(addProductToWishlist(product))
+        if (res.meta.requestStatus === "fulfilled") {
+            console.log("Product added to wishlist successfully:", res.payload);
+        } else {
+            console.error("Failed to add product to wishlist:", res.payload.error);
+        }
+    }
 
     return (
         <motion.div
@@ -32,8 +44,9 @@ export default function ProductCard({ product }: { product: Product }) {
                         className="bg-white text-gray-800 p-2 rounded-full shadow-md hover:bg-gray-100"
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9 }}
+                        onClick={() => addToWishlist()}
                     >
-                        <ShoppingCart size={18} />
+                        <Heart size={18} color="red" className=""/>
                     </motion.button>
                     <Link to={`/product/${product.id}`}>
                         <motion.button

@@ -26,6 +26,8 @@ const Index = () => {
 
                                 <HeroCarousel />
 
+                                <CategoriesSection />
+
                                 <DealsOfTheDay />
 
                                 <ProductFeed title="Electronics" category="electronics" />
