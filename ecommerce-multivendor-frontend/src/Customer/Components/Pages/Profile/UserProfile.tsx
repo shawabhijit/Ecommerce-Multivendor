@@ -3,8 +3,6 @@
 import { useEffect, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../../Components/ui/tabs"
-import { Button } from "../../../../Components/ui/button"
-import { Pencil } from "lucide-react"
 import Orderhistory from "./Orderhistory"
 import { useLocation, useNavigate } from "react-router-dom"
 import AddressPage from "./AddressPage"
@@ -12,7 +10,6 @@ import UserInfo from "./UserInfo"
 import PaymentMethods from "./PaymentMethods"
 
 export default function UserProfile() {
-    const [isEditing, setIsEditing] = useState(false)
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -117,24 +114,14 @@ export default function UserProfile() {
     }
 
     return (
-        <div className="container mx-auto px-4 py-8 max-w-5xl md:pt-32">
+        <div className="container mx-auto px-4 py-8 max-w-5xl md:pt-32 min-h-screen">
             <motion.div
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
                 className="flex items-center mb-8"
             >
-                <div className="relative">
-                    <img
-                        src="/placeholder.svg?height=100&width=100"
-                        alt="Profile"
-                        className="w-24 h-24 rounded-full object-cover border-4 border-white shadow-md"
-                    />
-                    <Button onClick={() => setIsEditing(!isEditing)} size="sm" variant="secondary" className="absolute bottom-0 right-0 rounded-full w-8 h-8 p-0">
-                        <Pencil className="h-4 w-4" />
-                    </Button>
-                </div>
-                <div className="ml-6">
+                <div className="">
                     <h1 className="text-2xl font-bold">John Doe</h1>
                     <p className="text-gray-500">john.doe@example.com</p>
                     <p className="text-gray-500">+91 98765 43210</p>

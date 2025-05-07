@@ -80,7 +80,7 @@ const CustomerSlice = createSlice({
                 state.loading = false;
                 state.error = null;
                 state.isLoggedIn = true;
-                state.selectedCustomer = action.payload; // Save the seller data
+                state.selectedCustomer = action.payload; // Save the customer data
             })
             .addCase(CustomerAuthLogin.rejected, (state, action) => {
                 state.loading = false;

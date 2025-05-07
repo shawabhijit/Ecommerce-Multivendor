@@ -209,7 +209,7 @@ const Navbar = ({ isLogedin }: any) => {
                                     </div>
                                 ) : (
                                     <div>
-                                        <Button variant="default" className='bg-[#3571bb] cursor-pointer hover:bg-[#1D4ED8]'>
+                                        <Button onClick={() => navigate("/login")} variant="default" className='bg-[#3571bb] cursor-pointer hover:bg-[#1D4ED8]'>
                                             Sign In
                                         </Button>
                                     </div>

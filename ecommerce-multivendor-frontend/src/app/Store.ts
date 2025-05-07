@@ -11,7 +11,7 @@ import CustomerProfileSlice from "./customer/CustomerSlice"
 const persistConfig = {
     key: 'root',
     storage,
-    whitelist: ['sellers'],
+    whitelist: ['sellers', 'customers'],
 }
 
 const rootReducer = combineReducers({

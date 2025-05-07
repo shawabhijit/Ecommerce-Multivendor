@@ -9,7 +9,6 @@ import WhyChooseUsSection from './Public/WhyChooseUs/WhyChooseUsSection';
 import TestimonialsSection from './Public/TestimonialsSection/TestimonialsSection';
 import VendorCTASection from './Public/VendorCTA/VendorCTASection';
 import Footer from '../../Layout/Footer/Footer';
-import Navbar from '../../Layout/Navbar/Navbar';
 import { useAppSelecter } from '../../../../app/Store';
 
 
@@ -17,13 +16,8 @@ import { useAppSelecter } from '../../../../app/Store';
 const Index = () => {
 
     const { isLoggedIn } = useAppSelecter((state) => state.customers)
-
-    const hideNavbarRoutes = ["/login", "/signup"];
-    const shouldHideNavbar = hideNavbarRoutes.includes(location.pathname);
-
     return (
         <>
-            {!shouldHideNavbar && <Navbar isLogedin={isLoggedIn} />}
             <div className="flex flex-col min-h-screen overflow-x-hidden">
                 {
                     isLoggedIn ? (
