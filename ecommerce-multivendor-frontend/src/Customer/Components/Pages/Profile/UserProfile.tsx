@@ -8,10 +8,15 @@ import { useLocation, useNavigate } from "react-router-dom"
 import AddressPage from "./AddressPage"
 import UserInfo from "./UserInfo"
 import PaymentMethods from "./PaymentMethods"
+import { useAppDispatch } from "../../../../app/Store"
+import { fetchCustomerProfile } from "../../../../app/customer/CustomerSlice"
 
 export default function UserProfile() {
     const location = useLocation();
     const navigate = useNavigate();
+    const dispatch = useAppDispatch();
+    const [response, setResponse] = useState<any>(null)
+    const [addresses, setAddresses] = useState<any>(null)
 
     const queryParams = new URLSearchParams(location.search)
     const initialTab = queryParams.get("tab") || "profile";
@@ -28,28 +33,21 @@ export default function UserProfile() {
         navigate({ pathname: location.pathname, search: params.toString() });
     }
 
-    const [addresses, setAddresses] = useState([
-        {
-            id: 1,
-            name: "John Doe",
-            address: "123 Main Street, Apt 4B",
-            city: "New York",
-            state: "NY",
-            pincode: "10001",
-            phone: "123-456-7890",
-            isDefault: true,
-        },
-        {
-            id: 2,
-            name: "John Doe",
-            address: "456 Park Avenue",
-            city: "New York",
-            state: "NY",
-            pincode: "10022",
-            phone: "123-456-7890",
-            isDefault: false,
-        },
-    ])
+    const fetchData = async () => {
+        const res = await dispatch(fetchCustomerProfile())
+        // console.log('res', res)
+        setResponse(res.payload)
+        setAddresses(res.payload.addresses)
+    }
+    const refetchProfile = () => {
+        fetchData();
+    }
+
+    useEffect(() => {
+        fetchData()
+    }, [dispatch])
+
+
     const [orders, setOrders] = useState([
         {
             id: "ORD123456",
@@ -122,9 +120,9 @@ export default function UserProfile() {
                 className="flex items-center mb-8"
             >
                 <div className="">
-                    <h1 className="text-2xl font-bold">John Doe</h1>
-                    <p className="text-gray-500">john.doe@example.com</p>
-                    <p className="text-gray-500">+91 98765 43210</p>
+                    <h1 className="text-2xl font-bold">{response?.username}</h1>
+                    <p className="text-gray-500">{response?.email}</p>
+                    <p className="text-gray-500">+91 {response?.phone}</p>
                 </div>
             </motion.div>
 
@@ -145,7 +143,7 @@ export default function UserProfile() {
                         transition={{ duration: 0.3 }}
                     >
                         <TabsContent value="profile" className="mt-0">
-                            <UserInfo containerVariants={containerVariants} itemVariants={itemVariants} />
+                            <UserInfo containerVariants={containerVariants} itemVariants={itemVariants} response={response} refetchProfile={refetchProfile} />
                         </TabsContent>
 
                         <TabsContent value="addresses" className="mt-0">

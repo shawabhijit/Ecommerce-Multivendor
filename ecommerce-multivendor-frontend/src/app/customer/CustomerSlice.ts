@@ -33,6 +33,23 @@ export const fetchCustomerByEmail = createAsyncThunk(
     }
 )
 
+export const updateCustomerProfileInfo = createAsyncThunk(
+    "/customerProfile/updateCustomerProfileInfo",
+    async (data: any , { rejectWithValue }) => {
+        try {
+            const respose = await api.put("/user/profile/update", data , {
+                withCredentials: true,
+            })
+            console.log("Customer Profile update suucessfully ,  Response:", respose.data);
+            return respose.data
+        }
+        catch (error: any) {
+            console.error("fetch Customer Profile failed:", error);
+            return rejectWithValue(error.response?.data || "Unknown error");
+        }
+    }
+)
+
 
 interface CustomerState {
     customer: any[],
@@ -88,6 +105,18 @@ const customerProfileSlice = createSlice({
                 state.loading = false;
                 state.error = action.payload as string;
                 // console.log('isLoggedIn', state.isLoggedIn)
+            })
+            .addCase(updateCustomerProfileInfo.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(updateCustomerProfileInfo.fulfilled, (state, action) => {
+                state.loading = false;
+                state.profile = action.payload
+                state.error = null;
+            })
+            .addCase(updateCustomerProfileInfo.rejected, (state, action) => {   
+                state.loading = false;
+                state.error = action.payload as string;
             })
     }
 });

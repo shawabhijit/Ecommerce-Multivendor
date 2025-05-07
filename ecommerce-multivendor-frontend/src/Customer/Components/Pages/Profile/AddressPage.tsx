@@ -145,7 +145,7 @@ const AddressPage = ({ addresses, setAddresses, containerVariants, itemVariants 
                 </AnimatePresence>
 
                 <motion.div variants={containerVariants} initial="hidden" animate="visible" className="space-y-4">
-                    {addresses.map((address) => (
+                    {addresses?.map((address) => (
                         <motion.div key={address.id} variants={itemVariants} className="border rounded-lg p-4 relative">
                             {address.isDefault && (
                                 <span className="absolute top-4 right-4 md:top-6 md:right-32 bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">
