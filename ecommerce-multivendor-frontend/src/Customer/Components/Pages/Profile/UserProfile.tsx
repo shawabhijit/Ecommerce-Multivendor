@@ -147,7 +147,7 @@ export default function UserProfile() {
                         </TabsContent>
 
                         <TabsContent value="addresses" className="mt-0">
-                            <AddressPage addresses={addresses} setAddresses={setAddresses} containerVariants={containerVariants} itemVariants={itemVariants} />
+                            <AddressPage addresses={addresses} setAddresses={setAddresses} containerVariants={containerVariants} itemVariants={itemVariants} refetchProfile={refetchProfile} />
                         </TabsContent>
 
                         <TabsContent value="orders" className="mt-0">
