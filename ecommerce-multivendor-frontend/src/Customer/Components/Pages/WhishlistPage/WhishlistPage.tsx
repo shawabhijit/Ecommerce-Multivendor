@@ -7,6 +7,13 @@ import { Heart } from "lucide-react"
 import HomeProductCard from "../Home/Private/HomeProductCard/HomeProductCard"
 import { useAppDispatch } from "../../../../app/Store"
 import { fetchWishlistData } from "../../../../app/customer/WhishlistSlice"
+import { addProductToCart } from "../../../../app/customer/CartSlice"
+
+type whishlistRequestProps = {
+    productId: number
+    size: string
+    quantity: number
+}
 
 export default function WishlistPage() {
     const dispatch = useAppDispatch();
@@ -16,21 +23,47 @@ export default function WishlistPage() {
         const res = await dispatch(fetchWishlistData());
         console.log("Wishlist fetch successfully, Response:", res);
         if (res.meta.requestStatus === "fulfilled") {
-            setWishlistItems(res.payload);
+            // Transform API data to match the structure expected by HomeProductCard
+            const formattedProducts = res.payload.products.map(product => ({
+                id: product.id,
+                title: product.title,
+                sellingPrice: product.sellingPrice,
+                mrpPrice: product.mrpPrice,
+                discountPrice: product.discountPrice,
+                brand: product.seo?.metaTitle?.split(' ')[0] || '',
+                images: Array.isArray(product.images) ? product.images : [],
+                ratings: {
+                    // Handle potentially null rating values
+                    rating: product.ratings?.average || 0,
+                    count: product.ratings?.count || 0
+                },
+                numRatings: product.numRatings || 0
+            }));
+            setWishlistItems(formattedProducts);
         }
     }
 
-    useEffect ( () => {
+    useEffect(() => {
         fetchWishlist()
-    } , [dispatch])
+    }, [dispatch])
 
     const removeFromWishlist = (id) => {
         setWishlistItems(wishlistItems?.filter((item) => item.id !== id))
     }
 
-    const moveToCart = (id) => {
-        // In a real app, this would add to cart and then remove from wishlist
-        removeFromWishlist(id)
+    const moveToCart = async (id) => {
+        const product = wishlistItems?.find((item) => item.id === id)
+        if (!product) return
+        const request : whishlistRequestProps = {
+            productId: product.id,
+            size: "XL",
+            quantity: 1,
+        }
+        const res = await dispatch(addProductToCart(request))
+        console.log("Product moved to cart successfully, Response:", res);
+        if (res.meta.requestStatus === "fulfilled") {
+            removeFromWishlist(id)
+        }
     }
 
     const containerVariants = {
@@ -85,18 +118,24 @@ export default function WishlistPage() {
                     variants={containerVariants}
                     initial="hidden"
                     animate="visible"
-                    className="grid grid-cols-1 w-full  sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-2"
+                    className="grid grid-cols-1 w-full sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4"
                 >
                     <AnimatePresence>
-                        {wishlistItems?.products?.map((item, index) => (
-
-                            <HomeProductCard product={item}
-                                index={index}
-                                showDiscount={true}
-                                showWishlistActions={true}
-                                onRemove={removeFromWishlist}
-                                onMoveToCart={moveToCart} />
-
+                        {wishlistItems?.map((item, index) => (
+                            <motion.div
+                                key={item.id}
+                                variants={itemVariants}
+                                exit="exit"
+                            >
+                                <HomeProductCard
+                                    product={item}
+                                    index={index}
+                                    showDiscount={true}
+                                    showWishlistActions={true}
+                                    onRemove={removeFromWishlist}
+                                    onMoveToCart={moveToCart}
+                                />
+                            </motion.div>
                         ))}
                     </AnimatePresence>
                 </motion.div>

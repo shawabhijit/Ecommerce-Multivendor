@@ -67,7 +67,7 @@ const wishlistSlice = createSlice({
             })
             .addCase(fetchWishlistData.fulfilled, (state, action) => {
                 state.loading = false;
-                state.wishlist = action.payload;
+                state.wishlist = Array.isArray(action.payload) ? action.payload : [];
             })
             .addCase(fetchWishlistData.rejected, (state, action) => {
                 state.loading = false;
@@ -79,7 +79,11 @@ const wishlistSlice = createSlice({
             })
             .addCase(addProductToWishlist.fulfilled, (state, action) => {
                 state.loading = false;
-                state.wishlist = [...state.wishlist, action.payload];
+                if (Array.isArray(state.wishlist)) {
+                    state.wishlist = [...state.wishlist, action.payload];
+                } else {
+                    state.wishlist = [action.payload];
+                }
             })
             .addCase(addProductToWishlist.rejected, (state, action) => {
                 state.loading = false;

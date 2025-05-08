@@ -1,14 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import NotFound from "./Components/Pages/NotFoundPage/NotFound";
-import ProductsPage from "./Customer/Components/Pages/Products/ProductsPage";
-import ProductDetailsWrapper from "./Customer/Components/Pages/ProductDetails/ProductDetailsWrapper";
-import WishlistPage from "./Customer/Components/Pages/WhishlistPage/WhishlistPage";
-import UserProfile from "./Customer/Components/Pages/Profile/UserProfile";
-import UserCheckoutPage from "./Customer/Components/Pages/CartPage/UserCheckoutPage";
-import Cart from "./Customer/Components/Pages/CartPage/Cart";
-import UserAddress from "./Customer/Components/Pages/CartPage/UserAddress";
-import UserOrderPayment from "./Customer/Components/Pages/CartPage/UserOrderPayment";
-import Confirmation from "./Customer/Components/Pages/CartPage/Confirmation";
 import Index from "./Customer/Components/Pages/Home/Index";
 import { ThemeProvider } from "./context/theme-provider";
 import { useEffect } from "react";
@@ -19,11 +10,12 @@ import store, { persistor, useAppSelecter } from "./app/Store";
 import CustomerLogin from "./Customer/Components/Pages/auth/CustomerLogin";
 import CustomerSignup from "./Customer/Components/Pages/auth/CustomerSignup";
 import Navbar from "./Customer/Components/Layout/Navbar/Navbar";
+import CustomerIndex from "./Customer/Components/Pages/CustomerIndex";
 // import { QueryClientProvider } from "@tanstack/react-query";
 
 function AppWrapper() {  
 
-  const { isLoggedIn , loading , error} = useAppSelecter((state) => state.customers)
+  // const { isLoggedIn , loading , error} = useAppSelecter((state) => state.customers)
   
 
   useEffect(() => {
@@ -51,30 +43,15 @@ function AppWrapper() {
     return () => document.removeEventListener('click', handleAnchorClick);
   }, []);
 
-  const hideSellerNavbarRoutes = ["/seller/signup", "/seller/login",];
-  const hideNavbarRoutes = ["/login", "/signup"];
-  const shouldHideNavbar = hideNavbarRoutes.includes(location.pathname) && !hideSellerNavbarRoutes.includes(location.pathname);
+
 
 
   return (
     
     <>
-      {!shouldHideNavbar && <Navbar isLogedin={isLoggedIn} />}
       <Routes>
-        <Route path="/" element={<Index />} />
-        <Route path="/login" element={<CustomerLogin />} />
-        <Route path="/signup" element={<CustomerSignup />} />
+        <Route path="/*" element={<CustomerIndex />} />
         <Route path="*" element={<NotFound />} />
-        <Route path="/products/*" element={<ProductsPage />} />
-        <Route path="product/:id" element={<ProductDetailsWrapper />} />
-        <Route path="/user/wishlist" element={<WishlistPage />} />
-        <Route path="/user/*" element={<UserProfile />} />
-        <Route path="/my/" element={<UserCheckoutPage />}>
-          <Route path="cart" element={<Cart />} />
-          <Route path="address" element={<UserAddress />} />
-          <Route path="payment" element={<UserOrderPayment />} />
-          <Route path="confirmation" element={<Confirmation />} />
-        </Route>
         <Route path="/seller/*" element={<SellerIndex />} />
       </Routes>
     </>

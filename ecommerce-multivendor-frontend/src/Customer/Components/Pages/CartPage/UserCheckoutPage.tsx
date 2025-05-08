@@ -84,7 +84,7 @@ export default function UserCheckoutPage() {
 
     return (
         <CartContext.Provider value={contextValue} >
-            <div className="container mx-auto px-4 py-32 max-w-7xl">
+            <div className="container mx-auto px-4 py-32 max-w-7xl min-h-screen">
                 <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
                     <h1 className="text-2xl font-bold flex items-center">
                         <ShoppingBag className="mr-2 h-6 w-6" />

@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { Link } from "react-router-dom"
 import { motion } from "framer-motion"
-import { Star, ShoppingCart, Eye, Heart } from "lucide-react"
+import { Star, Eye, Heart } from "lucide-react"
 import type { Product } from "../../../../lib/Types"
 import ProductDetails from "../ProductDetails/ProductDetails"
 import { useAppDispatch } from "../../../../app/Store"

@@ -11,14 +11,14 @@ export const CustomerAuthLogin = createAsyncThunk("/customers/CustomerLogin", as
         const response = await api.post("/auth/signing", loginRequest, {
             withCredentials: true
         });
-        console.log('response: ', response.data)
-        return response.data
+        console.log('Login response: ', response.data);
+        return response.data;
     }
     catch (error: any) {
-        console.log('sign in error :', error)
-        return rejectWithValue(error.response?.data?.message || "Login failed")
+        console.log('sign in error :', error);
+        return rejectWithValue(error.response?.data?.message || "Login failed");
     }
-})
+});
 
 type CustomerSignupRequest = {
     username: string;
@@ -31,14 +31,29 @@ type CustomerSignupRequest = {
 export const CustomerSignin = createAsyncThunk("/customers/CustomerSignin", async (signupRequest: CustomerSignupRequest, { rejectWithValue }) => {
     try {
         const response = await api.post("/auth/signup", signupRequest);
-        console.log('response: ', response.data)
+        console.log('Signup response: ', response.data);
         return response.data;
     }
-    catch (error : any) {
-        console.log('sign in error :', error)
-        return rejectWithValue(error.response?.data?.message || "Login failed")
+    catch (error: any) {
+        console.log('sign up error :', error);
+        return rejectWithValue(error.response?.data?.message || "Signup failed");
     }
-})
+});
+
+// Enhanced auth check thunk
+export const checkAuthStatus = createAsyncThunk("/customers/checkAuthStatus", async (_, { rejectWithValue }) => {
+    try {
+        console.log('Checking auth status...');
+        const response = await api.get("/customers/me", {
+            withCredentials: true // Ensure cookies are sent with the request
+        });
+        console.log('Auth check successful:', response.data);
+        return response.data;
+    } catch (error: any) {
+        console.log('Auth check failed:', error.response?.status, error.response?.data);
+        return rejectWithValue("Authentication failed");
+    }
+});
 
 interface CustomerState {
     customers: any[];
@@ -47,9 +62,9 @@ interface CustomerState {
     report: any | null;
     loading: boolean;
     error: string | null;
+    authChecked: boolean; 
 }
 
-// Define the initial state for the seller slice
 const initialState: CustomerState = {
     customers: [],
     selectedCustomer: null,
@@ -57,16 +72,21 @@ const initialState: CustomerState = {
     report: null,
     loading: false,
     error: null,
+    authChecked: false
 };
 
 const CustomerSlice = createSlice({
     name: "customers",
     initialState,
     reducers: {
-        // Add a logout reducer
+        // Logout reducer
         logout: (state) => {
             state.isLoggedIn = false;
             state.selectedCustomer = null;
+        },
+        // Set auth checked
+        setAuthChecked: (state) => {
+            state.authChecked = true;
         }
     },
     extraReducers: (builder) => {
@@ -80,12 +100,14 @@ const CustomerSlice = createSlice({
                 state.loading = false;
                 state.error = null;
                 state.isLoggedIn = true;
-                state.selectedCustomer = action.payload; // Save the customer data
+                state.selectedCustomer = action.payload;
+                state.authChecked = true;
             })
             .addCase(CustomerAuthLogin.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload as string;
                 state.isLoggedIn = false;
+                state.authChecked = true;
             })
 
             // Sign in cases
@@ -96,16 +118,32 @@ const CustomerSlice = createSlice({
             .addCase(CustomerSignin.fulfilled, (state, action) => {
                 state.loading = false;
                 state.error = null;
-                // state.isLoggedIn = true;
                 state.selectedCustomer = action.payload;
             })
             .addCase(CustomerSignin.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload as string;
+            })
+
+            // Auth status check cases
+            .addCase(checkAuthStatus.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(checkAuthStatus.fulfilled, (state, action) => {
+                state.loading = false;
+                state.isLoggedIn = true;
+                state.selectedCustomer = action.payload;
+                state.authChecked = true;
+            })
+            .addCase(checkAuthStatus.rejected, (state) => {
+                state.loading = false;
+                state.isLoggedIn = false;
+                state.selectedCustomer = null;
+                state.authChecked = true;
             });
     }
 });
 
-export const { logout } = CustomerSlice.actions;
+export const { logout, setAuthChecked } = CustomerSlice.actions;
 
-export default CustomerSlice.reducer 
+export default CustomerSlice.reducer;

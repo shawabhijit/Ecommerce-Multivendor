@@ -3,7 +3,7 @@ import type { Product } from "./Types"
 // Mock data for products
 const mockProducts: Product[] = [
     {
-        id: "1",
+        id: 1,
         title: "Premium Wireless Headphones",
         description:
             "Experience crystal-clear sound with our premium wireless headphones. Features noise cancellation and 20-hour battery life.",
@@ -23,7 +23,7 @@ const mockProducts: Product[] = [
         seller: "AudioTech Inc.",
     },
     {
-        id: "2",
+        id: 2,
         title: "Ergonomic Office Chair",
         description:
             "Stay comfortable during long work hours with this ergonomic office chair. Adjustable height and lumbar support.",
@@ -36,7 +36,7 @@ const mockProducts: Product[] = [
         seller: "ComfortSeating Co.",
     },
     {
-        id: "3",
+        id: 3,
         title: "Smart Fitness Watch",
         description:
             "Track your fitness goals with this advanced smartwatch. Features heart rate monitoring, GPS, and water resistance.",
@@ -50,7 +50,7 @@ const mockProducts: Product[] = [
         seller: "FitTech Gear",
     },
     {
-        id: "4",
+        id:4,
         title: "Organic Cotton T-Shirt",
         description: "Comfortable and eco-friendly organic cotton t-shirt. Available in multiple colors and sizes.",
         price: 29.99,
@@ -62,7 +62,7 @@ const mockProducts: Product[] = [
         seller: "EcoWear",
     },
     {
-        id: "5",
+        id: 5,
         title: "Professional DSLR Camera",
         description:
             "Capture stunning photos with this professional-grade DSLR camera. Includes 24-70mm lens and carrying case.",
@@ -76,7 +76,7 @@ const mockProducts: Product[] = [
         seller: "PhotoPro Equipment",
     },
     {
-        id: "6",
+        id: 6,
         title: "Stainless Steel Water Bottle",
         description: "Keep your drinks hot or cold for hours with this vacuum-insulated stainless steel water bottle.",
         price: 24.99,
@@ -88,7 +88,7 @@ const mockProducts: Product[] = [
         seller: "EcoHydrate",
     },
     {
-        id: "7",
+        id: 7,
         title: "Wireless Gaming Mouse",
         description:
             "Gain a competitive edge with this high-precision wireless gaming mouse. Features customizable RGB lighting.",
@@ -101,7 +101,7 @@ const mockProducts: Product[] = [
         seller: "GameGear Pro",
     },
     {
-        id: "8",
+        id: 8,
         title: "Leather Messenger Bag",
         description: "Stylish and durable genuine leather messenger bag perfect for work or casual use.",
         price: 119.99,
@@ -114,7 +114,7 @@ const mockProducts: Product[] = [
         seller: "Urban Leather Goods",
     },
     {
-        id: "9",
+        id: 9,
         title: "Smart Home Security Camera",
         description:
             "Monitor your home from anywhere with this HD smart security camera. Features motion detection and night vision.",
@@ -127,7 +127,7 @@ const mockProducts: Product[] = [
         seller: "SecureTech Solutions",
     },
     {
-        id: "10",
+        id: 10,
         title: "Ceramic Coffee Mug Set",
         description: "Set of 4 handcrafted ceramic coffee mugs in assorted colors. Microwave and dishwasher safe.",
         price: 34.99,
@@ -139,7 +139,7 @@ const mockProducts: Product[] = [
         seller: "ArtisanWare",
     },
     {
-        id: "11",
+        id: 11,
         title: "Bluetooth Portable Speaker",
         description:
             "Take your music anywhere with this waterproof Bluetooth speaker. 12-hour battery life and rich sound quality.",
@@ -153,7 +153,7 @@ const mockProducts: Product[] = [
         seller: "SoundWave Audio",
     },
     {
-        id: "12",
+        id: 12,
         title: "Yoga Mat with Carrying Strap",
         description: "Premium non-slip yoga mat with alignment markings and convenient carrying strap.",
         price: 39.99,
@@ -174,7 +174,7 @@ export async function getProducts(): Promise<Product[]> {
     return mockProducts
 }
 
-export async function getProductByid(id: string): Promise<Product> {
+export async function getProductByid(id: number): Promise<Product> {
     await delay(600) // Simulate network delay
     const product = mockProducts.find((p) => p.id === id)
 

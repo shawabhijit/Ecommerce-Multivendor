@@ -9,6 +9,8 @@ import { Input } from '../../../../Components/ui/input';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '../../../../Components/ui/dropdown-menu';
 import { useTheme } from '../../../../context/theme-provider';
 import { DarkMode, LightMode } from '@mui/icons-material';
+import { useAppDispatch } from '../../../../app/Store';
+import { logout } from '../../../../app/authSlice/CustomerAuthSlice';
 
 
 const products = [
@@ -27,6 +29,7 @@ const Navbar = ({ isLogedin }: any) => {
 
     const { theme, setTheme } = useTheme();
     const isDark = theme === 'dark';
+    const dispatch = useAppDispatch();
 
     const [isScrolled, setIsScrolled] = useState(false);
     const [isAccountOpen, setIsAccountOpen] = useState(false);
@@ -61,6 +64,10 @@ const Navbar = ({ isLogedin }: any) => {
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
     }, [searchValue]);
+
+    const handleLogout = async () => {
+        await dispatch(logout());
+    }
 
     return (
         <motion.header
@@ -177,7 +184,7 @@ const Navbar = ({ isLogedin }: any) => {
                                                     <DropdownMenuItem onClick={() => navigate("/user/profile?tab=orders")}>Orders</DropdownMenuItem>
                                                     <DropdownMenuItem onClick={() => navigate("/user/wishlist")}>Wishlist</DropdownMenuItem>
                                                     <DropdownMenuSeparator />
-                                                    <DropdownMenuItem>Logout</DropdownMenuItem>
+                                                    <DropdownMenuItem onClick={() => handleLogout()}>Logout</DropdownMenuItem>
                                                     <DropdownMenuItem onClick={() => setTheme(isDark ? "light" : "dark")}>
                                                         {
                                                             isDark ? (

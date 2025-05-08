@@ -16,6 +16,7 @@ import { useAppSelecter } from '../../../../app/Store';
 const Index = () => {
 
     const { isLoggedIn } = useAppSelecter((state) => state.customers)
+    console.log("isLoggedIn", isLoggedIn)
     return (
         <>
             <div className="flex flex-col min-h-screen overflow-x-hidden">

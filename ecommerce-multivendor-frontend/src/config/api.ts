@@ -1,4 +1,6 @@
 import axios from "axios";
+import store from "../app/Store";
+import { logout } from "../app/authSlice/CustomerAuthSlice";
 
 export const API_URL="http://localhost:8081";
 
@@ -10,3 +12,16 @@ export const api = axios.create({
     },
     // withCredentials:true, // Include cookies in request
 })
+
+// detect expired token and logout user
+api.interceptors.response.use(
+    (response) => {
+        return response;
+    },
+    (error) => {
+        if (error.response && error.response.status === 401) {
+            store.dispatch(logout());
+        }
+        return Promise.reject(error);
+    }
+);
