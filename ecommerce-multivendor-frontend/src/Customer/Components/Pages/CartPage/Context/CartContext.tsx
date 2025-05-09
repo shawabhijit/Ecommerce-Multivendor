@@ -1,17 +1,15 @@
 import { createContext, useContext } from "react";
+import { Products } from "../../../../../types/ProductTupe";
 
 
 interface CartItem {
     id: number;
-    name: string;
-    brand: string;
-    image: string;
-    price: number;
-    originalPrice: number;
-    discount: string;
-    size: string;
-    color: string;
+    mrpPrice: number;
+    sellingPrice: number;
+    product: Products;
     quantity: number;
+    size: string;
+    userId: number;
 }
 
 interface CartContextType {

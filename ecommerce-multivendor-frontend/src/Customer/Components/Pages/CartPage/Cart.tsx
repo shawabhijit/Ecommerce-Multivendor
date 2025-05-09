@@ -37,7 +37,7 @@ const Cart = ({ containerVariants, itemVariants }: any) => {
                     </div>
 
                     <AnimatePresence>
-                        {cartItems.map((item) => (
+                        {cartItems?.map((item) => (
                             <motion.div
                                 key={item.id}
                                 variants={itemVariants}
@@ -46,17 +46,18 @@ const Cart = ({ containerVariants, itemVariants }: any) => {
                                 className="flex border rounded-lg p-4"
                             >
                                 <img
-                                    src={item.image || "/placeholder.svg"}
-                                    alt={item.name}
+                                    src={item.product.images[0] || "/placeholder.svg"}
+                                    alt={item.product.title}
                                     className="w-24 h-32 object-cover rounded"
                                 />
                                 <div className="ml-4 flex-1">
                                     <div className="flex justify-between">
                                         <div>
-                                            <p className="text-gray-500 text-sm">{item.brand}</p>
-                                            <h3 className="font-medium">{item.name}</h3>
+                                            <p className="text-gray-500 text-sm">{item.product.seo?.metaTitle?.slice(0,7)}</p>
+                                            <h3 className="font-medium">{item.product.title}</h3>
                                             <p className="text-gray-500 text-sm">
-                                                Size: {item.size} | Color: {item.color}
+                                                Size: {item.product.variants?.find((variant) => variant.name === "size")?.value || "N/A"} | 
+                                                Color: {item.product.variants?.find((veriant) => veriant.name ==="color")?.value || "N/A"}
                                             </p>
                                         </div>
                                         <button onClick={() => removeItem(item.id)} className="text-gray-400 hover:text-red-500">
@@ -81,11 +82,11 @@ const Cart = ({ containerVariants, itemVariants }: any) => {
                                         </div>
                                         <div>
                                             <div className="flex items-center">
-                                                <span className="font-semibold">₹{item.price * item.quantity}</span>
+                                                <span className="font-semibold">₹{item.product.mrpPrice * item.quantity}</span>
                                                 <span className="text-gray-500 line-through text-sm ml-2">
-                                                    ₹{item.originalPrice * item.quantity}
+                                                    ₹{item.product.sellingPrice * item.quantity}
                                                 </span>
-                                                <span className="text-orange-500 text-sm ml-2">{item.discount}</span>
+                                                <span className="text-orange-500 text-sm ml-2">{item.product.discountPrice}%</span>
                                             </div>
                                         </div>
                                     </div>

@@ -1,43 +1,38 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { ShoppingBag } from "lucide-react"
 import PriceDetails from "./PriceDetails"
 import { Outlet, useLocation } from "react-router-dom"
 import { CartContext } from "./Context/CartContext"
+import { useAppDispatch } from "../../../../app/Store"
+import { fetchCartData } from "../../../../app/customer/CartSlice"
 
 export default function UserCheckoutPage() {
 
     const location = useLocation();
     const pathSegment = location.pathname.split('/').pop();
-    console.log('pathSegment', pathSegment)
-    const [cartItems, setCartItems] = useState([
-        {
-            id: 1,
-            name: "Men's Slim Fit T-Shirt",
-            brand: "Roadster",
-            image: "/placeholder.svg?height=120&width=90",
-            price: 599,
-            originalPrice: 999,
-            discount: "40% OFF",
-            size: "M",
-            color: "Navy Blue",
-            quantity: 1,
-        },
-        {
-            id: 2,
-            name: "Women's Printed Maxi Dress",
-            brand: "Antheaa",
-            image: "/placeholder.svg?height=120&width=90",
-            price: 1299,
-            originalPrice: 2599,
-            discount: "50% OFF",
-            size: "S",
-            color: "Floral Print",
-            quantity: 1,
-        },
-    ])
+    //console.log('pathSegment', pathSegment)
+    const dispatch = useAppDispatch();
+
+    const [cartItems, setCartItems] = useState<any>([])
+
+    const fetchCart = async () => {
+        const res = await dispatch(fetchCartData());
+        console.log("Cart fetch successfully, Response:", res);
+        if (res.meta.requestStatus === "fulfilled") {
+            setCartItems(res?.payload.cartItems);
+        }
+        else {
+            console.error("fetch cart data failed:", res.payload.message);
+            setCartItems([]);
+        }
+    }
+
+    useEffect(() => {
+        fetchCart();
+    }, [dispatch])
 
 
 
