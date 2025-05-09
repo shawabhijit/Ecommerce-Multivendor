@@ -1,22 +1,14 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import NotFound from "./Components/Pages/NotFoundPage/NotFound";
-import Index from "./Customer/Components/Pages/Home/Index";
 import { ThemeProvider } from "./context/theme-provider";
 import { useEffect } from "react";
 import SellerIndex from "./Seller/SellerIndex";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
-import store, { persistor, useAppSelecter } from "./app/Store";
-import CustomerLogin from "./Customer/Components/Pages/auth/CustomerLogin";
-import CustomerSignup from "./Customer/Components/Pages/auth/CustomerSignup";
-import Navbar from "./Customer/Components/Layout/Navbar/Navbar";
+import store, { persistor } from "./app/Store";
 import CustomerIndex from "./Customer/Components/Pages/CustomerIndex";
-// import { QueryClientProvider } from "@tanstack/react-query";
 
-function AppWrapper() {  
-
-  // const { isLoggedIn , loading , error} = useAppSelecter((state) => state.customers)
-  
+function AppWrapper() {    
 
   useEffect(() => {
     const handleAnchorClick = (e: MouseEvent) => {
@@ -42,9 +34,6 @@ function AppWrapper() {
     document.addEventListener('click', handleAnchorClick);
     return () => document.removeEventListener('click', handleAnchorClick);
   }, []);
-
-
-
 
   return (
     

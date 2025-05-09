@@ -35,7 +35,7 @@ export default function UserProfile() {
 
     const fetchData = async () => {
         const res = await dispatch(fetchCustomerProfile())
-        // console.log('res', res)
+        console.log('res', res)
         setResponse(res.payload)
         setAddresses(res.payload.addresses)
     }

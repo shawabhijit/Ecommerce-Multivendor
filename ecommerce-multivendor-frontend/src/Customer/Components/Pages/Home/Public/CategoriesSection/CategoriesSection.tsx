@@ -8,49 +8,57 @@ const categories = [
         icon: <Smartphone className="h-10 w-10" />,
         name: "Electronics",
         count: "25,000+ Products",
-        path: "/products/electronics"
+        path: "/products/electronics",
+        image: "https://res.cloudinary.com/dvkvr88db/image/upload/v1746792994/electronics-shopping-concept_488220-34943_umlmcz.webp"
     },
     {
         icon: <Shirt className="h-10 w-10" />,
         name: "Fashion",
         count: "18,000+ Products",
-        path: "/products/fashion"
+        path: "/products/fashion",
+        image:"https://res.cloudinary.com/dvkvr88db/image/upload/v1746792993/hangers-1850082_640_ottkhm.webp"
     },
     {
         icon: <Home className="h-10 w-10" />,
         name: "Home & Furniture",
         count: "12,000+ Products",
-        path: "/products/home-furniture"
+        path: "/products/home-furniture",
+        image:"https://res.cloudinary.com/dvkvr88db/image/upload/v1746792993/image101980-65ca84ab89f31_amd2c9.webp"
     },
     {
         icon: <Utensils className="h-10 w-10" />,
         name: "Groceries",
         count: "8,000+ Products",
-        path: "/products/groceries"
+        path: "/products/groceries",
+        image:"https://res.cloudinary.com/dvkvr88db/image/upload/v1746792992/grocery-1232944_640_sxougv.webp"
     },
     {
         icon: <Book className="h-10 w-10" />,
         name: "Books & Media",
         count: "15,000+ Products",
-        path: "/products/media"
+        path: "/products/media",
+        image:"https://res.cloudinary.com/dvkvr88db/image/upload/v1746792991/pile-books-bookstore_23-2148213789_cdcjfc.webp"
     },
     {
         icon: <Heart className="h-10 w-10" />,
         name: "Health & Beauty",
         count: "10,000+ Products",
-        path: "/products/health-beauty"
+        path: "/products/health-beauty",
+        image:"https://res.cloudinary.com/dvkvr88db/image/upload/v1746792991/spa-beauty-care-concept-beautiful-various-products-spa-set-care-spa-products-view-from_1220-1521_etpkkh.webp"
     },
     {
         icon: <Laptop className="h-10 w-10" />,
         name: "Computers",
         count: "7,000+ Products",
-        path: "/products/computers"
+        path: "/products/computers",
+        image:"https://res.cloudinary.com/dvkvr88db/image/upload/v1746792991/flx-1138080-DesktopCatRedesign-nav3_1-Monitors-c0e93e80-7dd5-4579-bee1-ae59c8436de4_owbrbq.webp"
     },
     {
         icon: <ShoppingBag className="h-10 w-10" />,
         name: "All Categories",
         count: "View All",
-        path: "/products"
+        path: "/products",
+        image:"https://res.cloudinary.com/dvkvr88db/image/upload/v1746792990/shopping-cart-3154149_640_di7gfg.webp"
     }
 ];
 
@@ -63,17 +71,29 @@ const CategoryCard = ({ category, index, onClick }: { category: any, index: numb
             ref={ref}
             initial={{ opacity: 0, scale: 0.8 }}
             animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }}
-            transition={{ duration: 0.4, delay: index * 0.1 }}
+            transition={{ duration: 0.2, delay: index * 0.1 }}
             whileHover={{ y: -10, boxShadow: "0 20px 25px -5px rgb(0 0 0 / 0.1)" }}
-            className="rounded-lg bg-white shadow-md text-center p-6 transition-all duration-100 hover:shadow-lg hover:translate-y-1 cursor-pointer"
+            className="relative md:h-[200px] rounded-lg shadow-md text-center p-6 transition-all duration-100 hover:shadow-lg hover:translate-y-1 cursor-pointer overflow-hidden flex justify-center items-end"
             onClick={onClick}
         >
-            <div className="flex flex-col items-center">
-                <div className="mb-4 bg-hiakri/10 p-4 rounded-full">
+            {/* Blurred Background */}
+            <div
+                className="absolute inset-0 z-0 filter blur-[1px] brightness-75"
+                style={{
+                    backgroundImage: `url(${category.image})`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                    backgroundRepeat: "no-repeat"
+                }}
+            />
+
+            {/* Foreground Content */}
+            <div className="relative z-10 flex flex-col items-center text-white">
+                {/* <div className="mb-4 bg-white/20 p-4 rounded-full backdrop-blur-sm">
                     {category.icon}
-                </div>
-                <h3 className="text-lg font-bold mb-1">{category.name}</h3>
-                <p className="text-sm text-gray-500">{category.count}</p>
+                </div> */}
+                <h3 className="text-xl font-bold mb-1">{category.name}</h3>
+                <p className="text-sm">{category.count}</p>
             </div>
         </motion.div>
     );

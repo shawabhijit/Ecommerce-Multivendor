@@ -7,140 +7,161 @@ import { Button } from "../../../../../../Components/ui/button"
 import ProductCard from "../HomeProductCard/HomeProductCard"
 
 // Mock data for products by category
-const productsByCategory = {
+const productsByCategory  = {
     electronics: [
         {
             id: 101,
-            name: "Smartphone X",
-            price: 799.99,
-            image: "/placeholder.svg?height=200&width=200",
-            rating: 4.6,
+            title: "Smartphone X",
+            sellingPrice: 799.99,
+            mrpPrice: 799.99,
+            images: ["https://assets.myntassets.com/f_webp,dpr_1.5,q_60,w_210,c_limit,fl_progressive/assets/images/14920218/2025/3/1/0ed4802a-4e01-45aa-b69e-01a889b82e761740815408512-Braun-Mini-Facial-Hair-Remover-FS1000-for-Upper-Lips-Chin--C-1.jpg"],
+            ratings: { rating: 4.6, count: 0 },
         },
         {
             id: 102,
-            name: "Laptop Pro",
-            price: 1299.99,
-            image: "/placeholder.svg?height=200&width=200",
-            rating: 4.8,
+            title: "Laptop Pro",
+            sellingPrice: 1299.99,
+            mrpPrice: 1299.99,
+            images: ["https://assets.myntassets.com/f_webp,dpr_1.5,q_60,w_210,c_limit,fl_progressive/assets/images/14920218/2025/3/1/0ed4802a-4e01-45aa-b69e-01a889b82e761740815408512-Braun-Mini-Facial-Hair-Remover-FS1000-for-Upper-Lips-Chin--C-1.jpg"],
+            ratings: { rating: 4.8, count: 0 },
         },
         {
             id: 103,
-            name: "Wireless Headphones",
-            price: 149.99,
-            image: "/placeholder.svg?height=200&width=200",
-            rating: 4.5,
+            title: "Wireless Headphones",
+            sellingPrice: 149.99,
+            mrpPrice: 149.99,
+            images: ["https://assets.myntassets.com/f_webp,dpr_1.5,q_60,w_210,c_limit,fl_progressive/assets/images/14920218/2025/3/1/0ed4802a-4e01-45aa-b69e-01a889b82e761740815408512-Braun-Mini-Facial-Hair-Remover-FS1000-for-Upper-Lips-Chin--C-1.jpg"],
+            ratings: { rating: 4.5, count: 0 },
         },
         {
             id: 104,
-            name: 'Smart TV 55"',
-            price: 599.99,
-            image: "/placeholder.svg?height=200&width=200",
-            rating: 4.7,
+            title: 'Smart TV 55"',
+            sellingPrice: 599.99,
+            mrpPrice: 599.99,
+            images: ["https://assets.myntassets.com/f_webp,dpr_1.5,q_60,w_210,c_limit,fl_progressive/assets/images/14920218/2025/3/1/0ed4802a-4e01-45aa-b69e-01a889b82e761740815408512-Braun-Mini-Facial-Hair-Remover-FS1000-for-Upper-Lips-Chin--C-1.jpg"],
+            ratings: { rating: 4.7, count: 0 },
         },
         {
             id: 105,
-            name: "Tablet Air",
-            price: 349.99,
-            image: "/placeholder.svg?height=200&width=200",
-            rating: 4.4,
+            title: "Tablet Air",
+            sellingPrice: 349.99,
+            mrpPrice: 349.99,
+            images: ["https://assets.myntassets.com/f_webp,dpr_1.5,q_60,w_210,c_limit,fl_progressive/assets/images/14920218/2025/3/1/0ed4802a-4e01-45aa-b69e-01a889b82e761740815408512-Braun-Mini-Facial-Hair-Remover-FS1000-for-Upper-Lips-Chin--C-1.jpg"],
+            ratings: { rating: 4.4, count: 0 },
         },
         {
             id: 106,
-            name: "Digital Camera",
-            price: 499.99,
-            image: "/placeholder.svg?height=200&width=200",
-            rating: 4.3,
+            title: "Digital Camera",
+            sellingPrice: 499.99,
+            mrpPrice: 499.99,
+            images: ["https://assets.myntassets.com/f_webp,dpr_1.5,q_60,w_210,c_limit,fl_progressive/assets/images/14920218/2025/3/1/0ed4802a-4e01-45aa-b69e-01a889b82e761740815408512-Braun-Mini-Facial-Hair-Remover-FS1000-for-Upper-Lips-Chin--C-1.jpg"],
+            ratings: { rating: 4.3, count: 0 },
         },
     ],
     fashion: [
         {
             id: 201,
-            name: "Casual T-Shirt",
-            price: 24.99,
-            image: "/placeholder.svg?height=200&width=200",
-            rating: 4.2,
+            title: "Casual T-Shirt",
+            sellingPrice: 24.99,
+            mrpPrice: 24.99,
+            images: ["https://assets.myntassets.com/f_webp,dpr_1.5,q_60,w_210,c_limit,fl_progressive/assets/images/2024/AUGUST/20/TUJvKDIa_bc8b5e64be4e41e5a8550473e9e75c43.jpg"],
+            ratings: { rating: 4.2, count: 0 },
         },
         {
             id: 202,
-            name: "Denim Jeans",
-            price: 49.99,
-            image: "/placeholder.svg?height=200&width=200",
-            rating: 4.4,
+            title: "Denim Jeans",
+            sellingPrice: 49.99,
+            mrpPrice: 49.99,
+            images: ["https://assets.myntassets.com/f_webp,dpr_1.5,q_60,w_210,c_limit,fl_progressive/assets/images/2024/AUGUST/20/TUJvKDIa_bc8b5e64be4e41e5a8550473e9e75c43.jpg"],
+            ratings: { rating: 4.4, count: 0 },
         },
         {
             id: 203,
-            name: "Running Shoes",
-            price: 89.99,
-            image: "/placeholder.svg?height=200&width=200",
-            rating: 4.7,
+            title: "Running Shoes",
+            sellingPrice: 89.99,
+            mrpPrice: 89.99,
+            images: ["https://assets.myntassets.com/f_webp,dpr_1.5,q_60,w_210,c_limit,fl_progressive/assets/images/2024/AUGUST/20/TUJvKDIa_bc8b5e64be4e41e5a8550473e9e75c43.jpg"],
+            ratings: { rating: 4.7, count: 0 },
         },
         {
             id: 204,
-            name: "Leather Wallet",
-            price: 39.99,
-            image: "/placeholder.svg?height=200&width=200",
-            rating: 4.5,
+            title: "Leather Wallet",
+            sellingPrice: 39.99,
+            mrpPrice: 39.99,
+            images: ["https://assets.myntassets.com/f_webp,dpr_1.5,q_60,w_210,c_limit,fl_progressive/assets/images/2024/AUGUST/20/TUJvKDIa_bc8b5e64be4e41e5a8550473e9e75c43.jpg"],
+            ratings: { rating: 4.5, count: 0 },
         },
         {
             id: 205,
-            name: "Sunglasses",
-            price: 59.99,
-            image: "/placeholder.svg?height=200&width=200",
-            rating: 4.3,
+            title: "Sunglasses",
+            sellingPrice: 59.99,
+            mrpPrice: 59.99,
+            images: ["https://assets.myntassets.com/f_webp,dpr_1.5,q_60,w_210,c_limit,fl_progressive/assets/images/2024/AUGUST/20/TUJvKDIa_bc8b5e64be4e41e5a8550473e9e75c43.jpg"],
+            ratings: { rating: 4.3, count: 0 },
         },
         {
-            id: 206,
-            name: "Wristwatch",
-            price: 129.99,
-            image: "/placeholder.svg?height=200&width=200",
-            rating: 4.6,
+
+                id: 206,
+                title: "Wristwatch",
+                sellingPrice: 129.99,
+                mrpPrice: 129.99,
+            images: ["https://assets.myntassets.com/f_webp,dpr_1.5,q_60,w_210,c_limit,fl_progressive/assets/images/2024/AUGUST/20/TUJvKDIa_bc8b5e64be4e41e5a8550473e9e75c43.jpg"],
+                ratings: { rating: 4.6, count: 0 },
         },
     ],
     home: [
         {
+
             id: 301,
-            name: "Coffee Maker",
-            price: 79.99,
-            image: "/placeholder.svg?height=200&width=200",
-            rating: 4.5,
+            title: "Coffee Maker",
+            sellingPrice: 79.99,
+            mrpPrice: 79.99,
+            images: ["https://assets.myntassets.com/f_webp,dpr_1.5,q_60,w_210,c_limit,fl_progressive/assets/images/2024/SEPTEMBER/26/MMJoq6zI_59829555afd24584bad0670db18f4351.jpg"],
+            ratings: { rating: 4.5, count: 0 },
         },
         {
             id: 302,
-            name: "Bedding Set",
-            price: 99.99,
-            image: "/placeholder.svg?height=200&width=200",
-            rating: 4.7,
+            title: "Bedding Set",
+            sellingPrice: 99.99,
+            mrpPrice: 99.99,
+            images: ["https://assets.myntassets.com/f_webp,dpr_1.5,q_60,w_210,c_limit,fl_progressive/assets/images/2024/SEPTEMBER/26/MMJoq6zI_59829555afd24584bad0670db18f4351.jpg"],
+            ratings: { rating: 4.7, count: 0 },
         },
         {
             id: 303,
-            name: "Kitchen Knife Set",
-            price: 129.99,
-            image: "/placeholder.svg?height=200&width=200",
-            rating: 4.8,
+            title: "Kitchen Knife Set",
+            sellingPrice: 129.99,
+            mrpPrice: 129.99,
+            images: ["https://assets.myntassets.com/f_webp,dpr_1.5,q_60,w_210,c_limit,fl_progressive/assets/images/2024/SEPTEMBER/26/MMJoq6zI_59829555afd24584bad0670db18f4351.jpg"],
+            ratings: { rating: 4.8, count: 0 },
         },
         {
             id: 304,
-            name: "Table Lamp",
-            price: 49.99,
-            image: "/placeholder.svg?height=200&width=200",
-            rating: 4.4,
+            title: "Table Lamp",
+            sellingPrice: 49.99,
+            mrpPrice: 49.99,
+            images: ["https://assets.myntassets.com/f_webp,dpr_1.5,q_60,w_210,c_limit,fl_progressive/assets/images/2024/SEPTEMBER/26/MMJoq6zI_59829555afd24584bad0670db18f4351.jpg"],
+            ratings: { rating: 4.4, count: 0 },
         },
         {
             id: 305,
-            name: "Throw Pillows (Set of 2)",
-            price: 34.99,
-            image: "/placeholder.svg?height=200&width=200",
-            rating: 4.3,
+            title: "Throw Pillows (Set of 2)",
+            sellingPrice: 34.99,
+            mrpPrice: 34.99,
+            images: ["https://assets.myntassets.com/f_webp,dpr_1.5,q_60,w_210,c_limit,fl_progressive/assets/images/2024/SEPTEMBER/26/MMJoq6zI_59829555afd24584bad0670db18f4351.jpg"],
+            ratings: { rating: 4.3, count: 0 },
         },
         {
             id: 306,
-            name: "Air Purifier",
-            price: 149.99,
-            image: "/placeholder.svg?height=200&width=200",
-            rating: 4.6,
+            title: "Air Purifier",
+            sellingPrice: 149.99,
+            mrpPrice: 149.99,
+            images: ["https://assets.myntassets.com/f_webp,dpr_1.5,q_60,w_210,c_limit,fl_progressive/assets/images/2024/SEPTEMBER/26/MMJoq6zI_59829555afd24584bad0670db18f4351.jpg"],
+            ratings: { rating: 4.6, count: 0 },
         },
     ],
-}
+};
+
 
 type ProductFeedProps = {
     title: string
@@ -153,6 +174,7 @@ export default function ProductFeed({ title, category }: ProductFeedProps) {
     const isInView = useInView(ref, { once: true, amount: 0.2 })
 
     const products = productsByCategory[category] || []
+    
 
     const scroll = (direction: "left" | "right") => {
         if (scrollRef.current) {
@@ -175,7 +197,7 @@ export default function ProductFeed({ title, category }: ProductFeedProps) {
             },
         },
     }
-
+    // console.log("product is", products[0]);
     return (
         <motion.div
             ref={ref}

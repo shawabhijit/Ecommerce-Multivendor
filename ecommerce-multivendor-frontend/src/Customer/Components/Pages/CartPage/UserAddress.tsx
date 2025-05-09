@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { motion } from "framer-motion"
-import { RadioGroup, RadioGroupItem } from '../../../../Components/ui/radio-group'
+import { RadioGroup } from '../../../../Components/ui/radio-group'
 import { Button } from '../../../../Components/ui/button'
 import { useNavigate } from 'react-router-dom'
 import AddressPage from '../Profile/AddressPage'
-import { useAppDispatch, useAppSelecter } from '../../../../app/Store'
+import { useAppDispatch } from '../../../../app/Store'
 import { fetchCustomerProfile } from '../../../../app/customer/CustomerSlice'
 
 const UserAddress = () => {

@@ -8,23 +8,23 @@ import { Button } from "../../../../../../Components/ui/button"
 const banners = [
     {
         id: 1,
-        title: "Summer Sale",
-        description: "Up to 50% off on summer essentials",
-        image: "/placeholder.svg?height=400&width=1200",
+        title: "",
+        description: "",
+        image: "https://res.cloudinary.com/dvkvr88db/image/upload/v1746803715/3700220_ygwfoq.jpg",
         color: "bg-blue-500",
     },
     {
         id: 2,
         title: "New Arrivals",
         description: "Check out our latest products",
-        image: "/placeholder.svg?height=400&width=1200",
+        image: "https://res.cloudinary.com/dvkvr88db/image/upload/v1746802296/4031994d-9092-4aa7-aea1-f52f2ae5194f1654006594976-Activewear_DK_lzhjfy_m9xddk.jpg",
         color: "bg-purple-500",
     },
     {
         id: 3,
         title: "Flash Deals",
         description: "Limited time offers on top brands",
-        image: "/placeholder.svg?height=400&width=1200",
+        image: "https://res.cloudinary.com/dvkvr88db/image/upload/v1746802401/179e278f-77ee-44c2-bf39-9f00b0cd08e01658752429301-Handbags_Desk_ycxcvl_rm3t9m.jpg",
         color: "bg-green-500",
     },
 ]
@@ -66,8 +66,8 @@ export default function HeroCarousel() {
     }, [])
 
     return (
-        <div className="relative overflow-hidden rounded-xl pt-10 md:pt-0">
-            <div className="aspect-[21/9] md:aspect-[3/1] w-full relative">
+        <div className="relative overflow-hidden rounded-xl pt-8 md:pt-0">
+            <div className="aspect-[1.5] md:aspect-[3/1] w-full relative">
                 <AnimatePresence initial={false} custom={direction}>
                     <motion.div
                         key={current}
@@ -82,10 +82,17 @@ export default function HeroCarousel() {
                         }}
                         className="absolute inset-0"
                     >
-                        <div className={`w-full h-full flex items-center relative ${banners[current].color}`}>
-                            <div className="absolute inset-0 bg-gradient-to-r from-black/50 to-transparent z-10" />
-                            <div className="container mx-auto px-4 md:px-10 relative z-20">
-                                <div className="w-full md:w-1/2 text-white p-6 md:p-10">
+                        <div className={`w-full h-full flex items-center relative `}
+                            style={{
+                                backgroundImage:`url(${banners[current].image})`,
+                                backgroundSize: "cover",
+                                backgroundPosition: "center",
+                                backgroundRepeat: "no-repeat"
+                            }}
+                        >
+                            <div className="absolute inset-0 bg-gradient-to-r from-black/50 to-transparent z-10 " />
+                            <div className="container mx-auto px-2 md:px-10 relative z-20">
+                                <div className="w-full md:w-1/2 text-white p-6 md:p-10 ">
                                     <motion.h2
                                         initial={{ opacity: 0, y: 20 }}
                                         animate={{ opacity: 1, y: 0 }}
@@ -107,7 +114,7 @@ export default function HeroCarousel() {
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ delay: 0.4 }}
                                     >
-                                        <Button className="bg-white text-black hover:bg-gray-100">Shop Now</Button>
+                                        {banners[current].id > 1 && <Button className="bg-white text-black hover:bg-gray-100">Shop Now</Button>}
                                     </motion.div>
                                 </div>
                             </div>
@@ -116,7 +123,7 @@ export default function HeroCarousel() {
                 </AnimatePresence>
             </div>
 
-            <Button
+            {/* <Button
                 variant="ghost"
                 size="icon"
                 className="absolute left-2 top-1/2 -translate-y-1/2 z-20 bg-white/80 rounded-full shadow-md"
@@ -132,18 +139,20 @@ export default function HeroCarousel() {
                 onClick={nextSlide}
             >
                 <ChevronRight className="h-5 w-5" />
-            </Button>
+            </Button> */}
 
             <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex space-x-2">
                 {banners.map((_, index) => (
-                    <button
-                        key={index}
-                        onClick={() => {
-                            setDirection(index > current ? 1 : -1)
-                            setCurrent(index)
-                        }}
-                        className={`w-2 h-2 rounded-full ${index === current ? "bg-white" : "bg-white/50"}`}
-                    />
+                    (
+                        <button
+                            key={index}
+                            onClick={() => {
+                                setDirection(index > current ? 1 : -1)
+                                setCurrent(index)
+                            }}
+                            className={`w-2 h-2 rounded-full ${index === current ? "bg-white" : "bg-white/50"}`}
+                        />
+                    )
                 ))}
             </div>
         </div>
