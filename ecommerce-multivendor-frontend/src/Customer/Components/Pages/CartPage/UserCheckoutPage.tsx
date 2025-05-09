@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import { ShoppingBag } from "lucide-react"
 import PriceDetails from "./PriceDetails"
 import { Outlet, useLocation } from "react-router-dom"
-import { CartContext } from "./Context/CartContext"
+import { CartContext } from "../Context/CartContext"
 import { useAppDispatch } from "../../../../app/Store"
 import { fetchCartData } from "../../../../app/customer/CartSlice"
 

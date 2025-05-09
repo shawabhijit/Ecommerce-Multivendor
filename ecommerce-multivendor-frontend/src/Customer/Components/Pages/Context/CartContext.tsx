@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import { Products } from "../../../../../types/ProductTupe";
+import { Products } from "../../../../types/ProductTupe";
 
 
 interface CartItem {

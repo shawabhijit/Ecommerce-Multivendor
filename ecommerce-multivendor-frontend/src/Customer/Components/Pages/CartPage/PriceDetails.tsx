@@ -1,4 +1,3 @@
-import React from 'react'
 import { motion } from "framer-motion"
 import { Card, CardContent } from '../../../../Components/ui/card'
 import { Button } from '../../../../Components/ui/button'
@@ -68,9 +67,9 @@ const PriceDetails = ({ cartItems }) => {
                                     <div key={item.id} className="flex items-center text-sm">
                                         <div className="w-2 h-2 bg-gray-300 rounded-full mr-2"></div>
                                         <span className="text-gray-600 truncate flex-1">
-                                            {item.name} ({item.size})
+                                            {item.product.title} ({item.size})
                                         </span>
-                                        <span>₹{item.price * item.quantity}</span>
+                                        <span>₹{item.product.mrpPrice * item.quantity}</span>
                                     </div>
                                 ))}
                             </div>

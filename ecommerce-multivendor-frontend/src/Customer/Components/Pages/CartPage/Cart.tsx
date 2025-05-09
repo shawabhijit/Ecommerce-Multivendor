@@ -2,7 +2,7 @@ import { Button } from '../../../../Components/ui/button'
 import { Minus, Plus, ShoppingBag, Trash2 } from 'lucide-react'
 import { motion, AnimatePresence } from "framer-motion"
 import { useNavigate } from 'react-router-dom'
-import { useCart } from './Context/CartContext'
+import { useCart } from '../Context/CartContext'
 
 const Cart = ({ containerVariants, itemVariants }: any) => {
 
@@ -53,11 +53,11 @@ const Cart = ({ containerVariants, itemVariants }: any) => {
                                 <div className="ml-4 flex-1">
                                     <div className="flex justify-between">
                                         <div>
-                                            <p className="text-gray-500 text-sm">{item.product.seo?.metaTitle?.slice(0,7)}</p>
+                                            <p className="text-gray-500 text-sm">{item.product.seo?.metaTitle?.slice(0, 7)}</p>
                                             <h3 className="font-medium">{item.product.title}</h3>
                                             <p className="text-gray-500 text-sm">
-                                                Size: {item.product.variants?.find((variant) => variant.name === "size")?.value || "N/A"} | 
-                                                Color: {item.product.variants?.find((veriant) => veriant.name ==="color")?.value || "N/A"}
+                                                Size: {item.product.variants?.find((variant) => variant.name === "size")?.value || "N/A"} |
+                                                Color: {item.product.variants?.find((veriant) => veriant.name === "color")?.value || "N/A"}
                                             </p>
                                         </div>
                                         <button onClick={() => removeItem(item.id)} className="text-gray-400 hover:text-red-500">
