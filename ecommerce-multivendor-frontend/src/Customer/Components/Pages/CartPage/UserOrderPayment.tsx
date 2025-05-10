@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom'
 
 const UserOrderPayment = () => {
     const navigate = useNavigate();
-    const [paymentMethod, setPaymentMethod] = useState("card")
+    const [paymentMethod, setPaymentMethod] = useState("razorpay")
 
 
 
@@ -25,6 +25,18 @@ const UserOrderPayment = () => {
                 <CardContent className="pt-6">
                     <h2 className="text-lg font-semibold mb-4">Payment Options</h2>
                     <RadioGroup value={paymentMethod} onValueChange={setPaymentMethod} className="space-y-4">
+                        <div
+                            className={`border rounded-lg p-4 cursor-pointer ${paymentMethod === "razorpay" ? "border-primary ring-2 ring-primary/20" : ""
+                                }`}
+                            onClick={() => setPaymentMethod("razorpay")}
+                        >
+                            <div className="flex items-center">
+                                <RadioGroupItem id="payment-razorpay" value="razorpay" className="mr-2" />
+                                <Label htmlFor="payment-razorpay" className="flex items-center cursor-pointer">
+                                    Razorpay
+                                </Label>
+                            </div>
+                        </div>
                         <div
                             className={`border rounded-lg p-4 cursor-pointer ${paymentMethod === "card" ? "border-primary ring-2 ring-primary/20" : ""
                                 }`}

@@ -9,6 +9,7 @@ import CustomerSlice from "./authSlice/CustomerAuthSlice"
 import CustomerProfileSlice from "./customer/CustomerSlice"
 import wishlistSlice from "./customer/WhishlistSlice"
 import cartSlice from "./customer/CartSlice"
+import orderSlice from "./customer/OrderSlice"
 
 const persistConfig = {
     key: 'root',
@@ -23,7 +24,8 @@ const rootReducer = combineReducers({
     customers: CustomerSlice,
     customerProfile: CustomerProfileSlice,
     wishlist: wishlistSlice,
-    cart: cartSlice
+    cart: cartSlice,
+    orders:orderSlice
 })
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)
