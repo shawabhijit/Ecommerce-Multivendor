@@ -44,9 +44,9 @@ const Index = () => {
                         <main>
                             <div className="container mx-auto px-4 space-y-8 pb-10 pt-32">
                                 <HeroCarousel />
-                                <FeaturesSection />
-                                <CategoriesSection />
                                 <DealsOfTheDay />
+                                <CategoriesSection />
+                                <FeaturesSection />
                                 <WhyChooseUsSection />
                                 <TestimonialsSection />
                                 <VendorCTASection />
