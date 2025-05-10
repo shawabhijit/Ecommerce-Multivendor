@@ -5,18 +5,20 @@ import { motion, AnimatePresence } from "framer-motion"
 import { ShoppingBag } from "lucide-react"
 import PriceDetails from "./PriceDetails"
 import { Outlet, useLocation } from "react-router-dom"
-import { CartContext } from "../Context/CartContext"
+import { Address, AddressProvider, CartContext } from "../Context/CartContext"
 import { useAppDispatch } from "../../../../app/Store"
 import { fetchCartData } from "../../../../app/customer/CartSlice"
+import { fetchCustomerProfile } from "../../../../app/customer/CustomerSlice"
 
 export default function UserCheckoutPage() {
 
     const location = useLocation();
     const pathSegment = location.pathname.split('/').pop();
-    //console.log('pathSegment', pathSegment)
+    console.log('pathSegment', pathSegment)
     const dispatch = useAppDispatch();
 
     const [cartItems, setCartItems] = useState<any>([])
+    const [addresses, setAddresses] = useState<Address[]>([]);
 
     const fetchCart = async () => {
         const res = await dispatch(fetchCartData());
@@ -30,8 +32,25 @@ export default function UserCheckoutPage() {
         }
     }
 
+    const fetchData = async () => {
+        const res = await dispatch(fetchCustomerProfile());
+        console.log('res', res);
+        if (res.meta.requestStatus === "fulfilled") {
+            setAddresses(res.payload.addresses);
+        }
+    }
+
+    // useEffect(() => {
+    //     fetchData();
+    // }, [dispatch]);
+
+    const refetchProfile = () => {
+        fetchData();
+    };
+
     useEffect(() => {
         fetchCart();
+        fetchData();
     }, [dispatch])
 
 
@@ -79,6 +98,7 @@ export default function UserCheckoutPage() {
 
     return (
         <CartContext.Provider value={contextValue} >
+            <AddressProvider initialAddresses={addresses} refetchProfile={refetchProfile}>
             <div className="container mx-auto px-4 py-32 max-w-7xl min-h-screen">
                 <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
                     <h1 className="text-2xl font-bold flex items-center">
@@ -86,7 +106,7 @@ export default function UserCheckoutPage() {
                         {pathSegment === "cart" && "Shopping Bag"}
                         {pathSegment === "address" && "Select Delivery Address"}
                         {pathSegment === "payment" && "Payment Options"}
-                        {pathSegment === "confirmation" && "Order Confirmation"}
+                        {(pathSegment !== "cart" && pathSegment !== "address" && pathSegment !== "payment") && "Order Confirmation"}
                     </h1>
                 </motion.div>
 
@@ -97,10 +117,11 @@ export default function UserCheckoutPage() {
                         </AnimatePresence>
                     </div>
                     {
-                        pathSegment != "confirmation" && <PriceDetails cartItems={cartItems} />
+                            (pathSegment === "cart" || pathSegment === "address" || pathSegment == "payment") && <PriceDetails cartItems={cartItems} />
                     }
                 </div>
             </div>
+            </AddressProvider>
         </CartContext.Provider>
     )
 }

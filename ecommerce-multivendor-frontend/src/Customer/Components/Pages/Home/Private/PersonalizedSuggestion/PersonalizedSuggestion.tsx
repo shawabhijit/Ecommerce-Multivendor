@@ -85,7 +85,7 @@ export default function PersonalizedSuggestions() {
             initial="hidden"
             animate={isInView ? "visible" : "hidden"}
             variants={containerVariants}
-            className="bg-white rounded-xl shadow-sm p-6"
+            className="bg-white rounded-xl p-6"
         >
             <div className="flex justify-between items-center mb-6">
                 <div>
@@ -102,7 +102,7 @@ export default function PersonalizedSuggestions() {
                 </div>
             </div>
 
-            <div ref={scrollRef} className="flex flex-wrap overflow-x-auto scrollbar-hide gap-4 pb-4">
+            <div ref={scrollRef} className="flex flex-wrap overflow-x-auto scrollbar-hide gap-6 pb-4">
                 {suggestedProducts.map((product, index) => (
                     <ProductCard key={product.id} product={product} index={index} isInView={isInView} />
                 ))}

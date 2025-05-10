@@ -48,7 +48,7 @@ const CustomerIndex = () => {
                         <Route path="cart" element={<Cart />} />
                         <Route path="address" element={<UserAddress />} />
                         <Route path="payment" element={<UserOrderPayment />} />
-                        <Route path="confirmation" element={<Confirmation />} />
+                        <Route path="confirmation/:orderId" element={<Confirmation />} />
                     </Route>
                 </Route>
             </Routes>

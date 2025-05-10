@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import { api } from "../../config/api"
 import { stat } from "fs"
 import { error } from "console"
+import { Address } from "../../Customer/Components/Pages/Context/CartContext"
 
 type OrderState = {
     orders: any[],
@@ -58,13 +59,13 @@ export const fetchOrderById = createAsyncThunk("orders/fetchOrderById" , async (
 export const createOrder = createAsyncThunk(
     "orders/createOrder",
     async (
-        { address, paymentGateway }: { address: any; paymentGateway: string },
+        { address, paymenyMethod }: { address: any; paymenyMethod: string },
         { rejectWithValue }
     ) => {
         try {
             const response = await api.post(API_URL, address, {
                 withCredentials: true,
-                params: { paymentMethod: paymentGateway }
+                params: { paymenyMethod: paymenyMethod }
             });
             console.log("Order created :" , response.data);
             if (response.data.payment_link_url) {

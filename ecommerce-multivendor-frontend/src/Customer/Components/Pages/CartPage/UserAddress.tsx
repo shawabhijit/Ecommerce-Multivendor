@@ -1,30 +1,34 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { motion } from "framer-motion"
 import { RadioGroup } from '../../../../Components/ui/radio-group'
 import { Button } from '../../../../Components/ui/button'
 import { useNavigate } from 'react-router-dom'
 import AddressPage from '../Profile/AddressPage'
-import { useAppDispatch } from '../../../../app/Store'
-import { fetchCustomerProfile } from '../../../../app/customer/CustomerSlice'
+import { useAddress } from '../Context/CartContext'
+
+// Animation variants for containers and items
+const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: {
+            staggerChildren: 0.1
+        }
+    }
+};
+
+const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+        y: 0,
+        opacity: 1
+    }
+};
 
 const UserAddress = () => {
-
-    const dispatch = useAppDispatch();
-    const [addresses, setAddresses] = useState<any>([])
-
-    const fetchData = async () => {
-        const res = await dispatch(fetchCustomerProfile())
-        // console.log('res', res)
-        setAddresses(res.payload.addresses)
-    }
-
-    useEffect(() => {
-        fetchData()
-    }, [dispatch])
-
-
     const navigate = useNavigate();
-    const [selectedAddress, setSelectedAddress] = useState(1)
+    const [selectedAddress, setSelectedAddress] = useState(1);
+    const {addresses , refetchProfile} = useAddress();
 
     return (
         <motion.div
@@ -39,13 +43,23 @@ const UserAddress = () => {
                 onValueChange={(value) => setSelectedAddress(Number.parseInt(value))}
                 className="space-y-4"
             >
-                <AddressPage addresses={addresses} setAddresses={setAddresses} />
+                <AddressPage
+                    containerVariants={containerVariants}
+                    itemVariants={itemVariants}
+                    refetchProfile={refetchProfile}
+                />
             </RadioGroup>
             <div className="flex justify-between mt-4 border-2 border-dashed border-gray-300 rounded-md p-8">
                 <Button variant="outline" onClick={() => navigate("/my/cart")} className=''>
                     Back to Bag
                 </Button>
-                <Button onClick={() => navigate("/my/payment")} className='w-[30%]'>CONTINUE</Button>
+                <Button
+                    onClick={() => navigate("/my/payment")}
+                    className='w-[30%]'
+                    disabled={addresses.length === 0}
+                >
+                    CONTINUE
+                </Button>
             </div>
         </motion.div>
     )

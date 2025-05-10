@@ -10,13 +10,17 @@ import UserInfo from "./UserInfo"
 import PaymentMethods from "./PaymentMethods"
 import { useAppDispatch } from "../../../../app/Store"
 import { fetchCustomerProfile } from "../../../../app/customer/CustomerSlice"
+import { Address, AddressProvider, useAddress } from "../Context/CartContext"
 
 export default function UserProfile() {
     const location = useLocation();
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const [response, setResponse] = useState<any>(null)
-    const [addresses, setAddresses] = useState<any>(null)
+    const [addresses, setAddresses] = useState<Address[]>([])
+
+    // const { addresses } = useAddress();
+    // console.log("Addresses are:", addresses);
 
     const queryParams = new URLSearchParams(location.search)
     const initialTab = queryParams.get("tab") || "profile";
@@ -112,6 +116,7 @@ export default function UserProfile() {
     }
 
     return (
+        <AddressProvider initialAddresses={addresses}>
         <div className="container mx-auto px-4 py-8 max-w-5xl md:pt-32 min-h-screen">
             <motion.div
                 initial={{ opacity: 0, y: -20 }}
@@ -147,7 +152,7 @@ export default function UserProfile() {
                         </TabsContent>
 
                         <TabsContent value="addresses" className="mt-0">
-                            <AddressPage addresses={addresses} setAddresses={setAddresses} containerVariants={containerVariants} itemVariants={itemVariants} refetchProfile={refetchProfile} />
+                            <AddressPage containerVariants={containerVariants} itemVariants={itemVariants} refetchProfile={refetchProfile} />
                         </TabsContent>
 
                         <TabsContent value="orders" className="mt-0">
@@ -161,5 +166,6 @@ export default function UserProfile() {
                 </AnimatePresence>
             </Tabs>
         </div>
+        </AddressProvider>
     )
 }

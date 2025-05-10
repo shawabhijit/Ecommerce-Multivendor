@@ -31,11 +31,12 @@ const Index = () => {
 
                                 <DealsOfTheDay />
 
+                                <PersonalizedSuggestions />
+                                
                                 <ProductFeed title="Electronics" category="electronics" />
 
                                 <ProductFeed title="Fashion" category="fashion" />
 
-                                <PersonalizedSuggestions />
 
                                 <ProductFeed title="Home & Kitchen" category="home" />
                             </div>
