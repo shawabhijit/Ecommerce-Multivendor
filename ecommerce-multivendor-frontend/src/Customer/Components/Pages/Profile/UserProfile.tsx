@@ -11,6 +11,7 @@ import PaymentMethods from "./PaymentMethods"
 import { useAppDispatch } from "../../../../app/Store"
 import { fetchCustomerProfile } from "../../../../app/customer/CustomerSlice"
 import { Address, AddressProvider, useAddress } from "../Context/CartContext"
+import { fetchUserOrderHistory } from "../../../../app/customer/OrderSlice"
 
 export default function UserProfile() {
     const location = useLocation();
@@ -26,6 +27,7 @@ export default function UserProfile() {
     const initialTab = queryParams.get("tab") || "profile";
 
     const [currentTab, setCurrentTab] = useState(initialTab);
+    const [orders, setOrders] = useState<any>([])
 
     useEffect(() => {
         setCurrentTab(initialTab)
@@ -43,54 +45,26 @@ export default function UserProfile() {
         setResponse(res.payload)
         setAddresses(res.payload.addresses)
     }
+
+    const fetchUserOrders = async () => {
+        const res = await dispatch(fetchUserOrderHistory());
+        console.log("user Order History response ," , res);
+        if (res.meta.requestStatus == "fulfilled") {
+            setOrders(res.payload);
+        }
+    }
+
     const refetchProfile = () => {
         fetchData();
     }
 
     useEffect(() => {
         fetchData()
+        fetchUserOrders()
     }, [dispatch])
 
 
-    const [orders, setOrders] = useState([
-        {
-            id: "ORD123456",
-            date: "15 Mar 2024",
-            amount: "₹2,499",
-            status: "Delivered",
-            items: [
-                {
-                    name: "Men's Cotton T-Shirt",
-                    color: "Navy Blue",
-                    size: "M",
-                    price: "₹799",
-                    image: "/placeholder.svg?height=80&width=60",
-                },
-                {
-                    name: "Women's Casual Jeans",
-                    color: "Light Blue",
-                    size: "28",
-                    price: "₹1,700",
-                    image: "/placeholder.svg?height=80&width=60",
-                },
-            ],
-        },
-        {
-            id: "ORD789012",
-            date: "28 Feb 2024",
-            amount: "₹3,999",
-            status: "Delivered",
-            items: [
-                {
-                    name: "Running Shoes",
-                    color: "Black/Red",
-                    size: "UK 9",
-                    price: "₹3,999",
-                    image: "/placeholder.svg?height=80&width=60",
-                },
-            ],
-        },
-    ])
+    
 
 
     const containerVariants = {
@@ -116,8 +90,8 @@ export default function UserProfile() {
     }
 
     return (
-        <AddressProvider initialAddresses={addresses}>
-        <div className="container mx-auto px-4 py-8 max-w-5xl md:pt-32 min-h-screen">
+        <AddressProvider initialAddresses={addresses} refetchProfile={refetchProfile}>
+        <div className="container mx-auto px-4 py-8 max-w-5xl pt-40 md:pt-32 min-h-screen">
             <motion.div
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
