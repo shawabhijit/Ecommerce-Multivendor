@@ -1,8 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import { api } from "../../config/api"
-import { stat } from "fs"
-import { error } from "console"
-import { Address } from "../../Customer/Components/Pages/Context/CartContext"
 
 type OrderState = {
     orders: any[],

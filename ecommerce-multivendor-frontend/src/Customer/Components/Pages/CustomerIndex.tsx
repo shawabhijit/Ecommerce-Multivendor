@@ -1,4 +1,3 @@
-import React from 'react'
 import AuthChecker from './auth/AuthChecker'
 import { Route, Routes, useLocation } from 'react-router-dom'
 import CustomerLogin from './auth/CustomerLogin'
