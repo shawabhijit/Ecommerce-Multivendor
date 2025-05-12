@@ -41,7 +41,7 @@ const Navbar = ({ isLogedin }: any) => {
     const navigate = useNavigate();
 
     const { scrollY } = useScroll()
-    const headerBackground = useTransform(scrollY, [0, 50], [isDark ? "rgba(0, 0, 0, 0.9)" : "", "rgba(255, 255, 255, 1)"])
+    const headerBackground = useTransform(scrollY, [0, 50], [isDark ? "rgba(0, 0, 0, 0.9)" : "rgba(255, 255, 255, 1)", "rgba(255, 255, 255, 1)"])
     const headerShadow = useTransform(scrollY, [0, 50], ["0 0 0 rgba(0, 0, 0, 0)", "0 4px 6px rgba(0, 0, 0, 0.1)"])
 
     useEffect(() => {

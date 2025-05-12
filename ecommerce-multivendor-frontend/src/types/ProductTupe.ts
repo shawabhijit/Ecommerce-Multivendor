@@ -40,6 +40,36 @@ export type Products = {
         average: number;
         count: number;
     };
+    reviews?: any[];
+};
+
+export type ProductsResponse = {
+    content: Products[];
+    empty: boolean;
+    first: boolean;
+    last: boolean;
+    number: number;
+    numberOfElements: number;
+    pageAble: {
+        offset: number;
+        pageNumber: number;
+        pageSize: number;
+        paged: boolean;
+        sort: {
+            empty: boolean;
+            sorted: boolean;
+            unsorted: boolean;
+        };
+        unpaged: boolean;
+    };
+    size: number;
+    sort: {
+        empty: boolean;
+        sorted: boolean;
+        unsorted: boolean;
+    };
+    totalElements: number;
+    totalPages: number;
 };
 
 

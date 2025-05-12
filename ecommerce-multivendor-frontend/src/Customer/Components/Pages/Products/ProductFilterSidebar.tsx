@@ -3,20 +3,36 @@
 import { motion } from "framer-motion"
 import { Checkbox } from "../../../../Components/ui/checkbox"
 import { Label } from "../../../../Components/ui/label"
+import { colorOptions } from "../../../../lib/api"
+import { useState } from "react"
 
-interface FilterSidebarProps {
+type FilterSidebarProps = {
     categories: string[]
     selectedCategories: string[]
     onCategoryChange: (categories: string[]) => void
+    priceRange: { min: string; max: string }
+    onPriceChange: (range: { min: string; max: string }) => void
 }
 
-export default function FilterSidebar({ categories, selectedCategories, onCategoryChange }: FilterSidebarProps) {
+export default function FilterSidebar({ categories, selectedCategories, onCategoryChange , priceRange , onPriceChange }: FilterSidebarProps) {
+
+    const [expendColor , setExpendColor] = useState(true);
+    
+
     const handleCategoryChange = (category: string) => {
         if (selectedCategories.includes(category)) {
             onCategoryChange(selectedCategories.filter((c) => c !== category))
         } else {
             onCategoryChange([...selectedCategories, category])
         }
+    }
+
+    const handlePriceChange = (price: any) => {
+        const { name, value } = price.target;
+        onPriceChange({
+            ...priceRange,
+            [name]: value
+        });
     }
 
     const handleClearAll = () => {
@@ -58,11 +74,63 @@ export default function FilterSidebar({ categories, selectedCategories, onCatego
             </div>
 
             <div className="border-t mt-6 pt-4">
+                <h3 className="font-medium text-gray-900 mb-3">Color</h3>
+                {
+                    expendColor == false ? (
+                        colorOptions.map((color, index) => (
+                            <li key={index} className="flex items-center gap-4">
+                                <Checkbox id={`color-${color.name}`} />
+                                <span className={`p-[8px] rounded-full h-[8px] w-[8px] ${color.name === "White" ? "border-1 border-black" : ""} `}
+                                    style={{
+                                        backgroundColor: color.colorCode
+                                    }}
+                                ></span>
+                                {color.name}
+                            </li>
+                        ))
+                    ) : (
+                            colorOptions.slice(0, 8).map((color, index) => (
+                                <li key={index} className="flex items-center gap-4">
+                                    <Checkbox id={`color-${color.name}`} />
+                                    <span className={`p-[8px] rounded-full h-[8px] w-[8px] ${color.name === "White" ? "border-1 border-black" : ""} `}
+                                        style={{
+                                            backgroundColor: color.colorCode
+                                        }}
+                                    ></span>
+                                    {color.name}
+                                </li>
+                        ))
+                    )
+                }
+                {
+                    colorOptions.slice(8).length > 0 && expendColor &&  (
+                        <p onClick={() => setExpendColor(false)} className="text-black font-semibold cursor-pointer">
+                            + {colorOptions.slice(8).length} more
+                        </p>
+                    )
+                }
+            </div>
+
+            <div className="border-t mt-6 pt-4">
                 <h3 className="font-medium text-gray-900 mb-3">Price Range</h3>
                 <div className="flex items-center gap-2">
-                    <input type="number" placeholder="Min" className="w-full p-2 border rounded-md text-sm" />
+                    <input 
+                        type="number" 
+                        name="min"
+                        placeholder="Min" 
+                        className="w-full p-2 border rounded-md text-sm" 
+                        value={priceRange.min}
+                        onChange={handlePriceChange}
+                    />
                     <span className="text-gray-500">-</span>
-                    <input type="number" placeholder="Max" className="w-full p-2 border rounded-md text-sm" />
+                    <input 
+                        type="number" 
+                        name="max"
+                        placeholder="Max" 
+                        className="w-full p-2 border rounded-md text-sm" 
+                        value={priceRange.max}
+                        onChange={handlePriceChange}
+                    />
                 </div>
             </div>
 

@@ -4,74 +4,100 @@ import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import ProductGrid from "./ProductGrid"
 import FilterSidebar from "./ProductFilterSidebar"
-import SearchBar from "./ProductSearchbar"
 import SortDropdown from "./SortBy"
 import type { Product } from "../../../../lib/Types"
 import { getProducts } from "../../../../lib/api"
 import { FilterIcon } from "lucide-react"
 import { useLocation, useNavigate } from "react-router-dom"
+import { useAppDispatch } from "../../../../app/Store"
+import { fetchAllProducts } from "../../../../app/customer/ProductSlice"
+import { Products, ProductsResponse } from "../../../../types/ProductTupe"
 
 export default function ProductsPage() {
-    const navigate = useNavigate();
     const location = useLocation();
     const categoryFromNav = location.state?.selecteedCategory || "";
+    const dispatch = useAppDispatch();
 
-    console.log('categoryFromNav', categoryFromNav)
-
-    const [products, setProducts] = useState<Product[]>([])
+    //console.log('categoryFromNav', categoryFromNav)
+    const [productResponse , setProductResponse ] = useState<ProductsResponse>()
+    const [products, setProducts] = useState<Products[]>([])
     const [loading, setLoading] = useState(true)
     const [searchQuery, setSearchQuery] = useState("")
     const [sortOption, setSortOption] = useState("featured")
     const [selectedCategories, setSelectedCategories] = useState<string[]>(categoryFromNav ? [categoryFromNav] : [])
+    const [priceRange , setPriceRange ] = useState({min: '', max:''});
     const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false)
+
+    console.log(priceRange)
+
+    const fetchAllProduct = async () => {
+        const res = await dispatch(fetchAllProducts({
+            categories: categories,
+            minPrice: priceRange.min !== '' ? Number(priceRange.min) : undefined,
+            maxPrice: priceRange.max !== '' ? Number(priceRange.max) : undefined
+        }));
+        console.log("response in product page of all products ,", res);
+        if (res.meta.requestStatus == "fulfilled") {
+            setProductResponse(res.payload)
+            setProducts(res.payload.content);
+            setLoading(false);
+        }
+        else {
+            setLoading(true);
+        }
+    }
 
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: "smooth" })
 
-        const fetchProducts = async () => {
-            try {
-                const data = await getProducts()
-                setProducts(data)
-                setLoading(false)
-            } catch (error) {
-                console.error("Error fetching products:", error)
-                setLoading(false)
-            }
-        }
+        // const fetchProducts = async () => {
+        //     try {
+        //         const data = await getProducts()
+        //         setProducts(data)
+        //         setLoading(false)
+        //     } catch (error) {
+        //         console.error("Error fetching products:", error)
+        //         setLoading(false)
+        //     }
+        // }
 
         if (categoryFromNav && !selectedCategories.includes(categoryFromNav)) {
             setSelectedCategories([categoryFromNav])
         }
 
-        fetchProducts()
+        // fetchProducts()
+        fetchAllProduct();
     }, [categoryFromNav])
 
 
     // Filter products based on search query and selected categories
     const filteredProducts = products.filter((product) => {
         const matchesSearch = product.title.toLowerCase().includes(searchQuery.toLowerCase())
-        const matchesCategory = selectedCategories.length === 0 || selectedCategories.includes(product.category)
-        return matchesSearch && matchesCategory
+        const matchesCategory = selectedCategories.length === 0 || selectedCategories.includes(product.category.name)
+        const min = priceRange.min !== '' ? Number(priceRange.min) : 0;
+        const max = priceRange.max !== '' ? Number(priceRange.max) : Infinity;
+        const matchesPriceRange = product.mrpPrice >= min && product.mrpPrice <= max;
+        return matchesSearch && matchesCategory && matchesPriceRange
     })
 
     // Sort products based on selected sort option
     const sortedProducts = [...filteredProducts].sort((a, b) => {
         switch (sortOption) {
             case "price-low-high":
-                return a.price - b.price
+                return a.mrpPrice - b.mrpPrice
             case "price-high-low":
-                return b.price - a.price
+                return b.mrpPrice - a.mrpPrice
             case "rating":
-                return b.rating - a.rating
+                return (b.ratings?.count ?? 0) - (a.ratings?.count ?? 0)
             default:
                 return 0
         }
     })
 
-    const categories = Array.from(new Set(products.map((product) => product.category)))
+    const categories = Array.from(new Set(products.map((product) => product.category.name)))
 
     return (
-        <div className="min-h-screen bg-gray-50 mt-24">
+        <div className="min-h-screen bg-white mt-34 md:mt-20">
 
             <div className="container mx-auto px-4 py-6">
                 <div className="flex flex-col md:flex-row gap-6">
@@ -81,12 +107,14 @@ export default function ProductsPage() {
                             categories={categories}
                             selectedCategories={selectedCategories}
                             onCategoryChange={setSelectedCategories}
+                            priceRange={priceRange}
+                            onPriceChange={setPriceRange}
                         />
                     </div>
 
                     {/* Mobile sidebar */}
                     {isMobileSidebarOpen && (
-                        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 md:hidden">
+                        <div className="fixed inset-0 bg-white bg-opacity-50 z-50 md:hidden">
                             <motion.div
                                 initial={{ x: "-100%" }}
                                 animate={{ x: 0 }}
@@ -108,6 +136,8 @@ export default function ProductsPage() {
                                             setSelectedCategories(categories)
                                             setIsMobileSidebarOpen(false)
                                         }}
+                                        priceRange={priceRange}
+                                        onPriceChange={setPriceRange}
                                     />
                                 </div>
                             </motion.div>
@@ -129,7 +159,7 @@ export default function ProductsPage() {
                             </div>
                         ) : (
                             <>
-                                <div className="mb-8 text-sm text-gray-500 flex items-center justify-between">
+                                <div className="mb-8 text-[12px] md:text-sm text-gray-500 flex items-center justify-between">
                                     <p>Showing {sortedProducts.length} products</p>
                                     <div className="flex items-center gap-2 md:gap-4">
                                         <SortDropdown value={sortOption} onChange={setSortOption} />

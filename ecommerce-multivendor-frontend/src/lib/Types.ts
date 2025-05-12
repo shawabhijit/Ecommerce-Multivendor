@@ -12,3 +12,16 @@ export interface Product {
     inStock: boolean
     seller?: string
 }
+
+export interface ColorOption {
+    name: string;
+    count: number;
+    colorCode: string;
+    isSelected: boolean;
+}
+
+export interface DiscountOption {
+    label: string;
+    value: number;
+    isSelected: boolean;
+}
