@@ -9,7 +9,7 @@ import { Input } from '../../../../Components/ui/input';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '../../../../Components/ui/dropdown-menu';
 import { useTheme } from '../../../../context/theme-provider';
 import { useAppDispatch } from '../../../../app/Store';
-import { logout } from '../../../../app/authSlice/CustomerAuthSlice';
+import { logout, logoutUser } from '../../../../app/authSlice/CustomerAuthSlice';
 
 
 const products = [
@@ -65,8 +65,13 @@ const Navbar = ({ isLogedin }: any) => {
     }, [searchValue]);
 
     const handleLogout = async () => {
-        await dispatch(logout());
-    }
+        try {
+            await dispatch(logoutUser()).unwrap();
+            dispatch(logout());
+        } catch (error) {
+            console.error("Logout failed:", error);
+        }
+    };
 
     return (
         <motion.header

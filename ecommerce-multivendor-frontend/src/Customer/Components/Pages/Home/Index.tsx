@@ -9,11 +9,29 @@ import WhyChooseUsSection from './Public/WhyChooseUs/WhyChooseUsSection';
 import TestimonialsSection from './Public/TestimonialsSection/TestimonialsSection';
 import VendorCTASection from './Public/VendorCTA/VendorCTASection';
 import Footer from '../../Layout/Footer/Footer';
-import { useAppSelecter } from '../../../../app/Store';
+import { useAppDispatch, useAppSelecter } from '../../../../app/Store';
+import { useEffect, useState } from 'react';
+import { Products } from '../../../../types/ProductTupe';
+import { fetchAllProducts } from '../../../../app/customer/ProductSlice';
 
 
 
 const Index = () => {
+
+    const dispatch = useAppDispatch();
+    const [products, setProduct] = useState<Products[]>([]);
+
+    const fetchProducts = async () => {
+        const res = await dispatch(fetchAllProducts({}));
+        //console.log("getting all products in product feed with ," , res.payload.content);
+        if (res.meta.requestStatus == "fulfilled") {
+            setProduct(res.payload?.content)
+        }
+    }
+
+    useEffect(() => {
+        fetchProducts()
+    }, [dispatch])
 
     const { isLoggedIn } = useAppSelecter((state) => state.customers)
     console.log("isLoggedIn", isLoggedIn)
@@ -29,23 +47,23 @@ const Index = () => {
 
                                 <CategoriesSection />
 
-                                <DealsOfTheDay />
+                                <DealsOfTheDay products={products} />
 
-                                <PersonalizedSuggestions />
-                                
-                                <ProductFeed title="Electronics" category="electronics" />
+                                <PersonalizedSuggestions products={products} />
 
-                                <ProductFeed title="Fashion" category="fashion" />
+                                <ProductFeed products={products} title="Electronics" category="Electronics" />
+
+                                <ProductFeed products={products} title="Fashion" category="fashion" />
 
 
-                                <ProductFeed title="Home & Kitchen" category="home" />
+                                <ProductFeed products={products} title="Home & Kitchen" category="home" />
                             </div>
                         </main>
                     ) : (
                         <main>
                             <div className="container mx-auto px-4 space-y-8 pb-10 pt-32">
                                 <HeroCarousel />
-                                <DealsOfTheDay />
+                                <DealsOfTheDay products={products} />
                                 <CategoriesSection />
                                 <FeaturesSection />
                                 <WhyChooseUsSection />

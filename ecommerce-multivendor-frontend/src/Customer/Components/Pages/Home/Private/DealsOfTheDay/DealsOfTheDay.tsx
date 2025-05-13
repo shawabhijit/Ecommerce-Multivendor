@@ -6,101 +6,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react"
 import { Button } from "../../../../../../Components/ui/button"
 import ProductCard from "../HomeProductCard/HomeProductCard"
 
-// Mock data for deals
-const dealProducts = [
-    {
-        id: 1,
-        name: "Wireless Earbuds",
-        price: 49.99,
-        originalPrice: 99.99,
-        image: "https://assets.myntassets.com/f_webp,dpr_1.5,q_60,w_210,c_limit,fl_progressive/assets/images/30348918/2025/4/25/9ad42b80-28a2-4e81-8da0-6ac765dacf041745573505996-BOULT-AUDIO-Shadow-Bluetooth-Earbuds-with-40H-Playtime-ENC-M-1.jpg",
-        rating: 4.5,
-        discount: 50,
-    },
-    {
-        id: 2,
-        name: "Smart Watch",
-        price: 129.99,
-        originalPrice: 199.99,
-        image: "https://assets.myntassets.com/f_webp,dpr_1.5,q_60,w_210,c_limit,fl_progressive/assets/images/30348918/2025/4/25/9ad42b80-28a2-4e81-8da0-6ac765dacf041745573505996-BOULT-AUDIO-Shadow-Bluetooth-Earbuds-with-40H-Playtime-ENC-M-1.jpg",
-        rating: 4.2,
-        discount: 35,
-    },
-    {
-        id: 3,
-        name: "Bluetooth Speaker",
-        price: 79.99,
-        originalPrice: 149.99,
-        image: "https://assets.myntassets.com/f_webp,dpr_1.5,q_60,w_210,c_limit,fl_progressive/assets/images/30348918/2025/4/25/9ad42b80-28a2-4e81-8da0-6ac765dacf041745573505996-BOULT-AUDIO-Shadow-Bluetooth-Earbuds-with-40H-Playtime-ENC-M-1.jpg",
-        rating: 4.7,
-        discount: 47,
-    },
-    {
-        id: 4,
-        name: "Laptop Backpack",
-        price: 39.99,
-        originalPrice: 69.99,
-        image: "https://assets.myntassets.com/f_webp,dpr_1.5,q_60,w_210,c_limit,fl_progressive/assets/images/30348918/2025/4/25/9ad42b80-28a2-4e81-8da0-6ac765dacf041745573505996-BOULT-AUDIO-Shadow-Bluetooth-Earbuds-with-40H-Playtime-ENC-M-1.jpg",
-        rating: 4.3,
-        discount: 43,
-    },
-    {
-        id: 5,
-        name: "Gaming Mouse",
-        price: 29.99,
-        originalPrice: 59.99,
-        image: "https://assets.myntassets.com/f_webp,dpr_1.5,q_60,w_210,c_limit,fl_progressive/assets/images/30348918/2025/4/25/9ad42b80-28a2-4e81-8da0-6ac765dacf041745573505996-BOULT-AUDIO-Shadow-Bluetooth-Earbuds-with-40H-Playtime-ENC-M-1.jpg",
-        rating: 4.6,
-        discount: 50,
-    },
-    {
-        id: 6,
-        name: "Mechanical Keyboard",
-        price: 89.99,
-        originalPrice: 149.99,
-        image: "https://assets.myntassets.com/f_webp,dpr_1.5,q_60,w_210,c_limit,fl_progressive/assets/images/30348918/2025/4/25/9ad42b80-28a2-4e81-8da0-6ac765dacf041745573505996-BOULT-AUDIO-Shadow-Bluetooth-Earbuds-with-40H-Playtime-ENC-M-1.jpg",
-        rating: 4.8,
-        discount: 40,
-    },
-    {
-        id: 5,
-        name: "Gaming Mouse",
-        price: 29.99,
-        originalPrice: 59.99,
-        image: "https://assets.myntassets.com/f_webp,dpr_1.5,q_60,w_210,c_limit,fl_progressive/assets/images/30348918/2025/4/25/9ad42b80-28a2-4e81-8da0-6ac765dacf041745573505996-BOULT-AUDIO-Shadow-Bluetooth-Earbuds-with-40H-Playtime-ENC-M-1.jpg",
-        rating: 4.6,
-        discount: 50,
-    },
-    {
-        id: 6,
-        name: "Mechanical Keyboard",
-        price: 89.99,
-        originalPrice: 149.99,
-        image: "https://assets.myntassets.com/f_webp,dpr_1.5,q_60,w_210,c_limit,fl_progressive/assets/images/30348918/2025/4/25/9ad42b80-28a2-4e81-8da0-6ac765dacf041745573505996-BOULT-AUDIO-Shadow-Bluetooth-Earbuds-with-40H-Playtime-ENC-M-1.jpg",
-        rating: 4.8,
-        discount: 40,
-    },
-    {
-        id: 5,
-        name: "Gaming Mouse",
-        price: 29.99,
-        originalPrice: 59.99,
-        image: "https://assets.myntassets.com/f_webp,dpr_1.5,q_60,w_210,c_limit,fl_progressive/assets/images/30348918/2025/4/25/9ad42b80-28a2-4e81-8da0-6ac765dacf041745573505996-BOULT-AUDIO-Shadow-Bluetooth-Earbuds-with-40H-Playtime-ENC-M-1.jpg",
-        rating: 4.6,
-        discount: 50,
-    },
-    {
-        id: 6,
-        name: "Mechanical Keyboard",
-        price: 89.99,
-        originalPrice: 149.99,
-        image: "https://assets.myntassets.com/f_webp,dpr_1.5,q_60,w_210,c_limit,fl_progressive/assets/images/30348918/2025/4/25/9ad42b80-28a2-4e81-8da0-6ac765dacf041745573505996-BOULT-AUDIO-Shadow-Bluetooth-Earbuds-with-40H-Playtime-ENC-M-1.jpg",
-        rating: 4.8,
-        discount: 40,
-    },
-]
-
-export default function DealsOfTheDay() {
+export default function DealsOfTheDay({products}) {
     const [timeLeft, setTimeLeft] = useState({
         hours: 10,
         minutes: 30,
@@ -109,6 +15,8 @@ export default function DealsOfTheDay() {
     const scrollRef = useRef<HTMLDivElement>(null)
     const ref = useRef(null)
     const isInView = useInView(ref, { once: true, amount: 0.2 })
+
+    const dealProducts = products.filter(prod => prod.discountPrice >= 40 ) || []
 
     useEffect(() => {
         const timer = setInterval(() => {
@@ -192,18 +100,7 @@ export default function DealsOfTheDay() {
 
             <div
                 ref={scrollRef}
-                className="
-                    flex 
-                    flex-nowrap 
-                    md:flex-wrap 
-                    md:justify-baseline
-                    overflow-x-auto 
-                    md:overflow-x-visible 
-                    gap-2 
-                    md:gap-6
-                    pb-4 
-                    scrollbar-hide
-                "
+                className="flex flex-nowrap md:flex-wrap md:justify-baselineoverflow-x-auto md:overflow-x-visible gap-6 md:gap-6pb-4 scrollbar-hide"
             >
                 {dealProducts.map((product, index) => (
                     <ProductCard

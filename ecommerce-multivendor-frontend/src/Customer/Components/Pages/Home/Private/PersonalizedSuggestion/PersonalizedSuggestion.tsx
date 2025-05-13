@@ -1,10 +1,11 @@
 "use client"
 
-import { useRef } from "react"
+import { useRef, useState } from "react"
 import { motion, useInView } from "framer-motion"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { Button } from "../../../../../../Components/ui/button"
 import ProductCard from "../HomeProductCard/HomeProductCard"
+import { Products } from "../../../../../../types/ProductTupe"
 
 // Mock data for personalized suggestions
 const suggestedProducts = [
@@ -52,11 +53,13 @@ const suggestedProducts = [
     },
 ]
 
-export default function PersonalizedSuggestions() {
+export default function PersonalizedSuggestions({products}) {
+
+    console.log("products in Recomendations ," , products)
     const scrollRef = useRef<HTMLDivElement>(null)
     const ref = useRef(null)
     const isInView = useInView(ref, { once: true, amount: 0.2 })
-
+    
     const scroll = (direction: "left" | "right") => {
         if (scrollRef.current) {
             const { current } = scrollRef
@@ -102,7 +105,7 @@ export default function PersonalizedSuggestions() {
                 </div>
             </div>
 
-            <div ref={scrollRef} className="flex flex-wrap overflow-x-auto scrollbar-hide gap-6 pb-4">
+            <div ref={scrollRef} className="flex flex-wrap overflow-hidden scrollbar-hide gap-6 pb-4">
                 {suggestedProducts.map((product, index) => (
                     <ProductCard key={product.id} product={product} index={index} isInView={isInView} />
                 ))}

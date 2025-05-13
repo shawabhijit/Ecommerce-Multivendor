@@ -4,6 +4,7 @@ import { checkAuthStatus } from '../../../../app/authSlice/CustomerAuthSlice';
 
 const AuthChecker = ({ children }) => {
     const dispatch = useAppDispatch();
+    const { isLoggedIn, authChecked } = useAppSelecter(state => state.customers);
     const [isChecking, setIsChecking] = useState(true);
 
     useEffect(() => {
@@ -20,12 +21,14 @@ const AuthChecker = ({ children }) => {
         checkAuth();
 
         const interval = setInterval(() => {
-            dispatch(checkAuthStatus());
+            if (isLoggedIn) {
+                dispatch(checkAuthStatus());
+            }
         }, 10 * 60 * 1000); 
         return () => clearInterval(interval);
-    }, [dispatch]);
+    }, [dispatch , isLoggedIn]);
 
-    if (isChecking) {
+    if (!authChecked || isChecking) {
         return <div>Loading...</div>;
     }
 

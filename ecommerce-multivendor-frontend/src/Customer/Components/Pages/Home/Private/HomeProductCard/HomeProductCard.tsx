@@ -1,7 +1,7 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { Heart, ShoppingCart, Star, X } from "lucide-react"
+import { ShoppingCart, Star, X } from "lucide-react"
 import { Button } from "../../../../../../Components/ui/button"
 
 // Define both product structure types

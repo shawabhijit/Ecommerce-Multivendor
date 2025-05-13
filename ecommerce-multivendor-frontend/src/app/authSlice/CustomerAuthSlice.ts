@@ -55,6 +55,15 @@ export const checkAuthStatus = createAsyncThunk("/customers/checkAuthStatus", as
     }
 });
 
+export const logoutUser = createAsyncThunk("/customers/logout", async (_, { rejectWithValue }) => {
+    try {
+        await api.get("/auth/logout", { withCredentials: true });
+        return true;
+    } catch (error: any) {
+        return rejectWithValue(error.response?.data?.message || "Logout failed");
+    }
+});
+
 interface CustomerState {
     customers: any[];
     selectedCustomer: any | null;
@@ -140,6 +149,10 @@ const CustomerSlice = createSlice({
                 state.isLoggedIn = false;
                 state.selectedCustomer = null;
                 state.authChecked = true;
+            })
+            .addCase(logoutUser.fulfilled, (state) => {
+                state.isLoggedIn = false;
+                state.selectedCustomer = null;
             });
     }
 });
