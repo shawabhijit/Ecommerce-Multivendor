@@ -4,11 +4,10 @@ import { useScroll, useTransform } from 'motion/react';
 import { motion } from "motion/react"
 import { cn } from '../../../../lib/utils';
 import { Button } from "../../../../Components/ui/button"
-import { Heart, Menu, Search, ShoppingCart, User, X } from 'lucide-react';
+import { Heart, Lightbulb, Menu, Moon, NutOffIcon, Search, ShoppingCart, Sun, User, X } from 'lucide-react';
 import { Input } from '../../../../Components/ui/input';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '../../../../Components/ui/dropdown-menu';
 import { useTheme } from '../../../../context/theme-provider';
-import { DarkMode, LightMode } from '@mui/icons-material';
 import { useAppDispatch } from '../../../../app/Store';
 import { logout } from '../../../../app/authSlice/CustomerAuthSlice';
 
@@ -188,9 +187,9 @@ const Navbar = ({ isLogedin }: any) => {
                                                     <DropdownMenuItem onClick={() => setTheme(isDark ? "light" : "dark")}>
                                                         {
                                                             isDark ? (
-                                                                <LightMode />
+                                                                <Sun />
                                                             ) : (
-                                                                <DarkMode />
+                                                                <Moon />
                                                             )
                                                         }
                                                         {
