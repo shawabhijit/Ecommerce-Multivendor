@@ -28,7 +28,7 @@ public class AppConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http.sessionManagement(management ->
-                management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                        management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(requests ->
                         requests.requestMatchers(new AntPathRequestMatcher("/api/**")).authenticated()
                                 .requestMatchers(new AntPathRequestMatcher("/seller/**")).permitAll()

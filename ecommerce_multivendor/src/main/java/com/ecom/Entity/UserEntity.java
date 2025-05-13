@@ -9,15 +9,14 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "User_info")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class UserEntity {
 
     @Id
@@ -27,17 +26,22 @@ public class UserEntity {
     private String username;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @JsonIgnore
     private String password;
 
     private String email;
 
     private String phone;
 
+    private String gender;
+
+    private String dob;
+
     @Enumerated(EnumType.STRING)
     private UserRole role = UserRole.ROLE_CUSTOMER;
 
     @OneToMany
-    private Set<AddressEntity> addresses = new HashSet<>();
+    private List<AddressEntity> addresses = new ArrayList<>();
 
     @ManyToMany
     @JsonIgnore  // by using JsonIgnore this property will not go to frontend

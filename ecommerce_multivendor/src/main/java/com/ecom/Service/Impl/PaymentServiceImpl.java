@@ -19,8 +19,10 @@ import com.stripe.model.checkout.Session;
 import com.stripe.param.checkout.SessionCreateParams;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -31,12 +33,15 @@ public class PaymentServiceImpl implements PaymentService {
     private final PaymentOrderRepo paymentOrderRepo;
     private final OrderRepo orderRepo;
 
-    private final String apiKey = "rzp_test_fHAM9vlitExOQI";
-    private final String apiSecret = "2ggGKtnLAW8hWDgTLhTEdfMc";
-    private final String stripeApiKey = "sk_test_51RAxAm06fEIM4VuNEZcWJmjPLjXNRUoee9AZjarVl1F7b9IZjZMFdzZxtUY8peB0hVTEySpEwufjLDYNY8bkj2lo00RrUghQi4";
+    @Value("${razorpay.api.key}")
+    private String apiKey;
+    @Value("${razorpay.api.secret}")
+    private String apiSecret;
+    @Value("${stripe.api.key}")
+    private String stripeApiKey;
 
     @Override
-    public PaymentOrder createOrder(UserEntity user, Set<OrderEntity> orders) {
+    public PaymentOrder createOrder(UserEntity user, List<OrderEntity> orders) {
         Long amount = orders.stream().mapToLong(OrderEntity::getTotalSellingPrice).sum();
 
         PaymentOrder paymentOrder = new PaymentOrder();
@@ -70,7 +75,7 @@ public class PaymentServiceImpl implements PaymentService {
             String status = payment.get("status");
 
             if (status.equals("captured")) {
-                Set<OrderEntity> orders = paymentOrder.getOrders();
+                List<OrderEntity> orders = paymentOrder.getOrders();
                 for (OrderEntity order : orders) {
                     order.setPaymentStatus(PaymentStatus.COMPLETED);
                     orderRepo.save(order);
@@ -104,8 +109,8 @@ public class PaymentServiceImpl implements PaymentService {
             notify.put("email", true);
             notify.put("type", "notify");
 
-            paymentLinkRequest.put("callback_url", "https://localhost:3000/payment-success"+orderId);
-            paymentLinkRequest.put("callback_method", "GET");
+            paymentLinkRequest.put("callback_url", "http://localhost:5173/my/confirmation/"+orderId);
+            paymentLinkRequest.put("callback_method", "get");
 
             PaymentLink paymentLink = razorpay.paymentLink.create(paymentLinkRequest);
 
@@ -126,7 +131,7 @@ public class PaymentServiceImpl implements PaymentService {
         SessionCreateParams params = SessionCreateParams.builder()
                 .addPaymentMethodType(SessionCreateParams.PaymentMethodType.CARD)
                 .setMode(SessionCreateParams.Mode.PAYMENT)
-                .setSuccessUrl("https://localhost:3000/payment-success"+orderId)
+                .setSuccessUrl("https://localhost:5173/my/confirmation"+orderId)
                 .setCancelUrl("https://localhost:3000/payment-cancel")
                 .addLineItem(SessionCreateParams.LineItem.builder()
                         .setQuantity(1L)

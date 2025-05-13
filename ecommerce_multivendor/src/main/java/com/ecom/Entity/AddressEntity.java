@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table(name = "address")
 public class AddressEntity {
     @Id
@@ -32,4 +32,7 @@ public class AddressEntity {
     private String pickupPhone;
 
     private String pickupZipCode;
+
+//    @Column(nullable = true)
+    private Boolean Default;
 }

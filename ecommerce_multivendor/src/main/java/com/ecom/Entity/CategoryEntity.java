@@ -22,11 +22,5 @@ public class CategoryEntity {
     private String name;
 
     @NotNull
-    @Column(unique = true)
     private String categoryId;
-
-    @ManyToOne
-    private CategoryEntity parentCategory;
-
-    private int level;
 }

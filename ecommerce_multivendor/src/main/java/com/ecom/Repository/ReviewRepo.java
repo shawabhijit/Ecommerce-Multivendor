@@ -12,7 +12,7 @@ import java.util.List;
 @Repository
 public interface ReviewRepo extends JpaRepository<ReviewEntity, Long> {
 
-    @Query("SELECT r FROM ReviewEntity r WHERE r.product.productId = :productId")
+    @Query("SELECT r FROM ReviewEntity r WHERE r.product.id = :productId")
     List<ReviewEntity> findByProduct(@Param("productId") Long productId);
 
 }

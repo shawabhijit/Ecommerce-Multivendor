@@ -6,6 +6,7 @@ import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.val;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -27,7 +28,15 @@ public class JwtTokenValidator extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        String jwt = request.getHeader(JWT_CONSTANT.JWT_HEADER);
+        //String jwt = request.getHeader(JWT_CONSTANT.JWT_HEADER);
+        String jwt = null;
+        if (request.getCookies() != null) {
+            for (val cookie : request.getCookies()) {
+                if ("jwt".equals(cookie.getName())) {  // or the name you used when setting the cookie
+                    jwt = cookie.getValue();
+                }
+            }
+        }
         if (jwt != null) {
             if (jwt.startsWith("Bearer ")) {
                 jwt = jwt.substring(7);

@@ -25,15 +25,15 @@ public class CartController {
     private final ProductService productService;
 
     @GetMapping
-    public ResponseEntity<?> findUserCartHandler (@RequestHeader("Authorization") String jwt) throws Exception {
+    public ResponseEntity<?> findUserCartHandler (@CookieValue(name = "jwt" , required = false) String jwt) throws Exception {
         UserEntity user = userService.findUserByJwtToken(jwt);
         CartEntity cart = cartService.findUserCart(user);
 
         return ResponseEntity.ok().body(cart);
     }
 
-    @PutMapping("/add")
-    public ResponseEntity<?> addItemCart(@RequestBody AddItemRequest req , @RequestHeader("Authorization") String jwt) throws Exception {
+    @PostMapping("/add")
+    public ResponseEntity<?> addItemCart(@RequestBody AddItemRequest req , @CookieValue(name = "jwt" , required = false) String jwt) throws Exception {
         UserEntity user = userService.findUserByJwtToken(jwt);
         ProductEntity prod = productService.findProductById(req.getProductId());
 

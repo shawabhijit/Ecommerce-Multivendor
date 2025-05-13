@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -32,50 +33,28 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductEntity createProduct(CreateProductRequest req, SellerEntity seller) {
 
-        CategoryEntity category1 = categoryRepo.findByCategoryId(req.getCategory());
 
-        if (category1 == null) {
-            CategoryEntity category = new CategoryEntity();
-            category.setCategoryId(req.getCategory());
-            category.setLevel(1);
-            category1 = categoryRepo.save(category);
-        }
+        //List<String> keywards = Arrays.asList(req.getSeo().getKeywords().split(","));
 
-        CategoryEntity category2 = categoryRepo.findByCategoryId(req.getCategory2());
-
-        if (category2 == null) {
-            CategoryEntity category = new CategoryEntity();
-            category.setCategoryId(req.getCategory2());
-            category.setLevel(2);
-            category.setParentCategory(category1);
-            category2 = categoryRepo.save(category);
-        }
-
-        CategoryEntity category3 = categoryRepo.findByCategoryId(req.getCategory3());
-
-        if (category3 == null) {
-            CategoryEntity category = new CategoryEntity();
-            category.setCategoryId(req.getCategory3());
-            category.setLevel(3);
-            category.setParentCategory(category2);
-            category3 = categoryRepo.save(category);
-        }
-
-        int discountPercentage = calculateDiscountPercentage(req.getMrpPrice(), req.getSellingPrice());
+        categoryRepo.save(req.getCategory());
 
         ProductEntity product = new ProductEntity();
         product.setSeller(seller);
-        product.setCategory(category3);
+        product.setTitle(req.getTitle());
         product.setDescription(req.getDescription());
         product.setCreatedAt(LocalDateTime.now());
-        product.setTitle(req.getTitle());
-        product.setColor(req.getColor());
-        product.setSellingPrice(req.getSellingPrice());
         product.setMrpPrice(req.getMrpPrice());
+        product.setSellingPrice(req.getSellingPrice());
         product.setImages(req.getImages());
-        product.setSizes(req.getSizes());
-        product.setDiscountPrice(discountPercentage);
-
+        product.setDiscountPrice(req.getDiscountPrice());
+        product.setCategory(req.getCategory());
+        product.setBarcode(req.getBarcode());
+        product.setSeo(req.getSeo());
+        product.setVariants(req.getVariants());
+        product.setShipping(req.getShipping());
+        product.setTags(req.getTags());
+        product.setQuantity(req.getQuantity());
+        product.setStatus(req.getStatus());
 
         return productRepo.save(product);
     }
@@ -91,11 +70,9 @@ public class ProductServiceImpl implements ProductService {
         ProductEntity oldProduct = this.findProductById(id);
         oldProduct.setDescription(product.getDescription());
         oldProduct.setTitle(product.getTitle());
-        oldProduct.setColor(product.getColor());
         oldProduct.setSellingPrice(product.getSellingPrice());
         oldProduct.setMrpPrice(product.getMrpPrice());
         oldProduct.setImages(product.getImages());
-        oldProduct.setSizes(product.getSizes());
         oldProduct.setDiscountPrice(product.getDiscountPrice());
 
         return productRepo.save(oldProduct);
@@ -180,13 +157,44 @@ public class ProductServiceImpl implements ProductService {
         return products;
     }
 
-    private int calculateDiscountPercentage(double mrpPrice , double sellingPrice) {
+    private int calculateDiscountPercentage(double mrpPrice , double sellingPrice , double discountPrice) {
         if (mrpPrice <= 0) {
             throw new IllegalArgumentException("MrpPrice must be greater than 0");
         }
-        double discount = mrpPrice-sellingPrice;
-        double discountPercentage = (discount/mrpPrice)*100;
+        double discountPercentage = (discountPrice/mrpPrice)*100;
         return (int) discountPercentage;
     }
 
 }
+
+
+//        CategoryEntity category1 = categoryRepo.findByCategoryId(req.getCategory());
+//
+//        if (category1 == null) {
+//            CategoryEntity category = new CategoryEntity();
+//            category.setCategoryId(req.getCategory());
+//            category.setLevel(1);
+//            category1 = categoryRepo.save(category);
+//        }
+//
+//        CategoryEntity category2 = categoryRepo.findByCategoryId(req.getCategory2());
+//
+//        if (category2 == null) {
+//            CategoryEntity category = new CategoryEntity();
+//            category.setCategoryId(req.getCategory2());
+//            category.setLevel(2);
+//            category.setParentCategory(category1);
+//            category2 = categoryRepo.save(category);
+//        }
+//
+//        CategoryEntity category3 = categoryRepo.findByCategoryId(req.getCategory3());
+//
+//        if (category3 == null) {
+//            CategoryEntity category = new CategoryEntity();
+//            category.setCategoryId(req.getCategory3());
+//            category.setLevel(3);
+//            category.setParentCategory(category2);
+//            category3 = categoryRepo.save(category);
+//        }
+
+//int discountPercentage = calculateDiscountPercentage(req.getMrpPrice(), req.getSellingPrice() , req.getDiscountPrice());

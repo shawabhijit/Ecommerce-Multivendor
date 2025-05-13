@@ -31,11 +31,11 @@ public class OrderController {
     public ResponseEntity<?> createOrderHandler (
             @RequestBody AddressEntity shippingAddress,
             @RequestParam PaymenyMethod paymenyMethod,
-            @RequestHeader("Authorization") String jwt
+            @CookieValue(name = "jwt" , required = false) String jwt
     ) throws Exception {
         UserEntity user = userService.findUserByJwtToken(jwt);
         CartEntity cart = cartService.findUserCart(user);
-        Set<OrderEntity> orders = orderService.createOrder(user, shippingAddress, cart);
+        List<OrderEntity> orders = orderService.createOrder(user, shippingAddress, cart);
 
         PaymentOrder paymentOrder = paymentService.createOrder(user,orders);
 
@@ -59,7 +59,7 @@ public class OrderController {
     }
 
     @GetMapping("/user")
-    public ResponseEntity<?> userOrderHistoryHandle ( @RequestHeader("Authorization") String jwt) throws Exception {
+    public ResponseEntity<?> userOrderHistoryHandle ( @CookieValue(name = "jwt" , required = false) String jwt) throws Exception {
         UserEntity user = userService.findUserByJwtToken(jwt);
         List<OrderEntity> orders = orderService.userOrderHistory(user.getId());
         return ResponseEntity.accepted().body(orders);

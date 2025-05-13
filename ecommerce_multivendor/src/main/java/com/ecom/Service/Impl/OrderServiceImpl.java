@@ -24,7 +24,7 @@ public class OrderServiceImpl implements OrderService {
     private final OrderItemRepo orderItemRepo;
 
     @Override
-    public Set<OrderEntity> createOrder(UserEntity user, AddressEntity shippingAddress, CartEntity cart) {
+    public List<OrderEntity> createOrder(UserEntity user, AddressEntity shippingAddress, CartEntity cart) {
         if (!user.getAddresses().contains(shippingAddress)) {
             user.getAddresses().add(shippingAddress);
         }
@@ -33,7 +33,7 @@ public class OrderServiceImpl implements OrderService {
         Map<Long , List<CartItemEntity>> itemsBySeller = cart.getCartItems()
                 .stream().collect(Collectors.groupingBy(item -> item.getProduct().getSeller().getId()));
 
-        Set<OrderEntity> orders = new HashSet<>();
+        List<OrderEntity> orders = new ArrayList<>();
 
         for (Map.Entry<Long , List<CartItemEntity>> entry : itemsBySeller.entrySet()) {
             Long sellerId = entry.getKey();

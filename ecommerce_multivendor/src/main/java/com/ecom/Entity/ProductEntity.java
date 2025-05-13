@@ -20,7 +20,8 @@ public class ProductEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long productId;
+    @Column(name = "Product_id")
+    private Long id;
 
     private String title;
 
@@ -32,11 +33,7 @@ public class ProductEntity {
 
     private Integer discountPrice;
 
-    private int quantity;
-
-    private String color;
-
-    private String sizes;
+    private Integer quantity;
 
     private String status; // active/inactive
 

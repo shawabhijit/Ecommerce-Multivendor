@@ -12,7 +12,7 @@ public interface CartService {
             ProductEntity product,
             String size,
             int quantity
-    );
+    ) throws Exception;
 
     public CartEntity findUserCart (UserEntity user);
 

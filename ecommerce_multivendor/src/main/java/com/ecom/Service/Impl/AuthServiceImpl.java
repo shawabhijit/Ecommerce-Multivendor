@@ -162,6 +162,4 @@ public class AuthServiceImpl implements AuthService {
 
         return jwtProvider.generateToken(authentication);
     }
-
-
 }

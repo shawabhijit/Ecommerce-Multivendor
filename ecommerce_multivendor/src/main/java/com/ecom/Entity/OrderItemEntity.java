@@ -1,5 +1,6 @@
 package com.ecom.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,6 +23,7 @@ public class OrderItemEntity {
     private ProductEntity product;
 
     @ManyToOne
+    @JsonBackReference
     private OrderEntity order;
 
     private String size;

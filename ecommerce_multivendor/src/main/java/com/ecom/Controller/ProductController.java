@@ -28,6 +28,7 @@ public class ProductController {
         return ResponseEntity.ok().body(products);
     }
 
+    @GetMapping
     public ResponseEntity<?> getAllProducts(
             @RequestParam(required = false) String category,
             @RequestParam(required = false) String brand,

@@ -10,6 +10,9 @@ import com.ecom.Service.CartService;
 import com.ecom.Service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -21,7 +24,7 @@ public class CartServiceImpl implements CartService {
 
 
     @Override
-    public CartItemEntity addCartItem(UserEntity user, ProductEntity product, String size, int quantity) {
+    public CartItemEntity addCartItem(UserEntity user, ProductEntity product, String size, int quantity) throws Exception {
         CartEntity cart = this.findUserCart(user);
 
         CartItemEntity cartItem = cartItemRepo.findByCartAndProductAndSize(cart, product, size);
@@ -39,35 +42,50 @@ public class CartServiceImpl implements CartService {
             cart.getCartItems().add(cartItem);
             cartItem.setCart(cart);
 
-            return cartItemRepo.save(cartItem);
+            CartItemEntity savedItem = cartItemRepo.save(cartItem);
+            // Force a refresh of the cart to ensure all items are properly persisted
+            cartRepo.save(cart);
+            return savedItem;
         }
-        return cartItem;
+        else {
+            throw new Exception("Product Already exits in the cart , please change something.");
+        }
     }
 
     @Override
+    @Transactional
     public CartEntity findUserCart(UserEntity user) {
         CartEntity cart = cartRepo.findByUserId(user.getId());
+
+        List<CartItemEntity> cartItems = cartItemRepo.findByCart(cart);
+
+        cart.getCartItems().clear();
+        cart.getCartItems().addAll(cartItems);
 
         int totalPrice = 0;
         int totalItem = 0;
         int totalDiscountPrice = 0;
 
-        for (CartItemEntity cartItem : cart.getCartItems()) {
-            totalPrice += cartItem.getMrpPrice();
-            totalDiscountPrice += cartItem.getSellingPrice();
-            totalItem += cartItem.getQuantity();
+        System.out.println("Total cart items found: " + cart.getCartItems().size());
+
+        for (CartItemEntity item : cartItems) {
+            System.out.println("Processing cart item ID: " + item.getId());
+            totalPrice += item.getMrpPrice();
+            totalDiscountPrice += item.getSellingPrice();
+            totalItem += item.getQuantity();
         }
 
         cart.setTotalMrpPrice(totalPrice);
         cart.setTotalItem(totalItem);
         cart.setTotalSellingPrice(totalDiscountPrice);
         cart.setDiscount(calculateDiscountPercentage(totalPrice, totalDiscountPrice));
-        return cart;
+
+        return cartRepo.save(cart);
     }
 
-    private int calculateDiscountPercentage(double mrpPrice , double sellingPrice) {
+    private int calculateDiscountPercentage(double mrpPrice, double sellingPrice) {
         if (mrpPrice <= 0) {
-            throw new IllegalArgumentException("MrpPrice must be greater than 0");
+            return 0; // Avoid division by zero or negative percentages
         }
         double discount = mrpPrice-sellingPrice;
         double discountPercentage = (discount/mrpPrice)*100;

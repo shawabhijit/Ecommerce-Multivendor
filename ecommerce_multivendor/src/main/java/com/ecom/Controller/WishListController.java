@@ -19,14 +19,14 @@ public class WishListController  {
     private final ProductService productService;
 
     @GetMapping
-    public ResponseEntity<?> getWishListByUserId(@RequestHeader("Authorization") String jwt) throws Exception {
+    public ResponseEntity<?> getWishListByUserId(@CookieValue(name = "jwt" , required = false) String jwt) throws Exception {
         UserEntity user = userService.findUserByJwtToken(jwt);
         WishList wishList = wishListService.getWishListByUserId(user);
         return ResponseEntity.ok().body(wishList);
     }
 
-    @PostMapping("/add-product/{productId}")
-    public ResponseEntity<?> addProductTOWishList(@RequestHeader("Authorization") String jwt, @PathVariable Long productId) throws Exception {
+    @PostMapping("/add/{productId}")
+    public ResponseEntity<?> addProductTOWishList(@CookieValue(name = "jwt" , required = false) String jwt, @PathVariable Long productId) throws Exception {
         ProductEntity product = productService.findProductById(productId);
         UserEntity user = userService.findUserByJwtToken(jwt);
 

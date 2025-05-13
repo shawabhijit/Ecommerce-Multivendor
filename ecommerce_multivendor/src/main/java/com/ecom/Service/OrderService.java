@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Set;
 
 public interface OrderService {
-    Set<OrderEntity> createOrder(UserEntity user , AddressEntity address , CartEntity cart);
+    List<OrderEntity> createOrder(UserEntity user , AddressEntity address , CartEntity cart);
     OrderEntity findOrderById(Long id) throws OrderException;
     List<OrderEntity> userOrderHistory(Long userId);
     List<OrderEntity> sellerOrder(Long sellerId);

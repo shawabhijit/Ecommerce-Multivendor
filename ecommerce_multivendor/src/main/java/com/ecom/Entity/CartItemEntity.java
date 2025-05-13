@@ -1,6 +1,7 @@
 package com.ecom.Entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,8 +12,8 @@ import lombok.NoArgsConstructor;
 @Table(name = "cart-item")
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
 @Data
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class CartItemEntity {
 
     @Id
@@ -30,10 +31,12 @@ public class CartItemEntity {
 
     private int quantity = 1;
 
-    private Integer mrpPrice;
+    private Integer mrpPrice=0;
 
-    private Integer SellingPrice;
+    @JsonProperty("sellingPrice")
+    private Integer sellingPrice;
 
-    private Long UserId;
+    @JsonProperty("userId")
+    private Long userId;
 
 }

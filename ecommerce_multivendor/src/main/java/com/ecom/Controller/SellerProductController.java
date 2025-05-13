@@ -23,7 +23,8 @@ public class SellerProductController {
     private final SellerService sellerService;
 
     @GetMapping()
-    public ResponseEntity<?> getProductsBySellerId(@RequestHeader("Authorization") String token) throws SellerException, ProductException {
+    public ResponseEntity<?> getProductsBySellerId(@CookieValue(name = "jwt" , required = false) String token) throws SellerException, ProductException {
+//        System.out.println("token is not valid ");
         SellerEntity seller = sellerService.getSellerProfile(token);
 
         List<ProductEntity> products = productService.getProductBySellerId(seller.getId());
@@ -33,7 +34,6 @@ public class SellerProductController {
     @PostMapping("/create")
     public ResponseEntity<?> createProduct (
             @RequestBody CreateProductRequest createProductRequest,
-//            @RequestHeader("Authorization") String jwt
             @CookieValue(name = "jwt" , required = false) String jwt
     ) throws ProductException, SellerException {
 
@@ -54,7 +54,7 @@ public class SellerProductController {
         }
     }
 
-    @PutMapping("/{ProductId}")
+    @PutMapping("/update/{ProductId}")
     public ResponseEntity<?> updateProduct(@PathVariable Long ProductId, @RequestBody ProductEntity product) throws ProductException {
         try {
             ProductEntity updatedProduct = productService.updateProduct(ProductId, product);
