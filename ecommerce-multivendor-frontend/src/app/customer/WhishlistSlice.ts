@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { api } from "../../config/api";
+import { Products } from "../../types/ProductTupe";
 
 export const fetchWishlistData = createAsyncThunk ("wishlist/fetchwishlistData", async (_ , { rejectWithValue }) => {
     try {
@@ -31,10 +32,27 @@ export const addProductToWishlist = createAsyncThunk("wishlist/addProductToWishl
     }
 })
 
+export const getWishlistProduct = createAsyncThunk("wishlist/getWishlistProduct", async (product: any , { rejectWithValue }) => {
+    try {
+        const productId = product?.id;
+        const response = await api.get(`/api/wishlist/${productId}`, {
+            withCredentials: true,
+        })
+        console.log("get product of wishlist with Response:", response.data);
+        return response.data;
+    }
+    catch (error: any) {
+        console.error("get product of wishlist failed:", error);
+        return rejectWithValue(error.response?.data || "Unknown error");
+    }
+})
+
+
 
 
 interface wishlistState {
     wishlist: any[],
+    product: Products | null,
     report: any,
     loading: boolean;
     error: string | null;
@@ -43,6 +61,7 @@ interface wishlistState {
 // Define the initial state for the seller slice
 const initialState: wishlistState = {
     wishlist: [],
+    product: null,
     report: null,
     loading: false,
     error: null,
@@ -86,6 +105,19 @@ const wishlistSlice = createSlice({
                 }
             })
             .addCase(addProductToWishlist.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload as string;
+            })
+            .addCase(getWishlistProduct.pending , (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(getWishlistProduct.fulfilled , (state , action) => {
+                state.loading = false;
+                state.error = null;
+                state.product = action.payload;
+            })
+            .addCase(getWishlistProduct.rejected , (state , action) => {
                 state.loading = false;
                 state.error = action.payload as string;
             });

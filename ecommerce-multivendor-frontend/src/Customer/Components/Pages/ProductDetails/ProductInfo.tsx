@@ -1,12 +1,13 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
 import { Star, Check, Truck, ShieldCheck, Clock, Heart, ShoppingBag } from "lucide-react"
 import { Products } from "../../../../types/ProductTupe"
 import { useAppDispatch } from "../../../../app/Store"
 import { addProductToCart } from "../../../../app/customer/CartSlice"
 import { toast } from "sonner"
+import { addProductToWishlist, getWishlistProduct } from "../../../../app/customer/WhishlistSlice"
 
 interface ProductInfoProps {
     product: Products
@@ -17,6 +18,7 @@ export default function ProductInfo({ product }: ProductInfoProps) {
     const [size , setSize] = useState("");
     const [isAddingToCart, setIsAddingToCart] = useState(false)
     const [addedToCart, setAddedToCart] = useState(false)
+    const [addToWishlist , setAddToWishlist] = useState(false);
     const dispatch = useAppDispatch();
 
 
@@ -44,6 +46,25 @@ export default function ProductInfo({ product }: ProductInfoProps) {
             }
         }, 1000)
     }
+
+    const handleAddToWishlist = async () => {
+        const res = await dispatch(addProductToWishlist(product));
+        console.log("response to add wishlist with ,", res);
+        if (res.meta.requestStatus == "fulfilled") {
+            setAddToWishlist(true);
+        }
+    }
+
+    useEffect(()=>{
+        const fetchWWishlistProductId = async () => {
+            const res = await dispatch(getWishlistProduct(product));
+            console.log("wishlist product " , res);
+            if (res.meta.requestStatus == "rejected") {
+                setAddToWishlist(true)
+            }
+        }
+        fetchWWishlistProductId();
+    } ,[dispatch])
 
     return (
         <div className="bg-white rounded-xl shadow-sm p-6">
@@ -177,10 +198,11 @@ export default function ProductInfo({ product }: ProductInfoProps) {
                     className="flex-1 px-6 py-3 bg-white border border-black text-black rounded-lg font-medium transition-colors"
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
+                    onClick={() => handleAddToWishlist()}
                 >
                     <span className="flex  gap-2 items-center justify-center">
                         <Heart color="red" />
-                        Wishlist
+                        {addToWishlist ? "Go To Wishlist" : "Wishlist"}
                     </span>
                 </motion.button>
             </div>

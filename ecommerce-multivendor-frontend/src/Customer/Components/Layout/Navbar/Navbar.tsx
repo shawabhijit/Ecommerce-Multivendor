@@ -108,12 +108,17 @@ const Navbar = ({ isLogedin }: any) => {
                         {
                             isLogedin ? (
                                 <nav className="hidden md:flex items-center space-x-5 font-semibold">
-                                    <a href="#" className="text-gray-700 hover:text-[#F97316] transition-colors">Electronics</a>
-                                    <a href="#features" className="text-gray-700 hover:text-[#F97316] transition-colors">Fashion</a>
-                                    <a href="#categories" className="text-gray-700 hover:text-[#F97316] transition-colors">Home & kitchen</a>
-                                    <a href="#categories" className="text-gray-700 hover:text-[#F97316] transition-colors">Books</a>
-                                    <a href="#testimonials" className="text-gray-700 hover:text-[#F97316] transition-colors">Beauty</a>
-                                    <a href="#join" className="text-gray-700 hover:text-[#F97316] transition-colors">Sports</a>
+                                    <a onClick={() => navigate("/products", { state: { selecteedCategory: "Electronics" } })} className="text-gray-700 cursor-pointer hover:text-[#F97316] transition-colors">Electronics</a>
+
+                                    <a onClick={() => navigate("/products", { state: { selecteedCategory: "Fashion" } })}  className="text-gray-700 cursor-pointer hover:text-[#F97316] transition-colors">Fashion</a>
+
+                                    <a onClick={() => navigate("/products", { state: { selecteedCategory: "Home & kitchen" } })}  className="text-gray-700 cursor-pointer hover:text-[#F97316] transition-colors">Home & kitchen</a>
+
+                                    <a onClick={() => navigate("/products", { state: { selecteedCategory: "Books & Media" } })}  className="text-gray-700 cursor-pointer hover:text-[#F97316] transition-colors">Books</a>
+
+                                    <a onClick={() => navigate("/products", { state: { selecteedCategory: "Health & Beauty" } })} className="text-gray-700 cursor-pointer hover:text-[#F97316] transition-colors">Beauty</a>
+
+                                    <a onClick={() => navigate("/products", { state: { selecteedCategory: "Sports" } })} className="text-gray-700 cursor-pointer hover:text-[#F97316] transition-colors">Sports</a>
                                 </nav>
                             ) : (
                                 <nav className="hidden md:flex items-center space-x-5 font-semibold">
