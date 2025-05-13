@@ -33,4 +33,13 @@ public class WishListController  {
         WishList wishList = wishListService.addProductToWishList(user, product);
         return ResponseEntity.ok().body(wishList);
     }
+
+    @GetMapping("/{productId}")
+    public ResponseEntity<?> getWishlistProductById (@CookieValue(name = "jwt" , required = false) String jwt, @PathVariable Long productId) throws Exception {
+        ProductEntity product = productService.findProductById(productId);
+        UserEntity user = userService.findUserByJwtToken(jwt);
+
+        WishList wishList = wishListService.getWishListByProductId(user, product);
+        return ResponseEntity.ok().body(wishList);
+    }
 }

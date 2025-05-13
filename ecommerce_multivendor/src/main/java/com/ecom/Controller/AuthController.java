@@ -1,6 +1,7 @@
 package com.ecom.Controller;
 
 import com.ecom.Domain.UserRole;
+import com.ecom.Entity.UserEntity;
 import com.ecom.Entity.VerificationCode;
 import com.ecom.Request.LoginOtpRequest;
 import com.ecom.Request.LoginRequest;
@@ -8,14 +9,12 @@ import com.ecom.Response.ApiResponse;
 import com.ecom.Response.AuthResponse;
 import com.ecom.Response.SignUpRequest;
 import com.ecom.Service.AuthService;
+import com.ecom.Service.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
@@ -23,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     private final AuthService authService;
+    private final UserService userService;
 
     @PostMapping("/signup")
     public ResponseEntity<?> createUserHandler (@RequestBody SignUpRequest signUpRequest) throws Exception {
@@ -67,5 +67,20 @@ public class AuthController {
         response.addCookie(cookie);
 
         return ResponseEntity.ok().body(auth);
+    }
+
+    @GetMapping("/logout")
+    public ResponseEntity<?> logouthandler (@CookieValue(name = "jwt" , required = false) String jwt , HttpServletResponse response) throws Exception {
+        if (jwt != null) {
+            Cookie cookie = new Cookie("jwt", null);
+            cookie.setHttpOnly(true);
+            cookie.setSecure(true);
+            cookie.setPath("/");
+            cookie.setMaxAge(0);
+
+            response.addCookie(cookie);
+        }
+
+        return ResponseEntity.ok().body("Logged out successfully");
     }
 }

@@ -37,9 +37,19 @@ public class WishListServiceImpl implements WishListService {
         if (wishList.getProducts().contains(product)) {
             wishList.getProducts().remove(product);
         }
-        else {
-            wishList.getProducts().add(product);
-        }
+
+        wishList.getProducts().add(product);
+
         return wishListRepo.save(wishList);
+    }
+
+    @Override
+    public WishList getWishListByProductId(UserEntity user, ProductEntity product) throws Exception {
+        WishList wishList = getWishListByUserId(user);
+
+        if (wishList.getProducts().contains(product)) {
+            throw new Exception("Product Already exits in the wishlist.");
+        }
+        return wishList;
     }
 }
