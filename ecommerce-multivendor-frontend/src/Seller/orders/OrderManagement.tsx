@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { motion } from "framer-motion"
 import {
     Calendar,
@@ -45,10 +45,12 @@ import OrderDetailsDialog from "./OrderDetailsDialog"
 import { Calendar as Calendar1 } from "../../Components/ui/calendar"
 import { cn } from "../../lib/utils"
 import Pagination from "../Components/Pagination/Pagination"
+import { useAppDispatch } from "../../app/Store"
+import { fetchAllSellerOrders } from "../../app/seller/SellerOrderSlice"
 
 
 export function OrderManagement() {
-
+    const dispatch = useAppDispatch();
     const [orders, setOrders] = useState(mockOrders)
 
     const [searchQuery, setSearchQuery] = useState("")
@@ -65,6 +67,18 @@ export function OrderManagement() {
 
 
     const ordersPerPage = 5
+
+    const fetchSellerOrders = async () => {
+        const res = await dispatch(fetchAllSellerOrders());
+        console.log("All seler order :" , res.payload)
+        if (res.meta.requestStatus == "fulfilled") {
+            // setOrders(res.payload);
+        }
+    }
+
+    useEffect(() => {
+        fetchSellerOrders();
+    } , [dispatch])
 
     // Filter orders based on search query and filters
     const filteredOrders = orders.filter((order) => {

@@ -17,9 +17,11 @@ const ProductPreview = ({ id , showPreviewDialog, setShowPreviewDialog, imagePre
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const res = await api.get(`/products/${id}`)
-                console.log("Product fetched successfully, Response:", res.data);
-                setResponse(res);
+                if (id && !isNaN(id)) {
+                    const res = await api.get(`/products/${id}`)
+                    console.log("Product fetched successfully, Response:", res.data);
+                    setResponse(res);
+                }
             } catch (error) {
                 console.error("Failed to fetch products:", error);
             }

@@ -80,7 +80,7 @@ export type ProductFormValues = z.infer<typeof productSchema>;
 
 const CATEGORIES = [
     "Electronics",
-    "Clothing",
+    "Fashion",
     "Home & Kitchen",
     "Beauty",
     "Toys",
@@ -256,7 +256,6 @@ export function AddEditProduct() {
     };
 
 
-    // Handle tag addition
     const handleTagAdd = (tag: string) => {
         if (tag && !watchTags.includes(tag)) {
             setValue("tags", [...watchTags, tag], { shouldDirty: true });
@@ -265,7 +264,6 @@ export function AddEditProduct() {
         }
     };
 
-    // Handle tag removal
     const handleTagRemove = (tag: string) => {
         setValue(
             "tags",
@@ -329,7 +327,7 @@ export function AddEditProduct() {
         try {
             await new Promise(resolve => setTimeout(resolve, 1000));
 
-            const res = dispatch(updateProduct({ request: watch(), id }));
+            const res = dispatch(updateProduct({ request: watch(), id : Number(id) }));
 
             console.log("Product updated successfully");
 
@@ -1006,7 +1004,7 @@ export function AddEditProduct() {
             </Dialog>
 
             {/* Product Preview Dialog */}
-            <ProductPreview id={id} imagePreviews={imagePreviews} setShowPreviewDialog={setShowPreviewDialog} showPreviewDialog={showPreviewDialog}  />
+            <ProductPreview id={Number(id)} imagePreviews={imagePreviews} setShowPreviewDialog={setShowPreviewDialog} showPreviewDialog={showPreviewDialog}  />
 
             {/* Revision History Dialog */}
             <Dialog open={showHistoryDialog} onOpenChange={setShowHistoryDialog}>
