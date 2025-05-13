@@ -4,12 +4,11 @@ import { useScroll, useTransform } from 'motion/react';
 import { motion } from "motion/react"
 import { cn } from '../../lib/utils';
 import { Button } from "../../Components/ui/button"
-import { Badge, BarChart3, Bell, CreditCard, Home, LogOut, Menu, Package, Settings, ShoppingCart, User, X } from 'lucide-react';
+import { Badge, BarChart3, Bell, CreditCard, Home, LogOut, Menu, Moon, Package, Settings, ShoppingCart, Sun, User, X } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from "../../Components/ui/avatar"
 
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '../../Components/ui/dropdown-menu';
 import { useTheme } from '../../context/theme-provider';
-import { DarkMode, LightMode } from '@mui/icons-material';
 import { useAppDispatch, useAppSelecter } from '../../app/Store';
 import { logout } from '../../app/authSlice/sellerAuthSlice';
 import { fetchSellerProfile } from '../../app/seller/SellerSlice';
@@ -213,9 +212,9 @@ const SellerNav = ({ isLogedin }: any) => {
                                                     <DropdownMenuItem onClick={() => setTheme(isDark ? "light" : "dark")}>
                                                         {
                                                             isDark ? (
-                                                                <LightMode />
+                                                                <Sun />
                                                             ) : (
-                                                                <DarkMode />
+                                                                <Moon />
                                                             )
                                                         }
                                                         {
