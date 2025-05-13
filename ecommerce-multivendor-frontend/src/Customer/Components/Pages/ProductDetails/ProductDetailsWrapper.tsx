@@ -9,5 +9,5 @@ export default function ProductDetailsWrapper() {
         return <div>Invalid Product id</div>
     }
 
-    return <ProductDetails id={id} />
+    return <ProductDetails id={Number(id)} />
 }

@@ -50,22 +50,10 @@ export default function ProductsPage() {
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: "smooth" })
 
-        // const fetchProducts = async () => {
-        //     try {
-        //         const data = await getProducts()
-        //         setProducts(data)
-        //         setLoading(false)
-        //     } catch (error) {
-        //         console.error("Error fetching products:", error)
-        //         setLoading(false)
-        //     }
-        // }
-
         if (categoryFromNav && !selectedCategories.includes(categoryFromNav)) {
             setSelectedCategories([categoryFromNav])
         }
-
-        // fetchProducts()
+        
         fetchAllProduct();
     }, [categoryFromNav])
 

@@ -7,6 +7,7 @@ import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import store, { persistor } from "./app/Store";
 import CustomerIndex from "./Customer/Components/Pages/CustomerIndex";
+import { Toaster } from "./Components/ui/sonner";
 
 function AppWrapper() {    
 
@@ -55,6 +56,7 @@ function App() {
         <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
           <BrowserRouter>
             <AppWrapper />
+            <Toaster position="bottom-right" richColors />
           </BrowserRouter>
         </ThemeProvider>
       </PersistGate>

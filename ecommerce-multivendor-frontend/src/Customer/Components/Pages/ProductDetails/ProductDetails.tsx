@@ -10,10 +10,14 @@ import ProductTabs from "./ProductTabs"
 import RelatedProducts from "./RelatedProducts"
 import { ArrowLeft } from "lucide-react"
 import { Link } from "react-router-dom"
+import { Products } from "../../../../types/ProductTupe"
+import { useAppDispatch } from "../../../../app/Store"
+import { fetchAllProducts, fetchProductById } from "../../../../app/customer/ProductSlice"
 
-export default function ProductDetails({ id }: { id: string }) {
-    const [product, setProduct] = useState<Product | null>(null)
-    const [relatedProducts, setRelatedProducts] = useState<Product[]>([])
+export default function ProductDetails({ id }: { id: number }) {
+    const dispatch = useAppDispatch();
+    const [product, setProduct] = useState<Products | null>(null)
+    const [relatedProducts, setRelatedProducts] = useState<Products[]>([])
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
@@ -21,15 +25,19 @@ export default function ProductDetails({ id }: { id: string }) {
             try {
                 setLoading(true)
                 console.log('id', id)
-                const productData = await getProductByid(id)
+                const productData = await dispatch(fetchProductById(id));
                 console.log('productData', productData)
-                setProduct(productData)
+                setProduct(productData.payload)
 
                 // Fetch related products
-                const allProducts = await getProducts()
-                const related = allProducts
-                    .filter((p) => p.category === productData.category && p.id !== productData.id)
+                const allProducts = await dispatch(fetchAllProducts({
+                    categories: product?.category?.name ? [product.category.name] : undefined,
+                }))
+                console.log(allProducts.payload.content)
+                const related = allProducts.payload.content
+                    ?.filter((p) => p.category === product?.category.name && p.id !== product?.id)
                     .slice(0, 8)
+                console.log("related products ," , related)
                 setRelatedProducts(related)
 
                 setLoading(false)
@@ -81,7 +89,7 @@ export default function ProductDetails({ id }: { id: string }) {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50 relative">
+        <div className="min-h-screen bg-white relative mt-28 md:mt-20">
             <div className="container mx-auto px-4 py-8">
                 <Link to="/products" className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-6 transition-colors">
                     <ArrowLeft size={16} className="mr-2" />
@@ -90,7 +98,7 @@ export default function ProductDetails({ id }: { id: string }) {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
                     <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5 }}>
-                        <ImageGallery images={product.images || [product.image]} />
+                        <ImageGallery images={product.images || [product.images[0]]} />
                     </motion.div>
 
                     <motion.div

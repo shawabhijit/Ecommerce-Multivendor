@@ -11,7 +11,7 @@ export default function SortDropdown({ value, onChange }: SortDropdownProps) {
         <div className="flex items-center">
             <span className="text-sm text-gray-500 mr-2 hidden sm:inline">Sort by:</span>
             <Select value={value} onValueChange={onChange}>
-                <SelectTrigger className="w-[160px] bg-gray-100 border-none focus:ring-2 focus:ring-rose-500">
+                <SelectTrigger className="w-[160px] bg-gray-100 border-none  ">
                     <SelectValue placeholder="Sort by" />
                 </SelectTrigger>
                 <SelectContent>

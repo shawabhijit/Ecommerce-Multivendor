@@ -50,7 +50,7 @@ export default function ImageGallery({ images }: ImageGalleryProps) {
                         transition={{ duration: 0.3 }}
                         className="relative h-full w-full"
                     >
-                        <img src={"https://m.media-amazon.com/images/I/61Krw8gk0aL._SY879_.jpg"} alt="" className={`w-full h-full object-contain p-4 transition-transform duration-200
+                        <img src={images[currentImageIndex]} alt="" className={`w-full h-full object-contain p-4 transition-transform duration-200
                                 ${isZoomed ? "scale-150" : "scale-100"}`}
                             style={
                                 isZoomed
@@ -106,7 +106,7 @@ export default function ImageGallery({ images }: ImageGalleryProps) {
                                 }`}
                             onClick={() => setCurrentImageIndex(index)}
                         >
-                            <img src={"https://m.media-amazon.com/images/I/61Krw8gk0aL._SY879_.jpg"} alt={`Thumbnail ${index + 1}`} className="w-full h-full object-cover" />
+                            <img src={images[index]} alt={`Thumbnail ${index + 1}`} className="w-full h-full object-cover" />
                         </motion.div>
                     ))}
                 </div>

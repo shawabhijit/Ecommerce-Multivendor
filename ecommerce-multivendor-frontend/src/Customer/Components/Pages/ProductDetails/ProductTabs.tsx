@@ -4,9 +4,10 @@ import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import type { Product } from "../../../../lib/Types"
 import { Star, User } from "lucide-react"
+import { Products } from "../../../../types/ProductTupe"
 
 interface ProductTabsProps {
-    product: Product
+    product: Products
 }
 
 export default function ProductTabs({ product }: ProductTabsProps) {
@@ -31,7 +32,7 @@ export default function ProductTabs({ product }: ProductTabsProps) {
                         >
                             {tab.label}
                             {activeTab === tab.id && (
-                                <motion.div className="absolute bottom-0 left-0 right-0 h-0.5 bg-rose-600" layoutid="activeTab" />
+                                <motion.div className="absolute bottom-0 left-0 right-0 h-0.5 bg-rose-600" layoutId="activeTab" />
                             )}
                         </button>
                     ))}
@@ -68,17 +69,14 @@ export default function ProductTabs({ product }: ProductTabsProps) {
                                         <h3 className="font-medium text-gray-900 mb-2">Dimensions</h3>
                                         <ul className="space-y-1 text-sm">
                                             {
-                                                [
-                                                    { dimension: "Height", value: "10 inches" },
-                                                    { dimension: "Width", value: "10 inches" },
-                                                    { dimension: "Depth", value: "10 inches" },
-                                                    { dimension: "Weight", value: "10 inches" },
-                                                ].map((item, index) => (
-                                                    <li className="flex justify-between">
-                                                        <span className="text-gray-600">{item.dimension}</span>
-                                                        <span>{item.value}</span>
-                                                    </li>
-                                                ))
+                                                product.shipping?.dimensions
+                                                    ? Object.entries(product.shipping.dimensions).map(([dimension, value], index) => (
+                                                        <li key={index} className="flex justify-between">
+                                                            <span className="text-gray-600">{dimension.charAt(0).toUpperCase() + dimension.slice(1)}</span>
+                                                            <span>{value}</span>
+                                                        </li>
+                                                    ))
+                                                    : null
                                             }
                                         </ul>
                                     </div>
@@ -132,11 +130,11 @@ export default function ProductTabs({ product }: ProductTabsProps) {
                                                     <Star
                                                         key={i}
                                                         size={18}
-                                                        className={`${i < Math.floor(product.rating) ? "text-yellow-400 fill-yellow-400" : "text-gray-300"
+                                                        className={`${i < Math.floor(product.ratings?.count ?? 0) ? "text-yellow-400 fill-yellow-400" : "text-gray-300"
                                                             }`}
                                                     />
                                                 ))}
-                                            <span className="ml-2 text-sm text-gray-600">Based on {product.reviewCount} reviews</span>
+                                            <span className="ml-2 text-sm text-gray-600">Based on {product.reviews?.length} reviews</span>
                                         </div>
                                     </div>
                                     <button className="px-4 py-2 bg-rose-600 text-white rounded-lg text-sm font-medium hover:bg-rose-700 transition-colors">

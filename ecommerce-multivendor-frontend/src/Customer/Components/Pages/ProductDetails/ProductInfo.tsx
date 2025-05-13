@@ -2,30 +2,46 @@
 
 import { useState } from "react"
 import { motion } from "framer-motion"
-import { Star, Check, Truck, ShieldCheck, Clock } from "lucide-react"
-import type { Product } from "../../../../lib/Types"
+import { Star, Check, Truck, ShieldCheck, Clock, Heart, ShoppingBag } from "lucide-react"
+import { Products } from "../../../../types/ProductTupe"
+import { useAppDispatch } from "../../../../app/Store"
+import { addProductToCart } from "../../../../app/customer/CartSlice"
+import { toast } from "sonner"
 
 interface ProductInfoProps {
-    product: Product
+    product: Products
 }
 
 export default function ProductInfo({ product }: ProductInfoProps) {
-    const [quantity, setQuantity] = useState(1)
+    const [quantity, setQuantity] = useState(1);
+    const [size , setSize] = useState("");
     const [isAddingToCart, setIsAddingToCart] = useState(false)
     const [addedToCart, setAddedToCart] = useState(false)
+    const dispatch = useAppDispatch();
 
-    const handleAddToCart = () => {
+
+    const handleAddToCart = async () => {
         setIsAddingToCart(true)
 
-        // Simulate API call
-        setTimeout(() => {
-            setIsAddingToCart(false)
-            setAddedToCart(true)
+        const data = {
+            productId: product.id,
+            size:size,
+            quantity: quantity,
+            mrpPrice: product.mrpPrice
+        }
 
-            // Reset success state after 2 seconds
-            setTimeout(() => {
-                setAddedToCart(false)
-            }, 2000)
+        // Simulate API call
+        setTimeout( async () => {
+            const res = await dispatch(addProductToCart(data));
+            console.log("response to add cart with ," , res);
+            if (res.meta.requestStatus == "fulfilled") {
+                setIsAddingToCart(false)
+                setAddedToCart(true)
+            }
+            else {
+                setIsAddingToCart(false);
+                toast.error("Product is already in the cart , please do some changes.")
+            }
         }, 1000)
     }
 
@@ -41,19 +57,19 @@ export default function ProductInfo({ product }: ProductInfoProps) {
                             <Star
                                 key={i}
                                 size={18}
-                                className={`${i < Math.floor(product.rating) ? "text-yellow-400 fill-yellow-400" : "text-gray-300"}`}
+                                className={`${i < Math.floor(product.ratings?.count ?? 1) ? "text-yellow-400 fill-yellow-400" : "text-gray-300"}`}
                             />
                         ))}
                 </div>
                 <span className="ml-2 text-sm text-gray-600">
-                    {product.rating.toFixed(1)} ({product.reviewCount} reviews)
+                    {product.ratings?.count?.toFixed(1)} ({product.reviews?.length} reviews)
                 </span>
             </div>
 
             <div className="text-3xl font-bold text-gray-900 mb-4">
-                ${product.price.toFixed(2)}
-                {product.originalPrice && (
-                    <span className="ml-2 text-lg text-gray-500 line-through">${product.originalPrice.toFixed(2)}</span>
+                ${product.mrpPrice.toFixed(2)}
+                {product.sellingPrice && (
+                    <span className="ml-2 text-lg text-gray-500 line-through">${product.sellingPrice.toFixed(2)}</span>
                 )}
             </div>
 
@@ -62,27 +78,34 @@ export default function ProductInfo({ product }: ProductInfoProps) {
             <div className="mb-6">
                 <h3 className="font-medium text-gray-900 mb-2">Available Colors</h3>
                 <div className="flex space-x-2">
-                    {["red", "blue", "black", "green"].map((color) => (
-                        <div
-                            key={color}
-                            className="w-8 h-8 rounded-full border-2 border-white shadow cursor-pointer hover:scale-110 transition-transform"
-                            style={{ backgroundColor: color }}
-                        ></div>
-                    ))}
+                    {product.variants?.find(varient => varient.name == "color")
+                        ?.value?.split(',')?.map((color) => {
+                        const trimColor = color.trim()
+                        return (
+                            <div
+                                key={color}
+                                className="w-8 h-8 rounded-full border-2 border-white shadow cursor-pointer hover:scale-110 transition-transform"
+                                style={{ backgroundColor: trimColor }}
+                            ></div>
+                        )
+                    })}
                 </div>
             </div>
 
             <div className="mb-6">
                 <h3 className="font-medium text-gray-900 mb-2">Size</h3>
                 <div className="flex flex-wrap gap-2">
-                    {["S", "M", "L", "XL", "XXL"].map((size) => (
-                        <div
-                            key={size}
-                            className="px-3 py-1 border rounded-md text-sm cursor-pointer hover:border-hiakri-green hover:text-hiakri-green transition-colors"
-                        >
-                            {size}
-                        </div>
-                    ))}
+                    {
+                        product.variants?.find(varient => varient.name == "size")
+                        ?.value?.split(',')?.map(size => (
+                            <div
+                                key={size}
+                                className="px-3 py-1 border rounded-md text-sm cursor-pointer hover:border-hiakri-green hover:text-hiakri-green transition-colors"
+                            >
+                                {size}
+                            </div>
+                        ))
+                    }
                 </div>
             </div>
 
@@ -113,7 +136,7 @@ export default function ProductInfo({ product }: ProductInfoProps) {
 
             <div className="flex flex-col sm:flex-row gap-4 mb-8">
                 <motion.button
-                    className={`flex-1 px-6 py-3 rounded-lg font-medium text-white ${isAddingToCart || addedToCart ? "bg-green-600" : "bg-rose-600 hover:bg-rose-700"
+                    className={`flex-1 px-6 py-3 rounded-lg font-medium text-white ${isAddingToCart || addedToCart ? "bg-green-600" : "hiakri-dark-bg"
                         } transition-colors flex items-center justify-center`}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
@@ -138,21 +161,27 @@ export default function ProductInfo({ product }: ProductInfoProps) {
                             Adding...
                         </span>
                     ) : addedToCart ? (
-                        <span className="flex items-center">
+                        <span className="flex items-center ">
                             <Check size={18} className="mr-2" />
-                            Added to Cart
+                            Go To Cart
                         </span>
                     ) : (
-                        "Add to Cart"
+                        <span className="flex gap-2 items-center">
+                            <ShoppingBag />
+                            Add to Cart
+                        </span>
                     )}
                 </motion.button>
 
                 <motion.button
-                    className="flex-1 px-6 py-3 bg-hiakri-dark text-white rounded-lg font-medium hover:bg-[#3571bb] transition-colors"
+                    className="flex-1 px-6 py-3 bg-white border border-black text-black rounded-lg font-medium transition-colors"
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                 >
-                    Buy Now
+                    <span className="flex  gap-2 items-center justify-center">
+                        <Heart color="red" />
+                        Wishlist
+                    </span>
                 </motion.button>
             </div>
 

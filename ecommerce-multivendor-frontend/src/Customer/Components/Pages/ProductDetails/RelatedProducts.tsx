@@ -5,9 +5,10 @@ import { motion } from "framer-motion"
 import type { Product } from "../../../../lib/Types"
 import ProductCard from "../Products/ProductCard"
 import { ChevronLeft, ChevronRight } from "lucide-react"
+import { Products } from "../../../../types/ProductTupe"
 
 interface RelatedProductsProps {
-    products: Product[]
+    products: Products[]
 }
 
 export default function RelatedProducts({ products }: RelatedProductsProps) {
