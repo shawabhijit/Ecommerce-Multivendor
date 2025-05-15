@@ -91,9 +91,23 @@ public class SellerServiceImpl implements SellerService {
         }
         if (seller.getBusinessDetails() != null
                 && seller.getBusinessDetails().getBusinessName() != null) {
-            oldSeller.getBusinessDetails()
-                    .setBusinessName(seller.getBusinessDetails().getBusinessName());
+            oldSeller.getBusinessDetails().setBusinessName(seller.getBusinessDetails().getBusinessName());
         }
+        if (seller.getBusinessDetails() != null
+                && seller.getBusinessDetails().getLogo() != null) {
+            oldSeller.getBusinessDetails().setLogo(seller.getBusinessDetails().getLogo());
+        }
+        if (seller.getBusinessDetails() != null
+                && seller.getBusinessDetails().getBanner() != null) {
+            oldSeller.getBusinessDetails().setBanner(seller.getBusinessDetails().getBanner());
+        }
+        if (seller.getBusinessDetails() != null && seller.getBusinessDetails().getAddress() != null) {
+            oldSeller.getBusinessDetails().setAddress(seller.getBusinessDetails().getAddress());
+        }
+        if (seller.getBusinessDetails() != null && seller.getBusinessDetails().getBusinessEmail() != null) {
+            oldSeller.getBusinessDetails().setBusinessEmail(seller.getBusinessDetails().getBusinessEmail());
+        }
+
         if (seller.getBankDetails() != null
                 && seller.getBankDetails().getAccountHolderName() != null
                 && seller.getBankDetails().getIfscCode() != null
@@ -116,6 +130,10 @@ public class SellerServiceImpl implements SellerService {
             oldSeller.getPickupAddress().setPickupAddress(seller.getPickupAddress().getPickupAddress());
             oldSeller.getPickupAddress().setPickupPhone(seller.getPickupAddress().getPickupPhone());
             oldSeller.getPickupAddress().setPickupZipCode(seller.getPickupAddress().getPickupZipCode());
+        }
+
+        if (seller.getAvtar() != null) {
+            oldSeller.setAvtar(seller.getAvtar());
         }
 
         return sellerRepo.save(oldSeller);

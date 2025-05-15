@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Entity
 @Table(name = "seller")
 @AllArgsConstructor
@@ -46,5 +48,9 @@ public class SellerEntity {
     private boolean isEmailVerified = false;
 
     private AccountStatus accountStatus = AccountStatus.PENDING_VERIFICATION;
+
+    private Date joiningDate = new Date();
+
+    private String avtar;
 
 }

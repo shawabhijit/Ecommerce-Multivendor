@@ -125,8 +125,8 @@ public class SellerController {
         return ResponseEntity.ok().body(sellers);
     }
 
-    @PatchMapping()
-    public ResponseEntity<?> updateSeller (@RequestHeader("Authorization") String jwt ,
+    @PatchMapping("/update")
+    public ResponseEntity<?> updateSeller (@CookieValue(name = "jwt" , required = false) String jwt ,
                                            @RequestBody SellerEntity seller) throws SellerException {
         SellerEntity profile = sellerService.getSellerProfile(jwt);
         profile = sellerService.updateSeller(profile.getId(), seller);
