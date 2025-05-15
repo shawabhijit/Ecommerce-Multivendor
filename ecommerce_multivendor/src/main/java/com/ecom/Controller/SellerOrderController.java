@@ -22,7 +22,7 @@ public class SellerOrderController {
     private final SellerService sellerService;
 
     @GetMapping()
-    public ResponseEntity<?> getAllOrdersHandler (@RequestHeader("Authorization") String jwt) throws SellerException {
+    public ResponseEntity<?> getAllOrdersHandler (@CookieValue(name = "jwt" , required = false)  String jwt) throws SellerException {
         SellerEntity seller = sellerService.getSellerProfile(jwt);
         List<OrderEntity> orders = orderService.sellerOrder(seller.getId());
         return ResponseEntity.accepted().body(orders);
