@@ -9,8 +9,10 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import { SellerProfile } from './SellerProfile/SellerProfile';
 import { SellerSignup } from './auth/SellerSignup';
 import { SellerLogin } from './auth/SellerLogin';
-import { useAppSelecter } from '../app/Store';
+import { useAppDispatch, useAppSelecter } from '../app/Store';
 import { ProtectedRoute } from './auth/ProtectedRoute';
+import { useEffect, useState } from 'react';
+import { fetchSellerProfile } from '../app/seller/SellerSlice';
 
 
 
@@ -21,10 +23,25 @@ const SellerIndex = () => {
     // Define paths where Navbar should be hidden
     const hideNavbarRoutes = ["/seller/signup", "/seller/login",];
     const shouldHideNavbar = hideNavbarRoutes.includes(location.pathname);
+    const dispatch = useAppDispatch();
+    const [sellerInfo , setSellerInfo] = useState<any>(null);
+
+    const fetchSellerData = async () => {
+        const res = await dispatch(fetchSellerProfile());
+        if (res.meta.requestStatus === "fulfilled") {
+            setSellerInfo(res.payload);
+        }
+    }
+
+    useEffect(() => {
+        if (isLoggedIn) {
+            fetchSellerData();
+        }
+    }, [isLoggedIn , dispatch]);
 
     return (
         <>
-            {!shouldHideNavbar && <SellerNav isLogedin={isLoggedIn} />}
+            {!shouldHideNavbar && <SellerNav isLogedin={isLoggedIn} sellerInfo={sellerInfo} />}
             <main className="flex-grow min-h-screen overflow-hidden">
                 <div className="container mx-auto px-4 space-y-8 pb-10 mt-28">
                     <Routes>

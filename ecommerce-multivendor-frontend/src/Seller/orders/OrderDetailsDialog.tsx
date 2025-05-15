@@ -31,14 +31,14 @@ const OrderDetailsDialog = ({ selectedOrder, formatDate, getStatusBadge, setIsOr
 
                             <TabsContent value="items" className="space-y-4">
                                 <div className="border rounded-lg divide-y">
-                                    {selectedOrder.items.map((item) => (
+                                    {selectedOrder.orderItems.map((item) => (
                                         <div key={item.id} className="p-4 flex items-center justify-between">
                                             <div className="flex items-center gap-4">
                                                 <div className="h-16 w-16 rounded bg-gray-100 flex items-center justify-center overflow-hidden">
                                                     {item.image ? (
                                                         <img
-                                                            src={item.image || "/placeholder.svg"}
-                                                            alt={item.name}
+                                                            src={item.product.images[0] || "/placeholder.svg"}
+                                                            alt={item.product.title}
                                                             className="h-full w-full object-cover"
                                                         />
                                                     ) : (
@@ -46,11 +46,11 @@ const OrderDetailsDialog = ({ selectedOrder, formatDate, getStatusBadge, setIsOr
                                                     )}
                                                 </div>
                                                 <div>
-                                                    <p className="font-medium">{item.name}</p>
+                                                    <p className="font-medium">{item.product.title}</p>
                                                     <p className="text-sm text-gray-500">Qty: {item.quantity}</p>
                                                 </div>
                                             </div>
-                                            <p className="font-medium">${item.price.toFixed(2)}</p>
+                                            <p className="font-medium">₹{item.sellingPrice.toFixed(2)}</p>
                                         </div>
                                     ))}
                                 </div>
@@ -58,19 +58,19 @@ const OrderDetailsDialog = ({ selectedOrder, formatDate, getStatusBadge, setIsOr
                                 <div className="border rounded-lg p-4 space-y-2">
                                     <div className="flex justify-between">
                                         <span className="text-gray-500">Subtotal</span>
-                                        <span>${selectedOrder.total.toFixed(2)}</span>
+                                        <span>₹{selectedOrder.totalSellingPrice.toFixed(2)}</span>
                                     </div>
                                     <div className="flex justify-between">
                                         <span className="text-gray-500">Shipping</span>
-                                        <span>$0.00</span>
+                                        <span>₹0.00</span>
                                     </div>
                                     <div className="flex justify-between">
                                         <span className="text-gray-500">Tax</span>
-                                        <span>$0.00</span>
+                                        <span>₹0.00</span>
                                     </div>
                                     <div className="border-t pt-2 flex justify-between font-medium">
                                         <span>Total</span>
-                                        <span>${selectedOrder.total.toFixed(2)}</span>
+                                        <span>₹{selectedOrder.totalMrpPrice.toFixed(2)}</span>
                                     </div>
                                 </div>
                             </TabsContent>
@@ -79,25 +79,25 @@ const OrderDetailsDialog = ({ selectedOrder, formatDate, getStatusBadge, setIsOr
                                 <div className="border rounded-lg p-4">
                                     <div className="flex items-center gap-4 mb-4">
                                         <Avatar className="h-12 w-12">
-                                            <AvatarImage src={selectedOrder.customer.avatar || "/placeholder.svg"} />
-                                            <AvatarFallback>{selectedOrder.customer.name.substring(0, 2)}</AvatarFallback>
+                                            {/* <AvatarImage src={selectedOrder.customer.avatar || "/placeholder.svg"} /> */}
+                                            <AvatarFallback>{selectedOrder.user.username.substring(0, 2)}</AvatarFallback>
                                         </Avatar>
                                         <div>
-                                            <h3 className="font-medium">{selectedOrder.customer.name}</h3>
-                                            <p className="text-sm text-gray-500">{selectedOrder.customer.email}</p>
+                                            <h3 className="font-medium">{selectedOrder.user.username}</h3>
+                                            <p className="text-sm text-gray-500">{selectedOrder.user.email}</p>
                                         </div>
                                     </div>
                                     <div className="grid grid-cols-2 gap-4">
                                         <div>
                                             <h4 className="text-sm font-medium mb-1">Shipping Address</h4>
-                                            <p className="text-sm text-gray-500">{selectedOrder.shippingAddress.street}</p>
+                                            <p className="text-sm text-gray-500">{selectedOrder.shippingAddress.pickupAddress}</p>
                                             <p className="text-sm text-gray-500">
-                                                {selectedOrder.shippingAddress.city}, {selectedOrder.shippingAddress.state}{" "}
-                                                {selectedOrder.shippingAddress.zip}
+                                                {selectedOrder.shippingAddress.pickupCity}, {selectedOrder.shippingAddress.pickupState}{" "}
+                                                {selectedOrder.shippingAddress.pinCode}
                                             </p>
-                                            <p className="text-sm text-gray-500">{selectedOrder.shippingAddress.country}</p>
+                                            <p className="text-sm text-gray-500">{selectedOrder.shippingAddress.country ? selectedOrder.shippingAddress.country : "India"}</p>
                                         </div>
-                                        <div>
+                                        {/* <div>
                                             <h4 className="text-sm font-medium mb-1">Billing Address</h4>
                                             <p className="text-sm text-gray-500">{selectedOrder.shippingAddress.street}</p>
                                             <p className="text-sm text-gray-500">
@@ -105,7 +105,7 @@ const OrderDetailsDialog = ({ selectedOrder, formatDate, getStatusBadge, setIsOr
                                                 {selectedOrder.shippingAddress.zip}
                                             </p>
                                             <p className="text-sm text-gray-500">{selectedOrder.shippingAddress.country}</p>
-                                        </div>
+                                        </div> */}
                                     </div>
                                 </div>
                             </TabsContent>
@@ -116,7 +116,7 @@ const OrderDetailsDialog = ({ selectedOrder, formatDate, getStatusBadge, setIsOr
                                     <div className="space-y-4">
                                         <div className="flex justify-between">
                                             <span className="text-gray-500">Status</span>
-                                            <span>{getStatusBadge(selectedOrder.status)}</span>
+                                            <span>{getStatusBadge(selectedOrder.orderStatus)}</span>
                                         </div>
                                         <div className="flex justify-between">
                                             <span className="text-gray-500">Shipping Method</span>
@@ -128,7 +128,7 @@ const OrderDetailsDialog = ({ selectedOrder, formatDate, getStatusBadge, setIsOr
                                         </div>
                                         <div className="flex justify-between">
                                             <span className="text-gray-500">Estimated Delivery</span>
-                                            <span className="text-gray-500">3-5 business days</span>
+                                            <span className="text-gray-500">3-7 business days</span>
                                         </div>
                                     </div>
                                 </div>
@@ -142,7 +142,7 @@ const OrderDetailsDialog = ({ selectedOrder, formatDate, getStatusBadge, setIsOr
                                             </div>
                                             <div>
                                                 <p className="font-medium">Order Placed</p>
-                                                <p className="text-sm text-gray-500">{formatDate(selectedOrder.date)}</p>
+                                                <p className="text-sm text-gray-500">{formatDate(selectedOrder.orderDate)}</p>
                                             </div>
                                         </div>
 

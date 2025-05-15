@@ -3,13 +3,9 @@
 import React, { useEffect, useState } from "react"
 import { motion } from "framer-motion"
 import {
-    Calendar,
     CalendarIcon,
-    ChevronLeft,
-    ChevronRight,
     Download,
     Eye,
-    Filter,
     Search,
 } from "lucide-react"
 
@@ -39,7 +35,7 @@ import { Label } from "../../Components/ui/label"
 import { Textarea } from "../../Components/ui/textarea"
 
 // Mock data for orders
-import { mockOrders } from "../Data/api"
+// import { mockOrders } from "../Data/api"
 import SellerOrderStatus from "./SellerOrderStatus"
 import OrderDetailsDialog from "./OrderDetailsDialog"
 import { Calendar as Calendar1 } from "../../Components/ui/calendar"
@@ -51,14 +47,14 @@ import { fetchAllSellerOrders } from "../../app/seller/SellerOrderSlice"
 
 export function OrderManagement() {
     const dispatch = useAppDispatch();
-    const [orders, setOrders] = useState(mockOrders)
+    const [orders, setOrders] = useState<any[]>([])
 
     const [searchQuery, setSearchQuery] = useState("")
     const [statusFilter, setStatusFilter] = useState("all")
     const [dateFilter, setDateFilter] = useState("all")
     const [currentPage, setCurrentPage] = useState(1)
     const [isUpdateStatusOpen, setIsUpdateStatusOpen] = useState(false)
-    const [selectedOrder, setSelectedOrder] = useState<(typeof mockOrders)[0] | null>(null)
+    const [selectedOrder, setSelectedOrder] = useState<any | null>(null)
     const [isOrderDetailsOpen, setIsOrderDetailsOpen] = useState(false)
     const [newStatus, setNewStatus] = useState("")
     const [trackingNumber, setTrackingNumber] = useState("")
@@ -70,9 +66,9 @@ export function OrderManagement() {
 
     const fetchSellerOrders = async () => {
         const res = await dispatch(fetchAllSellerOrders());
-        console.log("All seler order :" , res.payload)
+        console.log("All orders of seler :" , res.payload)
         if (res.meta.requestStatus == "fulfilled") {
-            // setOrders(res.payload);
+            setOrders(res.payload);
         }
     }
 
@@ -83,15 +79,15 @@ export function OrderManagement() {
     // Filter orders based on search query and filters
     const filteredOrders = orders.filter((order) => {
         const matchesSearch =
-            order.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            order.customer.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            order.customer.email.toLowerCase().includes(searchQuery.toLowerCase())
+            String(order.id).includes(searchQuery.toLowerCase()) ||
+            order.user.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            order.user.email.toLowerCase().includes(searchQuery.toLowerCase())
 
-        const matchesStatus = statusFilter === "all" || statusFilter === order.status
+        const matchesStatus = statusFilter === "all" || statusFilter === order.orderStatus.toLowerCase()
 
         // Date filtering logic
         let matchesDate = true
-        const orderDate = new Date(order.date)
+        const orderDate = new Date(order.orderDate)
         const today = new Date()
         const yesterday = new Date(today)
         yesterday.setDate(yesterday.getDate() - 1)
@@ -122,21 +118,21 @@ export function OrderManagement() {
     // const paginate = (pageNumber: number) => setCurrentPage(pageNumber)
     //
 
-    const viewOrderDetails = (order: (typeof mockOrders)[0]) => {
+    const viewOrderDetails = (order) => {
         setSelectedOrder(order)
         setIsOrderDetailsOpen(true)
     }
 
-    const openUpdateStatus = (order: (typeof mockOrders)[0]) => {
+    const openUpdateStatus = (order) => {
         setSelectedOrder(order)
-        setNewStatus(order.status)
+        setNewStatus(order.orderStatus)
         setIsUpdateStatusOpen(true)
     }
 
     const updateOrderStatus = () => {
         if (selectedOrder && newStatus) {
             const updatedOrders = orders.map((order) =>
-                order.id === selectedOrder.id ? { ...order, status: newStatus } : order,
+                order.id === selectedOrder?.id ? { ...order, status: newStatus } : order,
             )
             setOrders(updatedOrders)
             setIsUpdateStatusOpen(false)
@@ -338,22 +334,22 @@ export function OrderManagement() {
                                         <td className="py-3 px-4">
                                             <div className="flex items-center gap-2">
                                                 <Avatar className="h-8 w-8">
-                                                    <AvatarImage src={order.customer.avatar || "/placeholder.svg"} />
-                                                    <AvatarFallback>{order.customer.name.substring(0, 2)}</AvatarFallback>
+                                                    {/* <AvatarImage src={order.customer.avatar || "/placeholder.svg"} /> */}
+                                                    <AvatarFallback>{order.user.username.substring(0, 2)}</AvatarFallback>
                                                 </Avatar>
                                                 <div>
-                                                    <p className="font-medium">{order.customer.name}</p>
-                                                    <p className="text-xs text-gray-500">{order.customer.email}</p>
+                                                    <p className="font-medium">{order.user.username}</p>
+                                                    <p className="text-xs text-gray-500">{order.user.email}</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td className="py-3 px-4">
-                                            <p className="text-sm">{formatDate(order.date)}</p>
+                                            <p className="text-sm">{formatDate(order.deliveryDate)}</p>
                                         </td>
                                         <td className="py-3 px-4">
-                                            <p className="font-medium">${order.total.toFixed(2)}</p>
+                                            <p className="font-medium">₹{order.totalMrpPrice.toFixed(2)}</p>
                                         </td>
-                                        <td className="py-3 px-4">{getStatusBadge(order.status)}</td>
+                                        <td className="py-3 px-4">{getStatusBadge(order.orderStatus)}</td>
                                         <td className="py-3 px-4">{getPaymentStatusBadge(order.paymentStatus)}</td>
                                         <td className="py-3 px-4">
                                             <div className="flex items-center gap-2">

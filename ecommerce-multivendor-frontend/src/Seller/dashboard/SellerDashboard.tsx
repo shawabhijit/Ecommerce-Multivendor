@@ -1,8 +1,8 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
-import { ArrowDown, ArrowUp, CheckCircle, Clock, DollarSign, Package, ShoppingCart, Users, XCircle } from "lucide-react"
+import { ArrowUp, CheckCircle, Clock, DollarSign, IndianRupee, Package, ShoppingCart, Users, XCircle } from "lucide-react"
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../Components/ui/card"
 import { Button } from "../../Components/ui/button"
@@ -10,7 +10,10 @@ import { Badge } from "../../Components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../Components/ui/tabs"
 import { Avatar, AvatarFallback, AvatarImage } from "../../Components/ui/avatar"
 import { Progress } from "../../Components/ui/progress"
-import { recentOrders, stats } from "../Data/api"
+import { useAppDispatch } from "../../app/Store"
+import { fetchAllSellerOrders } from "../../app/seller/SellerOrderSlice"
+import { fetchSellerProducts } from "../../app/seller/SellerProductSlice"
+import { useNavigate } from "react-router-dom"
 
 
 const verificationStatus = {
@@ -25,7 +28,44 @@ const verificationStatus = {
 }
 
 export function SellerDashboard() {
-    const [activeTab, setActiveTab] = useState("overview")
+    const dispatch = useAppDispatch();
+    const navigate = useNavigate();
+    const [activeTab, setActiveTab] = useState("overview");
+    // const [verificationProgress, setVerificationProgress] = useState();
+    const [orders, setOrders] = useState<any[]>([])
+    const [products, setProducts] = useState<any[]>([])
+    const [viewAllOrders, setViewAllOrders] = useState(false);
+
+    const fetchSellerOrders = async () => {
+        const res = await dispatch(fetchAllSellerOrders());
+        console.log("All orders of seler :", res.payload)
+        if (res.meta.requestStatus == "fulfilled") {
+            setOrders(res.payload);
+        }
+    }
+
+    const fetchSellerAllProducts = async () => {
+        const res = await dispatch(fetchSellerProducts());
+        console.log("All products of seller :", res.payload)
+        if (res.meta.requestStatus == "fulfilled") {
+            setProducts(res.payload);
+        }
+    }
+
+    const recentOrders = orders.slice(0, 5);
+
+    const totalCustomer = new Set(orders.map(order => order.user.id)).size;
+    const totalSales = orders.reduce((acc, order) => acc + order.totalMrpPrice, 0);
+    const totalOrders = orders.length;
+    const totalProducts = products.length;
+
+    //const topProducts = products.slice(0, 5);
+
+
+    useEffect(() => {
+        fetchSellerOrders();
+        fetchSellerAllProducts();
+    }, [dispatch])
 
     const getStatusBadge = (status: string) => {
         switch (status) {
@@ -124,38 +164,106 @@ export function SellerDashboard() {
 
             {/* Stats Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-                {stats.map((stat, index) => (
-                    <motion.div
-                        key={stat.title}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: index * 0.1 }}
-                    >
-                        <Card>
-                            <CardContent className="p-6">
-                                <div className="flex items-center justify-between">
-                                    <div className={`p-2 rounded-full ${stat.color}`}>
-                                        <stat.icon className="h-5 w-5" />
-                                    </div>
-                                    <div className="flex items-center space-x-1">
-                                        <span className={`text-sm ${stat.trend === "up" ? "text-green-600" : "text-red-600"}`}>
-                                            {stat.change}
-                                        </span>
-                                        {stat.trend === "up" ? (
-                                            <ArrowUp className="h-3 w-3 text-green-600" />
-                                        ) : (
-                                            <ArrowDown className="h-3 w-3 text-red-600" />
-                                        )}
-                                    </div>
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1 }}
+                >
+                    <Card>
+                        <CardContent className="p-6">
+                            <div className="flex items-center justify-between">
+                                <div className={`p-2 rounded-full bg-green-100 text-green-700`}>
+                                    <IndianRupee className="h-5 w-5" />
                                 </div>
-                                <div className="mt-4">
-                                    <h3 className="text-sm font-medium text-gray-500">{stat.title}</h3>
-                                    <p className="text-2xl font-bold">{stat.value}</p>
+                                <div className="flex items-center space-x-1">
+                                    <span className={`text-sm text-green-600`}>
+                                        +12.5%
+                                    </span>
+                                    <ArrowUp className="h-3 w-3 text-green-600" />
                                 </div>
-                            </CardContent>
-                        </Card>
-                    </motion.div>
-                ))}
+                            </div>
+                            <div className="mt-4">
+                                <h3 className="text-sm font-medium text-gray-500">Total Sales</h3>
+                                <p className="text-2xl font-bold">₹{totalSales}</p>
+                            </div>
+                        </CardContent>
+                    </Card>
+                </motion.div>
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1 }}
+                >
+                    <Card>
+                        <CardContent className="p-6">
+                            <div className="flex items-center justify-between">
+                                <div className={`p-2 rounded-full bg-blue-100 text-blue-700`}>
+                                    <ShoppingCart className="h-5 w-5" />
+                                </div>
+                                <div className="flex items-center space-x-1">
+                                    <span className={`text-sm text-green-600`}>
+                                        +8.2%
+                                    </span>
+                                    <ArrowUp className="h-3 w-3 text-green-600" />
+                                </div>
+                            </div>
+                            <div className="mt-4">
+                                <h3 className="text-sm font-medium text-gray-500">Orders</h3>
+                                <p className="text-2xl font-bold">{totalOrders}</p>
+                            </div>
+                        </CardContent>
+                    </Card>
+                </motion.div>
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1 }}
+                >
+                    <Card>
+                        <CardContent className="p-6">
+                            <div className="flex items-center justify-between">
+                                <div className={`p-2 rounded-full bg-purple-100 text-purple-700`}>
+                                    <IndianRupee className="h-5 w-5" />
+                                </div>
+                                <div className="flex items-center space-x-1">
+                                    <span className={`text-sm text-green-600`}>
+                                        +4
+                                    </span>
+                                    <ArrowUp className="h-3 w-3 text-green-600" />
+                                </div>
+                            </div>
+                            <div className="mt-4">
+                                <h3 className="text-sm font-medium text-gray-500">Products</h3>
+                                <p className="text-2xl font-bold">{totalProducts}</p>
+                            </div>
+                        </CardContent>
+                    </Card>
+                </motion.div>
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1 }}
+                >
+                    <Card>
+                        <CardContent className="p-6">
+                            <div className="flex items-center justify-between">
+                                <div className={`p-2 rounded-full bg-amber-100 text-amber-700`}>
+                                    <IndianRupee className="h-5 w-5" />
+                                </div>
+                                <div className="flex items-center space-x-1">
+                                    <span className={`text-sm text-green-600`}>
+                                        +18.3%
+                                    </span>
+                                    <ArrowUp className="h-3 w-3 text-green-600" />
+                                </div>
+                            </div>
+                            <div className="mt-4">
+                                <h3 className="text-sm font-medium text-gray-500">Customers</h3>
+                                <p className="text-2xl font-bold">{totalCustomer}</p>
+                            </div>
+                        </CardContent>
+                    </Card>
+                </motion.div>
             </div>
 
             {/* Tabs for different sections */}
@@ -175,33 +283,72 @@ export function SellerDashboard() {
                             </CardHeader>
                             <CardContent>
                                 <div className="space-y-4">
-                                    {recentOrders.slice(0, 3).map((order) => (
-                                        <motion.div
-                                            key={order.id}
-                                            initial={{ opacity: 0 }}
-                                            animate={{ opacity: 1 }}
-                                            transition={{ duration: 0.3 }}
-                                            className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
-                                        >
-                                            <div className="flex items-center space-x-3">
-                                                <Avatar>
-                                                    <AvatarImage src={order.avatar || "/placeholder.svg"} />
-                                                    <AvatarFallback>{order.customer.substring(0, 2)}</AvatarFallback>
-                                                </Avatar>
-                                                <div>
-                                                    <p className="font-medium">{order.customer}</p>
-                                                    <p className="text-sm text-gray-500">{order.product}</p>
+                                    {viewAllOrders
+                                        ? recentOrders.map((order) => (
+                                            <motion.div
+                                                key={order.id}
+                                                initial={{ opacity: 0 }}
+                                                animate={{ opacity: 1 }}
+                                                transition={{ duration: 0.3 }}
+                                                className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                                            >
+                                                <div className="flex items-center space-x-3">
+                                                    <Avatar>
+                                                        {/* <AvatarImage src={order.avatar || "/placeholder.svg"} /> */}
+                                                        <AvatarFallback>{order.user.username.substring(0, 2)}</AvatarFallback>
+                                                    </Avatar>
+                                                    <div>
+                                                        <p className="font-medium">{order.user.username}</p>
+                                                        <p className="text-sm text-gray-500">
+                                                            {order.orderItems.map(prod => prod.product.title).join(" | ")}
+                                                        </p>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div className="text-right">
-                                                <p className="font-medium">{order.amount}</p>
-                                                <div className="mt-1">{getStatusBadge(order.status)}</div>
-                                            </div>
-                                        </motion.div>
-                                    ))}
-                                    <Button variant="outline" className="w-full">
-                                        View All Orders
-                                    </Button>
+                                                <div className="text-right">
+                                                    <p className="font-medium">₹{order.totalMrpPrice}</p>
+                                                    <div className="mt-1">{getStatusBadge(order.orderStatus.toLowerCase())}</div>
+                                                </div>
+                                            </motion.div>
+                                        ))
+                                        : recentOrders.slice(0, 3).map((order) => (
+                                            <motion.div
+                                                key={order.id}
+                                                initial={{ opacity: 0 }}
+                                                animate={{ opacity: 1 }}
+                                                transition={{ duration: 0.3 }}
+                                                className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                                            >
+                                                <div className="flex items-center space-x-3">
+                                                    <Avatar>
+                                                        {/* <AvatarImage src={order.avatar || "/placeholder.svg"} /> */}
+                                                        <AvatarFallback>{order.user.username.substring(0, 2)}</AvatarFallback>
+                                                    </Avatar>
+                                                    <div>
+                                                        <p className="font-medium">{order.user.username}</p>
+                                                        <p className="text-sm text-gray-500">
+                                                            {order.orderItems.map(prod => prod.product.title).join(" | ")}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div className="text-right">
+                                                    <p className="font-medium">₹{order.totalMrpPrice}</p>
+                                                    <div className="mt-1">{getStatusBadge(order.orderStatus.toLowerCase())}</div>
+                                                </div>
+                                            </motion.div>
+                                        ))
+                                    }
+                                    
+                                    {
+                                        viewAllOrders ? (
+                                            <Button variant="outline" className="w-full" onClick={() => setViewAllOrders(false)}>
+                                                View Less
+                                            </Button>
+                                        ) : (
+                                            <Button onClick={() => setViewAllOrders(true)} variant="outline" className="w-full">
+                                                View All Orders
+                                            </Button>
+                                        )
+                                    }
                                 </div>
                             </CardContent>
                         </Card>
@@ -213,10 +360,10 @@ export function SellerDashboard() {
                                 <CardDescription>Manage your store efficiently</CardDescription>
                             </CardHeader>
                             <CardContent className="space-y-4">
-                                <Button variant="outline" className="w-full justify-start">
+                                <Button onClick={() => navigate("/seller/products/add")} variant="outline" className="w-full justify-start">
                                     <Package className="mr-2 h-4 w-4" /> Add New Product
                                 </Button>
-                                <Button variant="outline" className="w-full justify-start">
+                                <Button onClick={() => navigate("/seller/orders")} variant="outline" className="w-full justify-start">
                                     <ShoppingCart className="mr-2 h-4 w-4" /> Process Orders
                                 </Button>
                                 <Button variant="outline" className="w-full justify-start">
@@ -248,20 +395,22 @@ export function SellerDashboard() {
                                         <div className="flex items-center space-x-4">
                                             <Avatar>
                                                 <AvatarImage src={order.avatar || "/placeholder.svg"} />
-                                                <AvatarFallback>{order.customer.substring(0, 2)}</AvatarFallback>
+                                                <AvatarFallback>{order.user.username.substring(0, 2)}</AvatarFallback>
                                             </Avatar>
                                             <div>
                                                 <div className="flex items-center">
-                                                    <p className="font-medium">{order.customer}</p>
+                                                    <p className="font-medium">{order.user.username}</p>
                                                     <p className="ml-2 text-xs text-gray-500">({order.id})</p>
                                                 </div>
-                                                <p className="text-sm text-gray-500">{order.product}</p>
-                                                <p className="text-xs text-gray-400">{order.date}</p>
+                                                <p className="text-sm text-gray-500">
+                                                    {order.orderItems.map(prod => prod.product.title).join(" | ")}
+                                                </p>
+                                                <p className="text-xs text-gray-400">{order.orderDate}</p>
                                             </div>
                                         </div>
                                         <div className="text-right">
-                                            <p className="font-medium">{order.amount}</p>
-                                            <div className="mt-1">{getStatusBadge(order.status)}</div>
+                                            <p className="font-medium">₹{order.totalMrpPrice}</p>
+                                            <div className="mt-1">{getStatusBadge(order.orderStatus)}</div>
                                         </div>
                                     </motion.div>
                                 ))}
@@ -288,7 +437,7 @@ export function SellerDashboard() {
                                         </div>
                                     </div>
                                     <div className="text-right">
-                                        <p className="font-medium">$5,459.88</p>
+                                        <p className="font-medium">₹5,459.88</p>
                                         <p className="text-sm text-green-600">+12% from last month</p>
                                     </div>
                                 </div>
@@ -303,7 +452,7 @@ export function SellerDashboard() {
                                         </div>
                                     </div>
                                     <div className="text-right">
-                                        <p className="font-medium">$2,279.62</p>
+                                        <p className="font-medium">₹2,279.62</p>
                                         <p className="text-sm text-green-600">+8% from last month</p>
                                     </div>
                                 </div>
@@ -318,7 +467,7 @@ export function SellerDashboard() {
                                         </div>
                                     </div>
                                     <div className="text-right">
-                                        <p className="font-medium">$5,399.73</p>
+                                        <p className="font-medium">₹5,399.73</p>
                                         <p className="text-sm text-red-600">-3% from last month</p>
                                     </div>
                                 </div>

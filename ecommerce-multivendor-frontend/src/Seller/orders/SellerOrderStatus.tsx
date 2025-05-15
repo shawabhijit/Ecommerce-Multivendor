@@ -36,7 +36,7 @@ const SellerOrderStatus = ({ orders }) => {
                     </div>
                     <div className="mt-3">
                         <h3 className="text-sm font-medium text-gray-500">Pending</h3>
-                        <p className="text-2xl font-bold">{orders.filter((order) => order.status === "pending").length}</p>
+                        <p className="text-2xl font-bold">{orders.filter((order) => order.orderStatus.toLowerCase() === "pending").length}</p>
                     </div>
                 </CardContent>
             </Card>
@@ -54,7 +54,7 @@ const SellerOrderStatus = ({ orders }) => {
                     </div>
                     <div className="mt-3">
                         <h3 className="text-sm font-medium text-gray-500">Shipped</h3>
-                        <p className="text-2xl font-bold">{orders.filter((order) => order.status === "shipped").length}</p>
+                        <p className="text-2xl font-bold">{orders.filter((order) => order.orderStatus.toLowerCase() === "shipped").length}</p>
                     </div>
                 </CardContent>
             </Card>
@@ -72,7 +72,7 @@ const SellerOrderStatus = ({ orders }) => {
                     </div>
                     <div className="mt-3">
                         <h3 className="text-sm font-medium text-gray-500">Delivered</h3>
-                        <p className="text-2xl font-bold">{orders.filter((order) => order.status === "delivered").length}</p>
+                        <p className="text-2xl font-bold">{orders.filter((order) => order.orderStatus.toLowerCase() === "delivered").length}</p>
                     </div>
                 </CardContent>
             </Card>

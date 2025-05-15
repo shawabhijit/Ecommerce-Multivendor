@@ -26,7 +26,7 @@ const products = [
     "Mobile Holder"
 ];
 
-const SellerNav = ({ isLogedin }: any) => {
+const SellerNav = ({ isLogedin , sellerInfo }: any) => {
 
     const { theme, setTheme } = useTheme();
     const isDark = theme === 'dark';
@@ -74,9 +74,7 @@ const SellerNav = ({ isLogedin }: any) => {
         return () => window.removeEventListener('scroll', handleScroll);
     }, [searchValue]);
 
-    useEffect(() => {
-        dispatch(fetchSellerProfile());
-    }, [dispatch])
+    
 
     // console.log("Seller Profile fetch suucessfully ,  Response:", response);
 
@@ -185,10 +183,10 @@ const SellerNav = ({ isLogedin }: any) => {
                                             <DropdownMenu>
                                                 <DropdownMenuTrigger asChild>
                                                     <Button variant="ghost" size="icon" className="rounded-full">
-                                                        <Avatar className="h-8 w-8">
+                                                        <Avatar className="h-10 w-10 flex items-center justify-center">
                                                             <AvatarImage src="/placeholder.svg" />
-                                                            <AvatarFallback>
-                                                                <img className="h-8 w-8" src={sellerProfile?.businessDetails?.logo} alt="User" />
+                                                            <AvatarFallback className='text-2xl font-bold bg-[#505050] text-white'>
+                                                                {sellerInfo?.fullName.substring(0, 1).toUpperCase()}
                                                             </AvatarFallback>
                                                         </Avatar>
                                                     </Button>

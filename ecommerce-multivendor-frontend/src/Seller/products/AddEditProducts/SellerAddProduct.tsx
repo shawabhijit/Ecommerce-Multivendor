@@ -327,13 +327,19 @@ export function AddEditProduct() {
         try {
             await new Promise(resolve => setTimeout(resolve, 1000));
 
-            const res = dispatch(updateProduct({ request: watch(), id : Number(id) }));
+            if (id && !isNaN(Number(id)) && isEditMode) {
+                const res = dispatch(updateProduct({ request: watch(), id: Number(id) }));
 
-            console.log("Product updated successfully");
+                console.log("Product updated successfully");
 
-            setResponse(res);
-            setSaveSuccess(true);
-            setFormChanged(false);
+                setResponse(res);
+                setSaveSuccess(true);
+                setFormChanged(false);
+            }
+            else {
+                onSubmit(watch());
+                console.log("Product created successfully");
+            }
 
             setTimeout(() => {
                 setSaveSuccess(false);
