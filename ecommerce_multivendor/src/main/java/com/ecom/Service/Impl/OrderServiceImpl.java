@@ -86,8 +86,21 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<OrderEntity> sellerOrder(Long sellerId) {
-        return orderRepo.findBySellerId(sellerId);
+        List<OrderEntity> orderEntities = orderRepo.findBySellerId(sellerId);
+
+        return orderEntities.stream()
+                .map(order -> {
+                    // Filter order items to include only products created by the given seller
+                    List<OrderItemEntity> filteredItems = order.getOrderItems().stream()
+                            .filter(item -> Objects.equals(item.getProduct().getSeller().getId(), sellerId))
+                            .toList();
+                    order.setOrderItems(filteredItems);
+                    return order;
+                })
+                .filter(order -> !order.getOrderItems().isEmpty())
+                .toList();
     }
+
 
     @Override
     public OrderEntity updateOrderStatus(Long id, OrderStatus status) throws OrderException {
