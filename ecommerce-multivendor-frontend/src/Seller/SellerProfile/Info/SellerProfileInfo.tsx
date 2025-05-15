@@ -3,51 +3,51 @@ import { Label } from '../../../Components/ui/label'
 import { Input } from '../../../Components/ui/input'
 import { Button } from '../../../Components/ui/button'
 import { Camera, Edit, Save, X } from 'lucide-react'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../../../Components/ui/card'
+import {
+    Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle
+} from '../../../Components/ui/card'
 import { TabsContent } from '../../../Components/ui/tabs'
-import { sellerData } from '../../Data/api'
 import { Avatar, AvatarFallback, AvatarImage } from '../../../Components/ui/avatar'
+import { uploadToCloudninary } from '../../../util/CloudinarySupport'
 
 const SellerPersonalInfo = ({
+    sellerInfo,
+    setSellerInfo,
     handleInputChange,
     handleCancel,
     handleEdit,
     handleSave,
+    updateSeller,
     isEditing
 }) => {
-
-    const [seller, setSeller] = useState(sellerData)
     const [saveSuccess, setSaveSuccess] = useState<string | null>(null)
+    const fileInputRef = useRef<HTMLInputElement>(null)
 
-    const fileInputRef = useRef<HTMLInputElement>(null);
-
-
-    const handleAvatarUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
             const file = e.target.files[0]
-            const reader = new FileReader()
-
-            reader.onload = (event) => {
-                if (event.target?.result) {
-                    setSeller((prev) => ({
+            try {
+                const url = await uploadToCloudninary(file)
+                if (url) {
+                    setSellerInfo((prev: any) => ({
                         ...prev,
-                        personal: {
-                            ...prev.personal,
-                            avatar: event.target?.result as string,
-                        },
+                        avtar: url,
                     }))
                     setSaveSuccess("Profile picture updated successfully!")
-
+                    updateSeller({
+                        ...sellerInfo,
+                        avtar: url,
+                    });
                     setTimeout(() => {
                         setSaveSuccess(null)
                     }, 3000)
                 }
+            } catch (error: any) {
+                console.error("Error uploading avatar: ", error)
+                setSaveSuccess("Failed to upload profile picture.")
             }
-
-            reader.readAsDataURL(file)
         }
     }
-
 
     return (
         <TabsContent value="personal">
@@ -77,20 +77,11 @@ const SellerPersonalInfo = ({
                         <CardContent className="space-y-4">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div className="space-y-2">
-                                    <Label htmlFor="firstName">First Name</Label>
+                                    <Label htmlFor="fullName">Full Name</Label>
                                     <Input
-                                        id="firstName"
-                                        value={seller.personal.firstName}
-                                        onChange={(e) => handleInputChange("personal", "firstName", e.target.value)}
-                                        disabled={!isEditing.personal}
-                                    />
-                                </div>
-                                <div className="space-y-2">
-                                    <Label htmlFor="lastName">Last Name</Label>
-                                    <Input
-                                        id="lastName"
-                                        value={seller.personal.lastName}
-                                        onChange={(e) => handleInputChange("personal", "lastName", e.target.value)}
+                                        id="fullName"
+                                        value={sellerInfo?.fullName}
+                                        onChange={(e) => handleInputChange(null, "fullName", e.target.value)}
                                         disabled={!isEditing.personal}
                                     />
                                 </div>
@@ -101,8 +92,8 @@ const SellerPersonalInfo = ({
                                     <Input
                                         id="email"
                                         type="email"
-                                        value={seller.personal.email}
-                                        onChange={(e) => handleInputChange("personal", "email", e.target.value)}
+                                        value={sellerInfo?.email}
+                                        onChange={(e) => handleInputChange(null, "email", e.target.value)}
                                         disabled={!isEditing.personal}
                                     />
                                 </div>
@@ -110,8 +101,8 @@ const SellerPersonalInfo = ({
                                     <Label htmlFor="phone">Phone Number</Label>
                                     <Input
                                         id="phone"
-                                        value={seller.personal.phone}
-                                        onChange={(e) => handleInputChange("personal", "phone", e.target.value)}
+                                        value={sellerInfo?.phone}
+                                        onChange={(e) => handleInputChange(null, "phone", e.target.value)}
                                         disabled={!isEditing.personal}
                                     />
                                 </div>
@@ -128,14 +119,13 @@ const SellerPersonalInfo = ({
                         </CardHeader>
                         <CardContent className="flex flex-col items-center">
                             <div className="relative mb-4">
-                                <Avatar className="h-32 w-32">
+                                <Avatar className="h-32 w-32 text-5xl bg">
                                     <AvatarImage
-                                        src={seller.personal.avatar || "/placeholder.svg"}
-                                        alt={`${seller.personal.firstName} ${seller.personal.lastName}`}
+                                        src={sellerInfo?.avtar || "/placeholder.svg"}
+                                        alt={`${sellerInfo?.fullName}`}
                                     />
                                     <AvatarFallback>
-                                        {seller.personal.firstName.charAt(0)}
-                                        {seller.personal.lastName.charAt(0)}
+                                        {sellerInfo?.fullName?.substring(0, 1).toUpperCase()}
                                     </AvatarFallback>
                                 </Avatar>
                                 <Button
@@ -159,7 +149,9 @@ const SellerPersonalInfo = ({
                         </CardContent>
                         <CardFooter className="flex flex-col items-start border-t pt-4">
                             <p className="text-sm font-medium">Account Details</p>
-                            <p className="text-sm text-gray-500">Member since {seller.personal.joinDate}</p>
+                            <p className="text-sm text-gray-500">
+                                Member since {sellerInfo?.joiningDate || "18-12-2024"}
+                            </p>
                         </CardFooter>
                     </Card>
                 </div>

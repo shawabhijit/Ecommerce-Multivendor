@@ -9,37 +9,50 @@ import { TabsContent } from '../../../Components/ui/tabs'
 import { Textarea } from '../../../Components/ui/textarea'
 import { Separator } from '../../../Components/ui/separator'
 import { sellerData } from '../../Data/api'
+import { useAppDispatch } from '../../../app/Store'
+import { uploadToCloudninary } from '../../../util/CloudinarySupport'
+import { updateSellerProfile } from '../../../app/seller/SellerSlice'
 
 const SellerBusinessInfo = ({
+    sellerInfo,
+    setSellerInfo,
     handleInputChange,
     handleNestedInputChange,
     handleCancel,
     handleEdit,
     handleSave,
+    updateSeller,
     isEditing
 }) => {
-
-    const [seller, setSeller] = useState(sellerData)
     const [saveSuccess, setSaveSuccess] = useState<string | null>(null)
 
     const logoInputRef = useRef<HTMLInputElement>(null);
     const bannerInputRef = useRef<HTMLInputElement>(null);
+    
 
+    
 
-    const handleBannerUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleBannerUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
             const file = e.target.files[0]
-            const reader = new FileReader()
 
-            reader.onload = (event) => {
-                if (event.target?.result) {
-                    setSeller((prev) => ({
+            try {
+                const bannerUrl = await uploadToCloudninary(file)
+                if (bannerUrl) {
+                    setSellerInfo((prev) => ({
                         ...prev,
-                        business: {
-                            ...prev.business,
-                            banner: event.target?.result as string,
+                        businessDetails: {
+                            ...prev.businessDetails,
+                            banner: bannerUrl,
                         },
                     }))
+                    updateSeller({
+                        ...sellerInfo,
+                        businessDetails: {
+                            ...sellerInfo.businessDetails,
+                            banner: bannerUrl,
+                        },
+                    });
                     setSaveSuccess("Store banner updated successfully!")
 
                     setTimeout(() => {
@@ -47,25 +60,34 @@ const SellerBusinessInfo = ({
                     }, 3000)
                 }
             }
-
-            reader.readAsDataURL(file)
+            catch (error: any) {
+                console.error("Error uploading banner:", error)
+            }
         }
     }
 
-    const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
             const file = e.target.files[0]
-            const reader = new FileReader()
 
-            reader.onload = (event) => {
-                if (event.target?.result) {
-                    setSeller((prev) => ({
+            try {
+                const logoUrl = await uploadToCloudninary(file)
+                console.log("Logo URL: ", logoUrl)
+                if (logoUrl) {
+                    setSellerInfo((prev : any) => ({
                         ...prev,
-                        business: {
-                            ...prev.business,
-                            logo: event.target?.result as string,
+                        businessDetails: {
+                            ...prev.businessDetails,
+                            logo: logoUrl,
                         },
                     }))
+                    updateSeller({
+                        ...sellerInfo,
+                        businessDetails: {
+                            ...sellerInfo.businessDetails,
+                            logo: logoUrl,
+                        },
+                    });
                     setSaveSuccess("Store logo updated successfully!")
 
                     setTimeout(() => {
@@ -73,11 +95,11 @@ const SellerBusinessInfo = ({
                     }, 3000)
                 }
             }
-
-            reader.readAsDataURL(file)
+            catch (error: any) {
+                console.error("Error uploading logo:", error)
+            }
         }
     }
-
 
     return (
         <TabsContent value="business">
@@ -94,7 +116,7 @@ const SellerBusinessInfo = ({
                             <Label className="mb-2 block">Store Banner</Label>
                             <div className="relative h-[200px] w-full rounded-lg overflow-hidden border border-gray-200 bg-gray-50">
                                 <img
-                                    src={seller.business.banner || "/placeholder.svg"}
+                                    src={sellerInfo?.businessDetails?.banner || "/placeholder.svg"}
                                     alt="Store Banner"
                                     className="w-full h-full object-cover"
                                 />
@@ -121,7 +143,7 @@ const SellerBusinessInfo = ({
                             <div className="relative">
                                 <div className="h-20 w-20 rounded-lg overflow-hidden border border-gray-200 bg-gray-50">
                                     <img
-                                        src={seller.business.logo || "/placeholder.svg"}
+                                        src={sellerInfo?.businessDetails?.logo || "/placeholder.svg"}
                                         alt="Store Logo"
                                         className="w-full h-full object-cover"
                                     />
@@ -177,16 +199,16 @@ const SellerBusinessInfo = ({
                                 <Label htmlFor="businessName">Business Name</Label>
                                 <Input
                                     id="businessName"
-                                    value={seller.business.name}
-                                    onChange={(e) => handleInputChange("business", "name", e.target.value)}
+                                    value={sellerInfo?.businessDetails?.businessName}
+                                    onChange={(e) => handleInputChange("businessDetails", "name", e.target.value)}
                                     disabled={!isEditing.business}
                                 />
                             </div>
                             <div className="space-y-2">
                                 <Label htmlFor="businessType">Business Type</Label>
                                 <Select
-                                    value={seller.business.type}
-                                    onValueChange={(value) => handleInputChange("business", "type", value)}
+                                    value={sellerInfo?.businessDetails?.businessType}
+                                    onValueChange={(value) => handleInputChange("businessDetails", "businessType", value)}
                                     disabled={!isEditing.business}
                                 >
                                     <SelectTrigger id="businessType">
@@ -202,36 +224,16 @@ const SellerBusinessInfo = ({
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 gap-4">
                             <div className="space-y-2">
                                 <Label htmlFor="gstin">GSTIN</Label>
                                 <Input
                                     id="gstin"
-                                    value={seller.business.gstin}
-                                    onChange={(e) => handleInputChange("business", "gstin", e.target.value)}
+                                    value={sellerInfo?.businessDetails?.gstin}
+                                    onChange={(e) => handleInputChange("businessDetails", "gstin", e.target.value)}
                                     disabled={!isEditing.business}
                                 />
                             </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="pan">PAN</Label>
-                                <Input
-                                    id="pan"
-                                    value={seller.business.pan}
-                                    onChange={(e) => handleInputChange("business", "pan", e.target.value)}
-                                    disabled={!isEditing.business}
-                                />
-                            </div>
-                        </div>
-
-                        <div className="space-y-2">
-                            <Label htmlFor="description">Business Description</Label>
-                            <Textarea
-                                id="description"
-                                value={seller.business.description}
-                                onChange={(e) => handleInputChange("business", "description", e.target.value)}
-                                disabled={!isEditing.business}
-                                rows={4}
-                            />
                         </div>
 
                         <Separator className="my-4" />
@@ -243,17 +245,17 @@ const SellerBusinessInfo = ({
                                     <Label htmlFor="street">Street Address</Label>
                                     <Input
                                         id="street"
-                                        value={seller.business.address.street}
-                                        onChange={(e) => handleNestedInputChange("business", "address", "street", e.target.value)}
+                                        value={sellerInfo?.businessDetails?.address}
+                                        onChange={(e) => handleInputChange("businessDetails", "address", e.target.value)}
                                         disabled={!isEditing.business}
                                     />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label htmlFor="city">City</Label>
+                                    <Label htmlFor="street">Street Address</Label>
                                     <Input
-                                        id="city"
-                                        value={seller.business.address.city}
-                                        onChange={(e) => handleNestedInputChange("business", "address", "city", e.target.value)}
+                                        id="street"
+                                        value={sellerInfo?.businessDetails?.city}
+                                        onChange={(e) => handleInputChange("businessDetails", "city", e.target.value)}
                                         disabled={!isEditing.business}
                                     />
                                 </div>
@@ -263,8 +265,8 @@ const SellerBusinessInfo = ({
                                     <Label htmlFor="state">State/Province</Label>
                                     <Input
                                         id="state"
-                                        value={seller.business.address.state}
-                                        onChange={(e) => handleNestedInputChange("business", "address", "state", e.target.value)}
+                                        value={sellerInfo?.businessDetails?.state}
+                                        onChange={(e) => handleInputChange("businessDetails", "state", e.target.value)}
                                         disabled={!isEditing.business}
                                     />
                                 </div>
@@ -272,16 +274,16 @@ const SellerBusinessInfo = ({
                                     <Label htmlFor="zipCode">ZIP/Postal Code</Label>
                                     <Input
                                         id="zipCode"
-                                        value={seller.business.address.zipCode}
-                                        onChange={(e) => handleNestedInputChange("business", "address", "zipCode", e.target.value)}
+                                        value={sellerInfo?.businessDetails?.zipCode}
+                                        onChange={(e) => handleInputChange("businessDetails", "zipCode", e.target.value)}
                                         disabled={!isEditing.business}
                                     />
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="country">Country</Label>
                                     <Select
-                                        value={seller.business.address.country}
-                                        onValueChange={(value) => handleNestedInputChange("business", "address", "country", value)}
+                                        value={sellerInfo?.businessDetails?.country}
+                                        onValueChange={(value) => handleInputChange("businessDetails", "country", value)}
                                         disabled={!isEditing.business}
                                     >
                                         <SelectTrigger id="country">

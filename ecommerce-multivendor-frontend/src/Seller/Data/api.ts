@@ -92,9 +92,3 @@ export const sellerData = {
         },
     },
 }
-
-
-//     <Avatar>
-// {/* <AvatarImage src={order.avatar || "/placeholder.svg"} /> */ }
-// <AvatarFallback>{ order.user.username.substring(0, 2) } </AvatarFallback>
-//     </Avatar>

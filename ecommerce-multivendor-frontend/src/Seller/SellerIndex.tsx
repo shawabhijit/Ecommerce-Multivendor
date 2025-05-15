@@ -86,7 +86,7 @@ const SellerIndex = () => {
                         } />
                         <Route path="info/:id" element={
                             <ProtectedRoute>
-                                <SellerProfile />
+                                <SellerProfile sellerInfo = {sellerInfo} setSellerInfo={setSellerInfo} />
                             </ProtectedRoute>
                         } />
 

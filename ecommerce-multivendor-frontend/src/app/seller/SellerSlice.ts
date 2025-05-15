@@ -17,6 +17,20 @@ export const fetchSellerProfile = createAsyncThunk(
     }
 );
 
+export const updateSellerProfile = createAsyncThunk("/seller/updateSellerProfile", async (data: any, { rejectWithValue }) => {
+    try {
+        const response = await api.patch("sellers/update", data, {
+            withCredentials: true,
+        })
+        console.log("Seller Profile updated successfully ,  Response:", response.data);
+        return response.data;
+    }
+    catch (error: any) {
+        console.error("❌ updateSellerProfile failed:", error);
+        return rejectWithValue(error.response?.data || "Unknown error");
+    }
+});
+
 
 interface sellerState {
     sellers: any[],

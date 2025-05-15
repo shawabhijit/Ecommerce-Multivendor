@@ -183,8 +183,8 @@ const SellerNav = ({ isLogedin , sellerInfo }: any) => {
                                             <DropdownMenu>
                                                 <DropdownMenuTrigger asChild>
                                                     <Button variant="ghost" size="icon" className="rounded-full">
-                                                        <Avatar className="h-10 w-10 flex items-center justify-center">
-                                                            <AvatarImage src="/placeholder.svg" />
+                                                        <Avatar className="h-9 w-9 flex items-center justify-center">
+                                                            <AvatarImage src={sellerInfo?.avtar} />
                                                             <AvatarFallback className='text-2xl font-bold bg-[#505050] text-white'>
                                                                 {sellerInfo?.fullName.substring(0, 1).toUpperCase()}
                                                             </AvatarFallback>
@@ -194,7 +194,7 @@ const SellerNav = ({ isLogedin , sellerInfo }: any) => {
                                                 <DropdownMenuContent align="end" className='w-[200px] absolute left-[-150px] top-2'>
                                                     <DropdownMenuLabel>My Account</DropdownMenuLabel>
                                                     <DropdownMenuSeparator />
-                                                    <DropdownMenuItem onClick={() => navigate("/seller/info/1")}>
+                                                    <DropdownMenuItem onClick={() => navigate(`/seller/info/${sellerInfo.id}`)}>
                                                         <User className="mr-2 h-4 w-4" />
                                                         <span>Profile</span>
                                                     </DropdownMenuItem>

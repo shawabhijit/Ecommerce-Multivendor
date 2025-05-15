@@ -1,20 +1,13 @@
 "use client"
 
-import type React from "react"
-
-import { useState, useRef } from "react"
+import { useState } from "react"
 import { motion } from "framer-motion"
 import {
     Check,
-    CreditCard,
     Edit,
-    Globe,
     Info,
     Save,
-    Store,
     X,
-    ShoppingCart,
-    Package,
 } from "lucide-react"
 import { Badge } from "../../Components/ui/badge"
 import { Alert, AlertDescription } from "../../Components/ui/alert"
@@ -23,29 +16,44 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../..
 import { Button } from "../../Components/ui/button"
 import { Label } from "../../Components/ui/label"
 import { Input } from "../../Components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../Components/ui/select"
-import { Textarea } from "../../Components/ui/textarea"
-import { Separator } from "../../Components/ui/separator"
-import { Switch } from "../../Components/ui/switch"
-import { sellerData } from "../Data/api"
 import SellerBusinessInfo from "./Info/SellerBusinessInfo"
 import SellerPersonalInfo from "./Info/SellerProfileInfo"
 import SellerSecurityInfo from "./Info/SellerSecurityInfo"
 import SellerNotification from "./Info/SellerNotification"
+import { updateSellerProfile } from "../../app/seller/SellerSlice"
+import { useAppDispatch } from "../../app/Store"
 
 
 // Mock seller data
 
 
-export function SellerProfile() {
-    const [seller, setSeller] = useState(sellerData)
+export function SellerProfile({ sellerInfo, setSellerInfo }: any) {
+
+    console.log("Seller Profile: ", sellerInfo)
+
+    const [seller, setSeller] = useState<any>(sellerInfo);
     const [activeTab, setActiveTab] = useState("personal")
     const [isEditing, setIsEditing] = useState<Record<string, boolean>>({})
     const [saveSuccess, setSaveSuccess] = useState<string | null>(null)
     const [formErrors, setFormErrors] = useState<Record<string, string>>({})
-    const fileInputRef = useRef<HTMLInputElement>(null)
+    //const fileInputRef = useRef<HTMLInputElement>(null)
     // const bannerInputRef = useRef<HTMLInputElement>(null)
     // const logoInputRef = useRef<HTMLInputElement>(null)
+    const dispatch = useAppDispatch();
+
+    const updateSeller = async (sellerInfo: any) => {
+        const res = await dispatch(updateSellerProfile(sellerInfo));
+        //console.log("Seller Profile updated successfully ,  Response:", res.payload);
+        if (res.meta.requestStatus === "fulfilled") {
+            setSaveSuccess("Profile updated successfully!")
+            setTimeout(() => {
+                setSaveSuccess(null)
+            }, 3000)
+        }
+        else {
+            setSaveSuccess("Failed to update profile.")
+        }
+    }
 
     const handleEdit = (section: string) => {
         setIsEditing((prev) => ({ ...prev, [section]: true }))
@@ -65,6 +73,8 @@ export function SellerProfile() {
 
     const handleSave = (section: string) => {
         // Simulate API call
+        console.log("Saving data for section:", section)
+        console.log("Seller data:", sellerInfo)
         setTimeout(() => {
             setIsEditing((prev) => ({ ...prev, [section]: false }))
             setSaveSuccess(`${section} information updated successfully!`)
@@ -76,15 +86,26 @@ export function SellerProfile() {
         }, 800)
     }
 
-    const handleInputChange = (section: string, field: string, value: string) => {
-        setSeller((prev) => ({
-            ...prev,
-            [section]: {
-                ...prev[section as keyof typeof prev],
-                [field]: value,
-            },
-        }))
-    }
+    const handleInputChange = (section: string | null, field: string, value: string) => {
+        setSeller((prev) => {
+            if (section && typeof prev[section as keyof typeof prev] === 'object') {
+                return {
+                    ...prev,
+                    [section]: {
+                        ...(prev[section as keyof typeof prev] as object),
+                        [field]: value,
+                    },
+                };
+            } else {
+                return {
+                    ...prev,
+                    [field]: value,
+                };
+            }
+        });
+    };
+
+
 
     const handleNestedInputChange = (section: string, nestedSection: string, field: string, value: string) => {
         setSeller((prev) => ({
@@ -151,31 +172,36 @@ export function SellerProfile() {
             )}
 
             <Tabs defaultValue="personal" value={activeTab} onValueChange={setActiveTab} className="mb-6">
-                <TabsList className="grid grid-cols-2 md:grid-cols-6 mb-4">
+                <TabsList className="grid grid-cols-2 md:grid-cols-5 mb-4">
                     <TabsTrigger value="personal">Personal</TabsTrigger>
                     <TabsTrigger value="business">Business</TabsTrigger>
                     <TabsTrigger value="banking">Banking</TabsTrigger>
-                    <TabsTrigger value="store">Store</TabsTrigger>
-                    <TabsTrigger value="security">Security</TabsTrigger>
+                    <TabsTrigger value="security">Settings</TabsTrigger>
                     <TabsTrigger value="notifications">Notifications</TabsTrigger>
                 </TabsList>
 
                 {/* Personal Information Tab */}
                 <SellerPersonalInfo
+                    sellerInfo={sellerInfo}
+                    setSellerInfo={setSellerInfo}
                     handleInputChange={handleInputChange}
                     handleCancel={handleCancel}
                     handleEdit={handleEdit}
                     handleSave={handleSave}
+                    updateSeller={updateSeller}
                     isEditing={isEditing}
                 />
 
                 {/* Business Information Tab */}
                 <SellerBusinessInfo
+                    sellerInfo={sellerInfo}
+                    setSellerInfo={setSellerInfo}
                     handleInputChange={handleInputChange}
                     handleNestedInputChange={handleNestedInputChange}
                     handleCancel={handleCancel}
                     handleEdit={handleEdit}
                     handleSave={handleSave}
+                    updateSeller={updateSeller}
                     isEditing={isEditing}
                 />
 
@@ -220,17 +246,8 @@ export function SellerProfile() {
                                     <Label htmlFor="accountName">Account Holder Name</Label>
                                     <Input
                                         id="accountName"
-                                        value={seller.bankDetails.accountName}
+                                        value={seller?.bankDetails?.accountHolderName}
                                         onChange={(e) => handleInputChange("bankDetails", "accountName", e.target.value)}
-                                        disabled={!isEditing.banking}
-                                    />
-                                </div>
-                                <div className="space-y-2">
-                                    <Label htmlFor="bankName">Bank Name</Label>
-                                    <Input
-                                        id="bankName"
-                                        value={seller.bankDetails.bankName}
-                                        onChange={(e) => handleInputChange("bankDetails", "bankName", e.target.value)}
                                         disabled={!isEditing.banking}
                                     />
                                 </div>
@@ -241,7 +258,7 @@ export function SellerProfile() {
                                     <Label htmlFor="accountNumber">Account Number</Label>
                                     <Input
                                         id="accountNumber"
-                                        value={seller.bankDetails.accountNumber}
+                                        value={seller?.bankDetails?.accountNumber}
                                         onChange={(e) => handleInputChange("bankDetails", "accountNumber", e.target.value)}
                                         disabled={!isEditing.banking}
                                         type={isEditing.banking ? "text" : "password"}
@@ -251,7 +268,7 @@ export function SellerProfile() {
                                     <Label htmlFor="ifscCode">IFSC Code</Label>
                                     <Input
                                         id="ifscCode"
-                                        value={seller.bankDetails.ifscCode}
+                                        value={seller?.bankDetails?.ifscCode}
                                         onChange={(e) => handleInputChange("bankDetails", "ifscCode", e.target.value)}
                                         disabled={!isEditing.banking}
                                     />
@@ -262,7 +279,7 @@ export function SellerProfile() {
                                 <Label htmlFor="upiid">UPI id (Optional)</Label>
                                 <Input
                                     id="upiid"
-                                    value={seller.bankDetails.upiid}
+                                    value={seller?.bankDetails?.upiid}
                                     onChange={(e) => handleInputChange("bankDetails", "upiid", e.target.value)}
                                     disabled={!isEditing.banking}
                                 />
@@ -272,7 +289,7 @@ export function SellerProfile() {
                 </TabsContent>
 
                 {/* Store Settings Tab */}
-                <TabsContent value="store">
+                {/* <TabsContent value="store">
                     <Card>
                         <CardHeader className="flex flex-row items-center justify-between">
                             <div>
@@ -454,7 +471,7 @@ export function SellerProfile() {
                             </div>
                         </CardContent>
                     </Card>
-                </TabsContent>
+                </TabsContent> */}
 
                 {/* Security Tab */}
                 <SellerSecurityInfo handleSwitchChange={handleSwitchChange} />
