@@ -54,7 +54,7 @@ public class AuthController {
     @PostMapping("/signing")
     public ResponseEntity<?> loginHandler (@RequestBody LoginRequest req , HttpServletResponse response) throws Exception {
 
-        System.out.println(req.getEmail());
+        //System.out.println(req.getEmail());
 
         AuthResponse auth = authService.signing(req);
 

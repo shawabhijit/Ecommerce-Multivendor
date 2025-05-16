@@ -44,11 +44,6 @@ public class SellerController {
         String otp = request.getOtp();
         String email = request.getEmail();
 
-//        VerificationCode verificationCode = verificationCodeRepo.findByEmail(email);
-//
-//        if (verificationCode == null || !verificationCode.getOtp().equals(request.getOtp())) {
-//            throw new Exception("wrong otp");
-//        }
         request.setEmail("seller_" + email);
         AuthResponse authResponse = authService.signing(request);
 

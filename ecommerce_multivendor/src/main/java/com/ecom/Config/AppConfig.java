@@ -30,7 +30,7 @@ public class AppConfig {
         http.sessionManagement(management ->
                         management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(requests ->
-                        requests.requestMatchers(new AntPathRequestMatcher("/api/**")).authenticated()
+                        requests.requestMatchers(new AntPathRequestMatcher("/api/**")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/seller/**")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/api/products/*/reviews")).permitAll()
                                 .anyRequest().permitAll()
