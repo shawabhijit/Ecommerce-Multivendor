@@ -8,6 +8,7 @@ import { PersistGate } from "redux-persist/integration/react";
 import store, { persistor } from "./app/Store";
 import CustomerIndex from "./Customer/Components/Pages/CustomerIndex";
 import { Toaster } from "./Components/ui/sonner";
+import AdminIndex from "./Admin/AdminIndex";
 
 function AppWrapper() {    
 
@@ -43,6 +44,7 @@ function AppWrapper() {
         <Route path="/*" element={<CustomerIndex />} />
         <Route path="*" element={<NotFound />} />
         <Route path="/seller/*" element={<SellerIndex />} />
+        <Route path="/admin/*" element={<AdminIndex />} />
       </Routes>
     </>
   );

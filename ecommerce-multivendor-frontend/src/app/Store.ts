@@ -12,11 +12,12 @@ import cartSlice from "./customer/CartSlice"
 import orderSlice from "./customer/OrderSlice"
 import productSlice from "./customer/ProductSlice"
 import sellerOrderSlice from "./seller/SellerOrderSlice"
+import adminSlice from "./Admin/AdminSlice"
 
 const persistConfig = {
     key: 'root',
     storage,
-    whitelist: ['sellers', 'customers'],
+    whitelist: ['sellers', 'customers' , 'admin'],
 }
 
 const rootReducer = combineReducers({
@@ -29,7 +30,8 @@ const rootReducer = combineReducers({
     cart: cartSlice,
     orders:orderSlice,
     products:productSlice,
-    sellerOrders:sellerOrderSlice
+    sellerOrders:sellerOrderSlice,
+    admin:adminSlice,
 })
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)

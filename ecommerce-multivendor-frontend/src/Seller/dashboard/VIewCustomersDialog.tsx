@@ -6,9 +6,6 @@ import { Input } from '../../Components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../Components/ui/select'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../Components/ui/table'
 import { Button } from '../../Components/ui/button'
-import { customers } from '../Data/api'
-import { format } from "date-fns"
-import { Badge } from '../../Components/ui/badge'
 
 const VIewCustomersDialog = ({totalCustomer , openCustomers, setOpenCustomers }) => {
     const [searchTerm, setSearchTerm] = useState("")
@@ -108,7 +105,7 @@ const VIewCustomersDialog = ({totalCustomer , openCustomers, setOpenCustomers })
                             <div className='flex items-center space-x-2'>
                                 <div className="text-sm text-muted-foreground">
                                     Showing <span className="font-medium">{totalCustomer.length}</span> of{" "}
-                                    <span className="font-medium">{customers.length}</span> customers
+                                    <span className="font-medium">{totalCustomer.length}</span> customers
                                 </div>
                                 <Button variant="outline" size="sm" disabled>
                                     Previous
