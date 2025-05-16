@@ -2,6 +2,7 @@ package com.ecom.Controller;
 
 import com.ecom.Entity.AddressEntity;
 import com.ecom.Entity.UserEntity;
+import com.ecom.Repository.UserRepo;
 import com.ecom.Service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
+    private final UserRepo userRepo;
 
     @GetMapping("/profile")
     public ResponseEntity<UserEntity> getUser (@CookieValue(name = "jwt" , required = false) String jwt) throws Exception {
@@ -24,6 +26,11 @@ public class UserController {
     @GetMapping("{email}")
     public ResponseEntity<?> findByEmail (@PathVariable String email) throws Exception {
         UserEntity user = userService.findUserByEmail(email);
+        return ResponseEntity.ok().body(user);
+    }
+    @GetMapping("/id/{id}")
+    public ResponseEntity<?> findById (@PathVariable Long id) throws Exception {
+        UserEntity user = userRepo.findById(id).orElseThrow();
         return ResponseEntity.ok().body(user);
     }
 

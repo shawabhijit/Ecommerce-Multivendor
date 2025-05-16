@@ -46,4 +46,6 @@ public class UserEntity {
     @ManyToMany
     @JsonIgnore  // by using JsonIgnore this property will not go to frontend
     private Set<CouponEntity> usedCoupons = new HashSet<>();
+
+    private Date joiningDate = new Date();
 }
