@@ -14,6 +14,9 @@ import { useAppDispatch } from "../../app/Store"
 import { fetchAllSellerOrders } from "../../app/seller/SellerOrderSlice"
 import { fetchSellerProducts } from "../../app/seller/SellerProductSlice"
 import { useNavigate } from "react-router-dom"
+import VIewCustomersDialog from "./VIewCustomersDialog"
+import { fetchCustomerById } from "../../app/customer/CustomerSlice"
+import { toast } from "sonner"
 
 
 const verificationStatus = {
@@ -35,6 +38,8 @@ export function SellerDashboard() {
     const [orders, setOrders] = useState<any[]>([])
     const [products, setProducts] = useState<any[]>([])
     const [viewAllOrders, setViewAllOrders] = useState(false);
+    const [openCustomers, setOpenCustomers] = useState(false);
+    const [totalCustomer, setTotalCustomer] = useState<any[]>([])
 
     const fetchSellerOrders = async () => {
         const res = await dispatch(fetchAllSellerOrders());
@@ -54,7 +59,36 @@ export function SellerDashboard() {
 
     const recentOrders = orders.slice(0, 5);
 
-    const totalCustomer = new Set(orders.map(order => order.user.id)).size;
+    const totalCustomerIds = new Set(orders.map(order => order.user.id));
+
+    const totalCustomerProfiles = async () => {
+        try {
+            const responses = await Promise.all(
+                Array.from(totalCustomerIds).map(async (id) => {
+                    const res = await dispatch(fetchCustomerById(id));
+                    return res.meta.requestStatus === "fulfilled" ? res.payload : null;
+                })
+            );
+
+            const filteredCustomers = responses.filter((cust) => cust !== null);
+            setTotalCustomer(filteredCustomers);
+
+            if (filteredCustomers.length > 0) {
+                setOpenCustomers(true);
+            } else {
+                toast.error("No customer found");
+            }
+
+            //console.log("Total customer data :", filteredCustomers);
+        } catch (err) {
+            console.error("Failed to fetch customer profiles:", err);
+            toast.error("Something went wrong");
+        }
+    };
+    
+
+
+    const totalCustomerCount = totalCustomer.length;
     const totalSales = orders.reduce((acc, order) => acc + order.totalMrpPrice, 0);
     const totalOrders = orders.length;
     const totalProducts = products.length;
@@ -259,7 +293,7 @@ export function SellerDashboard() {
                             </div>
                             <div className="mt-4">
                                 <h3 className="text-sm font-medium text-gray-500">Customers</h3>
-                                <p className="text-2xl font-bold">{totalCustomer}</p>
+                                <p className="text-2xl font-bold">{totalCustomerCount}</p>
                             </div>
                         </CardContent>
                     </Card>
@@ -369,11 +403,12 @@ export function SellerDashboard() {
                                 <Button variant="outline" className="w-full justify-start">
                                     <DollarSign className="mr-2 h-4 w-4" /> Request Payout
                                 </Button>
-                                <Button variant="outline" className="w-full justify-start">
+                                <Button onClick={() => totalCustomerProfiles()} variant="outline" className="w-full justify-start">
                                     <Users className="mr-2 h-4 w-4" /> View Customers
                                 </Button>
                             </CardContent>
                         </Card>
+                        <VIewCustomersDialog totalCustomer={totalCustomer} openCustomers={openCustomers} setOpenCustomers={setOpenCustomers} />
                     </div>
                 </TabsContent>
                 <TabsContent value="orders" className="mt-6">

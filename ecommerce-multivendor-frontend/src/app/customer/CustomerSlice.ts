@@ -33,6 +33,22 @@ export const fetchCustomerByEmail = createAsyncThunk(
     }
 )
 
+export const fetchCustomerById = createAsyncThunk(
+    "/customerProfile/fetchCustomerById",
+    async (id: number, { rejectWithValue }) => {
+        try {
+            const response = await api.get(`/user/id/${id}`, {
+                withCredentials: true,
+            });
+            console.log("Customer Profile fetch suucessfully ,  Response:", response.data);
+            return response.data;
+        } catch (error: any) {
+            console.error("fetch Customer Profile failed:", error);
+            return rejectWithValue(error.response?.data || "Unknown error");
+        }
+    }
+)
+
 export const updateCustomerProfileInfo = createAsyncThunk(
     "/customerProfile/updateCustomerProfileInfo",
     async (data: any , { rejectWithValue }) => {
@@ -147,6 +163,18 @@ const customerProfileSlice = createSlice({
                 state.loading = false;
                 state.error = action.payload as string;
             })
+            .addCase(fetchCustomerById.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(fetchCustomerById.fulfilled, (state, action) => {
+                state.loading = false;
+                state.selectedCustomer = action.payload
+                state.error = null;
+            })
+            .addCase(fetchCustomerById.rejected, (state, action) => {   
+                state.loading = false;
+                state.error = action.payload as string;
+            });
     }
 });
 
