@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef } from 'react'
 import { Label } from '../../../Components/ui/label'
 import { Input } from '../../../Components/ui/input'
 import { Button } from '../../../Components/ui/button'
@@ -20,7 +20,6 @@ const SellerPersonalInfo = ({
     updateSeller,
     isEditing
 }) => {
-    const [saveSuccess, setSaveSuccess] = useState<string | null>(null)
     const fileInputRef = useRef<HTMLInputElement>(null)
 
     const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -33,18 +32,13 @@ const SellerPersonalInfo = ({
                         ...prev,
                         avtar: url,
                     }))
-                    setSaveSuccess("Profile picture updated successfully!")
                     updateSeller({
                         ...sellerInfo,
                         avtar: url,
                     });
-                    setTimeout(() => {
-                        setSaveSuccess(null)
-                    }, 3000)
                 }
             } catch (error: any) {
                 console.error("Error uploading avatar: ", error)
-                setSaveSuccess("Failed to upload profile picture.")
             }
         }
     }

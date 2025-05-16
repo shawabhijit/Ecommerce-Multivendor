@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../Components/ui/select'
 import { Label } from '../../../Components/ui/label'
 import { Input } from '../../../Components/ui/input'
@@ -6,103 +6,102 @@ import { Button } from '../../../Components/ui/button'
 import { Camera, Edit, Save, Upload, X } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../Components/ui/card'
 import { TabsContent } from '../../../Components/ui/tabs'
-import { Textarea } from '../../../Components/ui/textarea'
 import { Separator } from '../../../Components/ui/separator'
-import { sellerData } from '../../Data/api'
-import { useAppDispatch } from '../../../app/Store'
 import { uploadToCloudninary } from '../../../util/CloudinarySupport'
-import { updateSellerProfile } from '../../../app/seller/SellerSlice'
 
 const SellerBusinessInfo = ({
     sellerInfo,
-    setSellerInfo,
     handleInputChange,
-    handleNestedInputChange,
     handleCancel,
     handleEdit,
     handleSave,
     updateSeller,
     isEditing
 }) => {
-    const [saveSuccess, setSaveSuccess] = useState<string | null>(null)
-
     const logoInputRef = useRef<HTMLInputElement>(null);
     const bannerInputRef = useRef<HTMLInputElement>(null);
-    
 
-    
+    // Local state for managing form data
+    const [localBusiness, setLocalBusiness] = useState(sellerInfo?.businessDetails || {});
 
-    const handleBannerUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Update local state when parent props change
+    useEffect(() => {
+        if (sellerInfo?.businessDetails) {
+            setLocalBusiness(sellerInfo.businessDetails);
+        }
+    }, [sellerInfo]);
+
+    // Handle local input changes
+    const handleLocalInputChange = (field, value) => {
+        setLocalBusiness(prev => ({
+            ...prev,
+            [field]: value
+        }));
+
+        // Also update parent state through the provided handler
+        handleInputChange("businessDetails", field, value);
+    };
+
+    const handleBannerUpload = async (e) => {
         if (e.target.files && e.target.files[0]) {
-            const file = e.target.files[0]
+            const file = e.target.files[0];
 
             try {
-                const bannerUrl = await uploadToCloudninary(file)
+                const bannerUrl = await uploadToCloudninary(file);
                 if (bannerUrl) {
-                    setSellerInfo((prev) => ({
+                    // Update local state
+                    setLocalBusiness(prev => ({
                         ...prev,
-                        businessDetails: {
-                            ...prev.businessDetails,
-                            banner: bannerUrl,
-                        },
-                    }))
-                    updateSeller({
+                        banner: bannerUrl
+                    }));
+
+                    // Update parent state with the complete updated object
+                    const updatedSellerInfo = {
                         ...sellerInfo,
                         businessDetails: {
-                            ...sellerInfo.businessDetails,
-                            banner: bannerUrl,
-                        },
-                    });
-                    setSaveSuccess("Store banner updated successfully!")
-
-                    setTimeout(() => {
-                        setSaveSuccess(null)
-                    }, 3000)
+                            ...sellerInfo?.businessDetails,
+                            banner: bannerUrl
+                        }
+                    };
+                    updateSeller(updatedSellerInfo);
                 }
-            }
-            catch (error: any) {
-                console.error("Error uploading banner:", error)
+            } catch (error) {
+                console.error("Error uploading banner:", error);
             }
         }
-    }
+    };
 
-    const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleLogoUpload = async (e) => {
         if (e.target.files && e.target.files[0]) {
-            const file = e.target.files[0]
+            const file = e.target.files[0];
 
             try {
-                const logoUrl = await uploadToCloudninary(file)
-                console.log("Logo URL: ", logoUrl)
+                const logoUrl = await uploadToCloudninary(file);
                 if (logoUrl) {
-                    setSellerInfo((prev : any) => ({
+                    setLocalBusiness(prev => ({
                         ...prev,
-                        businessDetails: {
-                            ...prev.businessDetails,
-                            logo: logoUrl,
-                        },
-                    }))
-                    updateSeller({
+                        logo: logoUrl
+                    }));
+
+                    // updating parent state
+                    const updatedSellerInfo = {
                         ...sellerInfo,
                         businessDetails: {
-                            ...sellerInfo.businessDetails,
-                            logo: logoUrl,
-                        },
-                    });
-                    setSaveSuccess("Store logo updated successfully!")
+                            ...sellerInfo?.businessDetails,
+                            logo: logoUrl
+                        }
+                    };
 
-                    setTimeout(() => {
-                        setSaveSuccess(null)
-                    }, 3000)
+                    updateSeller(updatedSellerInfo);
                 }
-            }
-            catch (error: any) {
-                console.error("Error uploading logo:", error)
+            } catch (error) {
+                console.error("Error uploading logo:", error);
             }
         }
-    }
+    };
 
     return (
-        <TabsContent value="business">
+        <TabsContent value="businessDetails">
             <div className="grid grid-cols-1 gap-6">
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between">
@@ -116,7 +115,7 @@ const SellerBusinessInfo = ({
                             <Label className="mb-2 block">Store Banner</Label>
                             <div className="relative h-[200px] w-full rounded-lg overflow-hidden border border-gray-200 bg-gray-50">
                                 <img
-                                    src={sellerInfo?.businessDetails?.banner || "/placeholder.svg"}
+                                    src={localBusiness?.banner || "/placeholder.svg"}
                                     alt="Store Banner"
                                     className="w-full h-full object-cover"
                                 />
@@ -143,7 +142,7 @@ const SellerBusinessInfo = ({
                             <div className="relative">
                                 <div className="h-20 w-20 rounded-lg overflow-hidden border border-gray-200 bg-gray-50">
                                     <img
-                                        src={sellerInfo?.businessDetails?.logo || "/placeholder.svg"}
+                                        src={localBusiness?.logo || "/placeholder.svg"}
                                         alt="Store Logo"
                                         className="w-full h-full object-cover"
                                     />
@@ -178,16 +177,16 @@ const SellerBusinessInfo = ({
                             <CardTitle>Business Information</CardTitle>
                             <CardDescription>Manage your business details</CardDescription>
                         </div>
-                        {!isEditing.business ? (
-                            <Button variant="outline" size="sm" onClick={() => handleEdit("business")}>
+                        {!isEditing.businessDetails ? (
+                            <Button variant="outline" size="sm" onClick={() => handleEdit("businessDetails")}>
                                 <Edit className="h-4 w-4 mr-2" /> Edit
                             </Button>
                         ) : (
                             <div className="flex gap-2">
-                                <Button variant="ghost" size="sm" onClick={() => handleCancel("business")}>
+                                <Button variant="ghost" size="sm" onClick={() => handleCancel("businessDetails")}>
                                     <X className="h-4 w-4 mr-2" /> Cancel
                                 </Button>
-                                <Button size="sm" onClick={() => handleSave("business")}>
+                                <Button size="sm" onClick={() => handleSave("businessDetails")}>
                                     <Save className="h-4 w-4 mr-2" /> Save
                                 </Button>
                             </div>
@@ -199,23 +198,23 @@ const SellerBusinessInfo = ({
                                 <Label htmlFor="businessName">Business Name</Label>
                                 <Input
                                     id="businessName"
-                                    value={sellerInfo?.businessDetails?.businessName}
-                                    onChange={(e) => handleInputChange("businessDetails", "name", e.target.value)}
-                                    disabled={!isEditing.business}
+                                    value={localBusiness?.businessName || ""}
+                                    onChange={(e) => handleLocalInputChange("businessName", e.target.value)}
+                                    disabled={!isEditing.businessDetails}
                                 />
                             </div>
                             <div className="space-y-2">
                                 <Label htmlFor="businessType">Business Type</Label>
                                 <Select
-                                    value={sellerInfo?.businessDetails?.businessType}
-                                    onValueChange={(value) => handleInputChange("businessDetails", "businessType", value)}
-                                    disabled={!isEditing.business}
+                                    value={localBusiness?.businessType}
+                                    onValueChange={(value) => handleLocalInputChange("businessType", value)}
+                                    disabled={!isEditing.businessDetails}
                                 >
                                     <SelectTrigger id="businessType">
                                         <SelectValue placeholder="Select business type" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="Individual">Individual</SelectItem>
+                                        <SelectItem value="individual">Individual</SelectItem>
                                         <SelectItem value="LLC">LLC</SelectItem>
                                         <SelectItem value="Corporation">Corporation</SelectItem>
                                         <SelectItem value="Partnership">Partnership</SelectItem>
@@ -229,9 +228,9 @@ const SellerBusinessInfo = ({
                                 <Label htmlFor="gstin">GSTIN</Label>
                                 <Input
                                     id="gstin"
-                                    value={sellerInfo?.businessDetails?.gstin}
-                                    onChange={(e) => handleInputChange("businessDetails", "gstin", e.target.value)}
-                                    disabled={!isEditing.business}
+                                    value={localBusiness?.gstin || ""}
+                                    onChange={(e) => handleLocalInputChange("gstin", e.target.value)}
+                                    disabled={!isEditing.businessDetails}
                                 />
                             </div>
                         </div>
@@ -242,21 +241,21 @@ const SellerBusinessInfo = ({
                             <h3 className="text-sm font-medium mb-3">Business Address</h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div className="space-y-2">
-                                    <Label htmlFor="street">Street Address</Label>
+                                    <Label htmlFor="address">Street Address</Label>
                                     <Input
-                                        id="street"
-                                        value={sellerInfo?.businessDetails?.address}
-                                        onChange={(e) => handleInputChange("businessDetails", "address", e.target.value)}
-                                        disabled={!isEditing.business}
+                                        id="address"
+                                        value={localBusiness?.address || ""}
+                                        onChange={(e) => handleLocalInputChange("address", e.target.value)}
+                                        disabled={!isEditing.businessDetails}
                                     />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label htmlFor="street">Street Address</Label>
+                                    <Label htmlFor="city">City</Label>
                                     <Input
-                                        id="street"
-                                        value={sellerInfo?.businessDetails?.city}
-                                        onChange={(e) => handleInputChange("businessDetails", "city", e.target.value)}
-                                        disabled={!isEditing.business}
+                                        id="city"
+                                        value={localBusiness?.city || ""}
+                                        onChange={(e) => handleLocalInputChange("city", e.target.value)}
+                                        disabled={!isEditing.businessDetails}
                                     />
                                 </div>
                             </div>
@@ -265,26 +264,26 @@ const SellerBusinessInfo = ({
                                     <Label htmlFor="state">State/Province</Label>
                                     <Input
                                         id="state"
-                                        value={sellerInfo?.businessDetails?.state}
-                                        onChange={(e) => handleInputChange("businessDetails", "state", e.target.value)}
-                                        disabled={!isEditing.business}
+                                        value={localBusiness?.state || ""}
+                                        onChange={(e) => handleLocalInputChange("state", e.target.value)}
+                                        disabled={!isEditing.businessDetails}
                                     />
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="zipCode">ZIP/Postal Code</Label>
                                     <Input
                                         id="zipCode"
-                                        value={sellerInfo?.businessDetails?.zipCode}
-                                        onChange={(e) => handleInputChange("businessDetails", "zipCode", e.target.value)}
-                                        disabled={!isEditing.business}
+                                        value={localBusiness?.zipCode || ""}
+                                        onChange={(e) => handleLocalInputChange("zipCode", e.target.value)}
+                                        disabled={!isEditing.businessDetails}
                                     />
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="country">Country</Label>
                                     <Select
-                                        value={sellerInfo?.businessDetails?.country}
-                                        onValueChange={(value) => handleInputChange("businessDetails", "country", value)}
-                                        disabled={!isEditing.business}
+                                        value={localBusiness?.country || ""}
+                                        onValueChange={(value) => handleLocalInputChange("country", value)}
+                                        disabled={!isEditing.businessDetails}
                                     >
                                         <SelectTrigger id="country">
                                             <SelectValue placeholder="Select country" />

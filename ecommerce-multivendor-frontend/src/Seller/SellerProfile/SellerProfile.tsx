@@ -1,16 +1,8 @@
 "use client"
 
-import { useState } from "react"
-import { motion } from "framer-motion"
-import {
-    Check,
-    Edit,
-    Info,
-    Save,
-    X,
-} from "lucide-react"
+import { useState, useEffect } from "react"
+import {Edit,Info,Save,X,} from "lucide-react"
 import { Badge } from "../../Components/ui/badge"
-import { Alert, AlertDescription } from "../../Components/ui/alert"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../Components/ui/tabs"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../Components/ui/card"
 import { Button } from "../../Components/ui/button"
@@ -19,49 +11,52 @@ import { Input } from "../../Components/ui/input"
 import SellerBusinessInfo from "./Info/SellerBusinessInfo"
 import SellerPersonalInfo from "./Info/SellerProfileInfo"
 import SellerSecurityInfo from "./Info/SellerSecurityInfo"
-import SellerNotification from "./Info/SellerNotification"
 import { updateSellerProfile } from "../../app/seller/SellerSlice"
 import { useAppDispatch } from "../../app/Store"
-
-
-// Mock seller data
+import { toast } from "sonner"
 
 
 export function SellerProfile({ sellerInfo, setSellerInfo }: any) {
 
     console.log("Seller Profile: ", sellerInfo)
 
-    const [seller, setSeller] = useState<any>(sellerInfo);
+    // Initialize seller state with sellerInfo or empty object to prevent null
+    const [seller, setSeller] = useState<any>(sellerInfo || {});
     const [activeTab, setActiveTab] = useState("personal")
     const [isEditing, setIsEditing] = useState<Record<string, boolean>>({})
-    const [saveSuccess, setSaveSuccess] = useState<string | null>(null)
     const [formErrors, setFormErrors] = useState<Record<string, string>>({})
-    //const fileInputRef = useRef<HTMLInputElement>(null)
-    // const bannerInputRef = useRef<HTMLInputElement>(null)
-    // const logoInputRef = useRef<HTMLInputElement>(null)
     const dispatch = useAppDispatch();
 
-    const updateSeller = async (sellerInfo: any) => {
-        const res = await dispatch(updateSellerProfile(sellerInfo));
-        //console.log("Seller Profile updated successfully ,  Response:", res.payload);
-        if (res.meta.requestStatus === "fulfilled") {
-            setSaveSuccess("Profile updated successfully!")
-            setTimeout(() => {
-                setSaveSuccess(null)
-            }, 3000)
+    // Update local state when props change
+    useEffect(() => {
+        if (sellerInfo) {
+            setSeller(sellerInfo);
         }
-        else {
-            setSaveSuccess("Failed to update profile.")
+    }, [sellerInfo]);
+
+    const updateSeller = async (updatedSellerInfo: any) => {
+        try {
+            const res = await dispatch(updateSellerProfile(updatedSellerInfo));
+            if (res.meta.requestStatus === "fulfilled") {
+                if (setSellerInfo) {
+                    setSellerInfo(updatedSellerInfo);
+                }
+            }
+        } catch (error) {
+            console.error("Error updating seller profile:", error);
         }
     }
 
     const handleEdit = (section: string) => {
+        const currentData = sellerInfo ? JSON.parse(JSON.stringify(sellerInfo)) : {};
+        setSeller(currentData);
         setIsEditing((prev) => ({ ...prev, [section]: true }))
     }
 
     const handleCancel = (section: string) => {
         setIsEditing((prev) => ({ ...prev, [section]: false }))
-        // Reset form errors for this section
+        const currentData = sellerInfo ? JSON.parse(JSON.stringify(sellerInfo)) : {};
+        setSeller(currentData);
         const newErrors = { ...formErrors }
         Object.keys(newErrors).forEach((key) => {
             if (key.startsWith(section)) {
@@ -72,75 +67,45 @@ export function SellerProfile({ sellerInfo, setSellerInfo }: any) {
     }
 
     const handleSave = (section: string) => {
-        // Simulate API call
-        console.log("Saving data for section:", section)
-        console.log("Seller data:", sellerInfo)
-        setTimeout(() => {
-            setIsEditing((prev) => ({ ...prev, [section]: false }))
-            setSaveSuccess(`${section} information updated successfully!`)
-
-            // Clear success message after 3 seconds
-            setTimeout(() => {
-                setSaveSuccess(null)
-            }, 3000)
-        }, 800)
+        updateSeller(seller);
+        setIsEditing((prev) => ({ ...prev, [section]: false }))
+        toast.success("Profile updated successfully!")
     }
 
     const handleInputChange = (section: string | null, field: string, value: string) => {
         setSeller((prev) => {
-            if (section && typeof prev[section as keyof typeof prev] === 'object') {
+            const safePrev = prev || {};
+            if (section !== null) {
+                const sectionData = safePrev[section] || {};
                 return {
-                    ...prev,
+                    ...safePrev,
                     [section]: {
-                        ...(prev[section as keyof typeof prev] as object),
+                        ...sectionData,
                         [field]: value,
                     },
                 };
             } else {
                 return {
-                    ...prev,
+                    ...safePrev,
                     [field]: value,
                 };
             }
         });
     };
 
-
-
-    const handleNestedInputChange = (section: string, nestedSection: string, field: string, value: string) => {
-        setSeller((prev) => ({
-            ...prev,
-            [section]: {
-                ...prev[section as keyof typeof prev],
-                [nestedSection]: {
-                    ...prev[section as keyof typeof prev][nestedSection as any],
-                    [field]: value,
-                },
-            },
-        }))
-    }
-
     const handleSwitchChange = (section: string, field: string, checked: boolean) => {
-        setSeller((prev) => ({
-            ...prev,
-            [section]: {
-                ...prev[section as keyof typeof prev],
-                [field]: checked,
-            },
-        }))
-    }
+        setSeller((prev) => {
+            const safePrev = prev || {};
+            const sectionData = safePrev[section] || {};
 
-    const handleNestedSwitchChange = (section: string, nestedSection: string, field: string, checked: boolean) => {
-        setSeller((prev) => ({
-            ...prev,
-            [section]: {
-                ...prev[section as keyof typeof prev],
-                [nestedSection]: {
-                    ...prev[section as keyof typeof prev][nestedSection as any],
+            return {
+                ...safePrev,
+                [section]: {
+                    ...sectionData,
                     [field]: checked,
                 },
-            },
-        }))
+            };
+        });
     }
 
     return (
@@ -157,33 +122,19 @@ export function SellerProfile({ sellerInfo, setSellerInfo }: any) {
                 </div>
             </div>
 
-            {saveSuccess && (
-                <motion.div
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    className="mb-6"
-                >
-                    <Alert className="bg-green-50 text-green-700 border-green-200">
-                        <Check className="h-4 w-4" />
-                        <AlertDescription>{saveSuccess}</AlertDescription>
-                    </Alert>
-                </motion.div>
-            )}
-
             <Tabs defaultValue="personal" value={activeTab} onValueChange={setActiveTab} className="mb-6">
                 <TabsList className="grid grid-cols-2 md:grid-cols-5 mb-4">
                     <TabsTrigger value="personal">Personal</TabsTrigger>
-                    <TabsTrigger value="business">Business</TabsTrigger>
-                    <TabsTrigger value="banking">Banking</TabsTrigger>
+                    <TabsTrigger value="businessDetails">Business</TabsTrigger>
+                    <TabsTrigger value="bankDetails">Banking</TabsTrigger>
                     <TabsTrigger value="security">Settings</TabsTrigger>
                     <TabsTrigger value="notifications">Notifications</TabsTrigger>
                 </TabsList>
 
                 {/* Personal Information Tab */}
                 <SellerPersonalInfo
-                    sellerInfo={sellerInfo}
-                    setSellerInfo={setSellerInfo}
+                    sellerInfo={seller} /* Use local state instead of props */
+                    setSellerInfo={setSeller}
                     handleInputChange={handleInputChange}
                     handleCancel={handleCancel}
                     handleEdit={handleEdit}
@@ -194,10 +145,8 @@ export function SellerProfile({ sellerInfo, setSellerInfo }: any) {
 
                 {/* Business Information Tab */}
                 <SellerBusinessInfo
-                    sellerInfo={sellerInfo}
-                    setSellerInfo={setSellerInfo}
+                    sellerInfo={seller} /* Use local state instead of props */
                     handleInputChange={handleInputChange}
-                    handleNestedInputChange={handleNestedInputChange}
                     handleCancel={handleCancel}
                     handleEdit={handleEdit}
                     handleSave={handleSave}
@@ -206,23 +155,23 @@ export function SellerProfile({ sellerInfo, setSellerInfo }: any) {
                 />
 
                 {/* Banking Information Tab */}
-                <TabsContent value="banking">
+                <TabsContent value="bankDetails">
                     <Card>
                         <CardHeader className="flex flex-row items-center justify-between">
                             <div>
                                 <CardTitle>Banking Information</CardTitle>
                                 <CardDescription>Manage your payout details</CardDescription>
                             </div>
-                            {!isEditing.banking ? (
-                                <Button variant="outline" size="sm" onClick={() => handleEdit("banking")}>
+                            {!isEditing.bankDetails ? (
+                                <Button variant="outline" size="sm" onClick={() => handleEdit("bankDetails")}>
                                     <Edit className="h-4 w-4 mr-2" /> Edit
                                 </Button>
                             ) : (
                                 <div className="flex gap-2">
-                                    <Button variant="ghost" size="sm" onClick={() => handleCancel("banking")}>
+                                    <Button variant="ghost" size="sm" onClick={() => handleCancel("bankDetails")}>
                                         <X className="h-4 w-4 mr-2" /> Cancel
                                     </Button>
-                                    <Button size="sm" onClick={() => handleSave("banking")}>
+                                    <Button size="sm" onClick={() => handleSave("bankDetails")}>
                                         <Save className="h-4 w-4 mr-2" /> Save
                                     </Button>
                                 </div>
@@ -246,9 +195,9 @@ export function SellerProfile({ sellerInfo, setSellerInfo }: any) {
                                     <Label htmlFor="accountName">Account Holder Name</Label>
                                     <Input
                                         id="accountName"
-                                        value={seller?.bankDetails?.accountHolderName}
-                                        onChange={(e) => handleInputChange("bankDetails", "accountName", e.target.value)}
-                                        disabled={!isEditing.banking}
+                                        value={seller?.bankDetails?.accountHolderName || ""}
+                                        onChange={(e) => handleInputChange("bankDetails", "accountHolderName", e.target.value)}
+                                        disabled={!isEditing.bankDetails}
                                     />
                                 </div>
                             </div>
@@ -258,19 +207,19 @@ export function SellerProfile({ sellerInfo, setSellerInfo }: any) {
                                     <Label htmlFor="accountNumber">Account Number</Label>
                                     <Input
                                         id="accountNumber"
-                                        value={seller?.bankDetails?.accountNumber}
+                                        value={seller?.bankDetails?.accountNumber || ""}
                                         onChange={(e) => handleInputChange("bankDetails", "accountNumber", e.target.value)}
-                                        disabled={!isEditing.banking}
-                                        type={isEditing.banking ? "text" : "password"}
+                                        disabled={!isEditing.bankDetails}
+                                        type={isEditing.bankDetails ? "text" : "password"}
                                     />
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="ifscCode">IFSC Code</Label>
                                     <Input
                                         id="ifscCode"
-                                        value={seller?.bankDetails?.ifscCode}
+                                        value={seller?.bankDetails?.ifscCode || ""}
                                         onChange={(e) => handleInputChange("bankDetails", "ifscCode", e.target.value)}
-                                        disabled={!isEditing.banking}
+                                        disabled={!isEditing.bankDetails}
                                     />
                                 </div>
                             </div>
@@ -279,205 +228,20 @@ export function SellerProfile({ sellerInfo, setSellerInfo }: any) {
                                 <Label htmlFor="upiid">UPI id (Optional)</Label>
                                 <Input
                                     id="upiid"
-                                    value={seller?.bankDetails?.upiid}
+                                    value={seller?.bankDetails?.upiid || ""}
                                     onChange={(e) => handleInputChange("bankDetails", "upiid", e.target.value)}
-                                    disabled={!isEditing.banking}
+                                    disabled={!isEditing.bankDetails}
                                 />
                             </div>
                         </CardContent>
                     </Card>
                 </TabsContent>
 
-                {/* Store Settings Tab */}
-                {/* <TabsContent value="store">
-                    <Card>
-                        <CardHeader className="flex flex-row items-center justify-between">
-                            <div>
-                                <CardTitle>Store Settings</CardTitle>
-                                <CardDescription>Configure your store preferences</CardDescription>
-                            </div>
-                            {!isEditing.store ? (
-                                <Button variant="outline" size="sm" onClick={() => handleEdit("store")}>
-                                    <Edit className="h-4 w-4 mr-2" /> Edit
-                                </Button>
-                            ) : (
-                                <div className="flex gap-2">
-                                    <Button variant="ghost" size="sm" onClick={() => handleCancel("store")}>
-                                        <X className="h-4 w-4 mr-2" /> Cancel
-                                    </Button>
-                                    <Button size="sm" onClick={() => handleSave("store")}>
-                                        <Save className="h-4 w-4 mr-2" /> Save
-                                    </Button>
-                                </div>
-                            )}
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                            <div className="flex items-center justify-between">
-                                <div className="flex items-center space-x-2">
-                                    <Store className="h-5 w-5 text-gray-500" />
-                                    <div>
-                                        <p className="font-medium">Store Status</p>
-                                        <p className="text-sm text-gray-500">Enable or disable your store</p>
-                                    </div>
-                                </div>
-                                <Switch
-                                    checked={seller.storeSettings.isActive}
-                                    onCheckedChange={(checked) => handleSwitchChange("storeSettings", "isActive", checked)}
-                                    disabled={!isEditing.store}
-                                />
-                            </div>
-
-                            <Separator className="my-4" />
-
-                            <div className="space-y-2">
-                                <Label htmlFor="storeUrl">Store URL</Label>
-                                <div className="flex items-center">
-                                    <span className="bg-gray-100 px-3 py-2 rounded-l-md text-gray-500 border border-r-0 border-gray-200">
-                                        https://marketplace.com/store/
-                                    </span>
-                                    <Input
-                                        id="storeUrl"
-                                        className="rounded-l-none"
-                                        value={seller.storeSettings.storeUrl}
-                                        onChange={(e) => handleInputChange("storeSettings", "storeUrl", e.target.value)}
-                                        disabled={!isEditing.store}
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="space-y-2">
-                                <Label htmlFor="categories">Store Categories</Label>
-                                <Select
-                                    value={seller.storeSettings.categories[0]}
-                                    onValueChange={(value) => {
-                                        setSeller((prev) => ({
-                                            ...prev,
-                                            storeSettings: {
-                                                ...prev.storeSettings,
-                                                categories: [value, ...prev.storeSettings.categories.slice(1)],
-                                            },
-                                        }))
-                                    }}
-                                    disabled={!isEditing.store}
-                                >
-                                    <SelectTrigger id="categories">
-                                        <SelectValue placeholder="Select primary category" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="Electronics">Electronics</SelectItem>
-                                        <SelectItem value="Clothing">Clothing</SelectItem>
-                                        <SelectItem value="Home & Kitchen">Home & Kitchen</SelectItem>
-                                        <SelectItem value="Beauty">Beauty</SelectItem>
-                                        <SelectItem value="Toys">Toys</SelectItem>
-                                        <SelectItem value="Sports">Sports</SelectItem>
-                                        <SelectItem value="Books">Books</SelectItem>
-                                        <SelectItem value="Accessories">Accessories</SelectItem>
-                                        <SelectItem value="Smart Home">Smart Home</SelectItem>
-                                    </SelectContent>
-                                </Select>
-                                <div className="flex flex-wrap gap-2 mt-2">
-                                    {seller.storeSettings.categories.map((category, index) => (
-                                        <Badge key={index} variant="secondary" className="px-2 py-1">
-                                            {category}
-                                            {isEditing.store && index > 0 && (
-                                                <Button
-                                                    variant="ghost"
-                                                    size="icon"
-                                                    className="h-4 w-4 ml-1 p-0"
-                                                    onClick={() => {
-                                                        setSeller((prev) => ({
-                                                            ...prev,
-                                                            storeSettings: {
-                                                                ...prev.storeSettings,
-                                                                categories: prev.storeSettings.categories.filter((_, i) => i !== index),
-                                                            },
-                                                        }))
-                                                    }}
-                                                >
-                                                    <X className="h-3 w-3" />
-                                                </Button>
-                                            )}
-                                        </Badge>
-                                    ))}
-                                    {isEditing.store && (
-                                        <Button
-                                            variant="outline"
-                                            size="sm"
-                                            className="h-7"
-                                            onClick={() => {
-                                                setSeller((prev) => ({
-                                                    ...prev,
-                                                    storeSettings: {
-                                                        ...prev.storeSettings,
-                                                        categories: [...prev.storeSettings.categories, "New Category"],
-                                                    },
-                                                }))
-                                            }}
-                                        >
-                                            + Add
-                                        </Button>
-                                    )}
-                                </div>
-                            </div>
-
-                            <div className="space-y-2">
-                                <Label htmlFor="returnPolicy">Return Policy</Label>
-                                <Textarea
-                                    id="returnPolicy"
-                                    value={seller.storeSettings.returnPolicy}
-                                    onChange={(e) => handleInputChange("storeSettings", "returnPolicy", e.target.value)}
-                                    disabled={!isEditing.store}
-                                    rows={4}
-                                />
-                            </div>
-
-                            <div className="space-y-2">
-                                <Label>Shipping Methods</Label>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                                    {["Standard", "Express", "Next Day", "International"].map((method) => (
-                                        <div key={method} className="flex items-center space-x-2">
-                                            <input
-                                                type="checkbox"
-                                                id={`shipping-${method}`}
-                                                checked={seller.storeSettings.shippingMethods.includes(method)}
-                                                onChange={(e) => {
-                                                    if (e.target.checked) {
-                                                        setSeller((prev) => ({
-                                                            ...prev,
-                                                            storeSettings: {
-                                                                ...prev.storeSettings,
-                                                                shippingMethods: [...prev.storeSettings.shippingMethods, method],
-                                                            },
-                                                        }))
-                                                    } else {
-                                                        setSeller((prev) => ({
-                                                            ...prev,
-                                                            storeSettings: {
-                                                                ...prev.storeSettings,
-                                                                shippingMethods: prev.storeSettings.shippingMethods.filter((m) => m !== method),
-                                                            },
-                                                        }))
-                                                    }
-                                                }}
-                                                disabled={!isEditing.store}
-                                                className="rounded border-gray-300 text-primary focus:ring-primary"
-                                            />
-                                            <Label htmlFor={`shipping-${method}`} className="text-sm">
-                                                {method}
-                                            </Label>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        </CardContent>
-                    </Card>
-                </TabsContent> */}
-
                 {/* Security Tab */}
-                <SellerSecurityInfo handleSwitchChange={handleSwitchChange} />
+                <SellerSecurityInfo sellerInfo={seller} handleSwitchChange={handleSwitchChange} />
 
                 {/* Notifications Tab */}
-                <SellerNotification handleNestedSwitchChange={handleNestedSwitchChange} />
+                {/* <SellerNotification sellerInfo={seller} handleNestedSwitchChange={handleNestedSwitchChange} /> */}
             </Tabs>
         </div>
     )

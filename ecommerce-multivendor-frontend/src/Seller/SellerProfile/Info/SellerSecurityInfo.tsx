@@ -5,15 +5,15 @@ import { Button } from '../../../Components/ui/button'
 import { Lock, Mail } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../Components/ui/card'
 import { TabsContent } from '../../../Components/ui/tabs'
-import { sellerData } from '../../Data/api'
 import { Switch } from '../../../Components/ui/switch'
 import { Separator } from '../../../Components/ui/separator'
 
 const SellerSecurityInfo = ({
+    sellerInfo,
     handleSwitchChange
 }) => {
 
-    const [seller, setSeller] = useState(sellerData)
+    const [seller, setSeller] = useState(sellerInfo)
 
     return (
         <TabsContent value="security">
@@ -23,21 +23,6 @@ const SellerSecurityInfo = ({
                     <CardDescription>Manage your account security</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-2">
-                            <Lock className="h-5 w-5 text-gray-500" />
-                            <div>
-                                <p className="font-medium">Two-Factor Authentication</p>
-                                <p className="text-sm text-gray-500">Add an extra layer of security to your account</p>
-                            </div>
-                        </div>
-                        <Switch
-                            checked={seller.security.twoFactorEnabled}
-                            onCheckedChange={(checked) => handleSwitchChange("security", "twoFactorEnabled", checked)}
-                        />
-                    </div>
-
-                    <Separator />
 
                     <div>
                         <h3 className="text-sm font-medium mb-3">Change Password</h3>
@@ -58,7 +43,7 @@ const SellerSecurityInfo = ({
                         </div>
                     </div>
 
-                    <Separator />
+                    {/* <Separator />
 
                     <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-2">
@@ -78,7 +63,7 @@ const SellerSecurityInfo = ({
                         <p className="text-sm text-gray-500">
                             Last password change: <span className="font-medium">{seller.security.lastPasswordChange}</span>
                         </p>
-                    </div>
+                    </div> */}
                 </CardContent>
             </Card>
         </TabsContent>

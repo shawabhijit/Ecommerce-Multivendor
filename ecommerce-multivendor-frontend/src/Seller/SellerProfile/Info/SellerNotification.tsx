@@ -5,15 +5,15 @@ import { Label } from '../../../Components/ui/label'
 import { CreditCard, Globe, Info, Package, ShoppingCart } from 'lucide-react'
 import { Switch } from '../../../Components/ui/switch'
 import { Separator } from '../../../Components/ui/separator'
-import { sellerData } from '../../Data/api'
 
 const SellerNotification = (
     {
+        sellerInfo,
         handleNestedSwitchChange
     }
 ) => {
 
-    const [seller, setSeller] = useState(sellerData)
+    const [seller, setSeller] = useState(sellerInfo)
 
 
 
