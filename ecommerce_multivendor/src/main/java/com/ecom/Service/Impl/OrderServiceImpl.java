@@ -24,6 +24,11 @@ public class OrderServiceImpl implements OrderService {
     private final OrderItemRepo orderItemRepo;
 
     @Override
+    public List<OrderEntity> getAllOrders() {
+        return orderRepo.findAll();
+    }
+
+    @Override
     public List<OrderEntity> createOrder(UserEntity user, AddressEntity shippingAddress, CartEntity cart) {
         if (!user.getAddresses().contains(shippingAddress)) {
             user.getAddresses().add(shippingAddress);

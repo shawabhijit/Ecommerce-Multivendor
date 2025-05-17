@@ -28,6 +28,7 @@ public class UserController {
         UserEntity user = userService.findUserByEmail(email);
         return ResponseEntity.ok().body(user);
     }
+
     @GetMapping("/id/{id}")
     public ResponseEntity<?> findById (@PathVariable Long id) throws Exception {
         UserEntity user = userRepo.findById(id).orElseThrow();
@@ -48,4 +49,8 @@ public class UserController {
         return ResponseEntity.ok().body(oldUser);
     }
 
+    @GetMapping()
+    public ResponseEntity<?> findAllUsers() {
+        return ResponseEntity.ok().body(userRepo.findAll());
+    }
 }

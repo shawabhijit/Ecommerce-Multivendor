@@ -92,6 +92,15 @@ public class SellerController {
         return new ResponseEntity<>(savedSeller, HttpStatus.CREATED);
     }
 
+    @GetMapping
+    public ResponseEntity<?> getAllSellers (@RequestParam(required = false) String status) throws SellerException {
+        if (status != null) {
+            AccountStatus accountStatus = AccountStatus.valueOf(status);
+            return ResponseEntity.ok().body(sellerService.getAllSellers(accountStatus));
+        }
+        return ResponseEntity.ok().body(sellerService.getAllSellers(null));
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<?> getSellerById (@PathVariable Long id) throws SellerException {
         SellerEntity seller = sellerService.getSellerById(id);
@@ -112,12 +121,6 @@ public class SellerController {
         SellerEntity seller = sellerService.getSellerProfile(jwt);
         SellerReport report = sellerReportService.getSellerReport(seller);
         return ResponseEntity.ok().body(report);
-    }
-
-    @GetMapping
-    public ResponseEntity<?> getAllSellers(@RequestParam(required = false)AccountStatus status) throws Exception {
-        List<SellerEntity> sellers = sellerService.getAllSellers(status);
-        return ResponseEntity.ok().body(sellers);
     }
 
     @PatchMapping("/update")

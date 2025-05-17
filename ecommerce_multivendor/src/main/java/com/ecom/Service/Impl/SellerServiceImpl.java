@@ -73,6 +73,9 @@ public class SellerServiceImpl implements SellerService {
 
     @Override
     public List<SellerEntity> getAllSellers(AccountStatus status) {
+        if (status == null ) {
+            return sellerRepo.findAll();
+        }
         return sellerRepo.findByAccountStatus(status);
     }
 

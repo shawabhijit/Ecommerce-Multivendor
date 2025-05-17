@@ -58,6 +58,12 @@ public class OrderController {
         return ResponseEntity.ok().body(res);
     }
 
+    @GetMapping
+    public ResponseEntity<?> getAllOrders () {
+        List<OrderEntity> orders = orderService.getAllOrders();
+        return ResponseEntity.ok().body(orders);
+    }
+
     @GetMapping("/user")
     public ResponseEntity<?> userOrderHistoryHandle ( @CookieValue(name = "jwt" , required = false) String jwt) throws Exception {
         UserEntity user = userService.findUserByJwtToken(jwt);

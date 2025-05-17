@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Set;
 
 public interface OrderService {
+    List<OrderEntity> getAllOrders();
     List<OrderEntity> createOrder(UserEntity user , AddressEntity address , CartEntity cart);
     OrderEntity findOrderById(Long id) throws OrderException;
     List<OrderEntity> userOrderHistory(Long userId);
