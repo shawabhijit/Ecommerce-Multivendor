@@ -4,6 +4,7 @@ import {AdminLogin} from './auth/AdminLogin/AdminLogin'
 import { AdminLayout } from './Layout/AdminLayout'
 import Dashboard from './AdminDashboard/Dashboard'
 import Customers from './Customers/Customers'
+import VendorList from './VendorList/VendorList'
 
 const AdminIndex = () => {
     return (
@@ -20,6 +21,10 @@ const AdminIndex = () => {
                     <Route path='/customers' element={<AdminLayout>
                             <Customers />
                         </AdminLayout>}
+                    />
+                    <Route path='/sellers' element={<AdminLayout>
+                        <VendorList />
+                    </AdminLayout>}
                     />
                 </Routes>
             </div>

@@ -64,7 +64,7 @@ export default function DealsOfTheDay({products}) {
             initial="hidden"
             animate={isInView ? "visible" : "hidden"}
             variants={containerVariants}
-            className="p-6 bg-white"
+            className="p-6"
         >
 
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">

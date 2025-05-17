@@ -1,6 +1,6 @@
 "use client"
 import { motion } from "framer-motion"
-import { ArrowDown, ArrowUp, DollarSign, Package, ShoppingCart, Users } from "lucide-react"
+import { ArrowDown, ArrowUp, DollarSign, IndianRupee, Package, ShoppingCart, Users } from "lucide-react"
 import {Area,AreaChart,Bar,BarChart,CartesianGrid,Cell, Legend,Pie,PieChart,ResponsiveContainer,Tooltip,XAxis,YAxis,} from "recharts"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../Components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../Components/ui/tabs"
@@ -60,76 +60,108 @@ export default function Dashboard() {
     <AdminLayout>
       <motion.div variants={containerVariants} initial="hidden" animate="visible" className="space-y-6">
 
-        <motion.div variants={itemVariants} className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          {/* KPI Cards */}
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Orders</CardTitle>
-              <ShoppingCart className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">1,284</div>
-              <p className="text-xs text-muted-foreground">
-                <span className="text-green-500 flex items-center">
-                  <ArrowUp className="mr-1 h-4 w-4" />
-                  12.5%
-                </span>
-                <span> from last month</span>
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Vendors</CardTitle>
-              <Package className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">145</div>
-              <p className="text-xs text-muted-foreground">
-                <span className="text-green-500 flex items-center">
-                  <ArrowUp className="mr-1 h-4 w-4" />
-                  8.2%
-                </span>
-                <span> from last month</span>
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Customers</CardTitle>
-              <Users className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">3,427</div>
-              <p className="text-xs text-muted-foreground">
-                <span className="text-green-500 flex items-center">
-                  <ArrowUp className="mr-1 h-4 w-4" />
-                  18.7%
-                </span>
-                <span> from last month</span>
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Earnings</CardTitle>
-              <DollarSign className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">$48,294</div>
-              <p className="text-xs text-muted-foreground">
-                <span className="text-red-500 flex items-center">
-                  <ArrowDown className="mr-1 h-4 w-4" />
-                  4.3%
-                </span>
-                <span> from last month</span>
-              </p>
-            </CardContent>
-          </Card>
-        </motion.div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+          >
+            <Card>
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div className={`p-2 rounded-full bg-green-100 text-green-700`}>
+                    <ShoppingCart className="h-5 w-5" />
+                  </div>
+                  <div className="flex items-center space-x-1">
+                    <span className={`text-sm text-green-600`}>
+                      +12.5%
+                    </span>
+                    <ArrowUp className="h-3 w-3 text-green-600" />
+                  </div>
+                </div>
+                <div className="mt-4">
+                  <h3 className="text-sm font-medium text-gray-500">Total Orders</h3>
+                  <p className="text-2xl font-bold"></p>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+          >
+            <Card>
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div className={`p-2 rounded-full bg-blue-100 text-blue-700`}>
+                    <Package className="h-5 w-5" />
+                  </div>
+                  <div className="flex items-center space-x-1">
+                    <span className={`text-sm text-green-600`}>
+                      +8.2%
+                    </span>
+                    <ArrowUp className="h-3 w-3 text-green-600" />
+                  </div>
+                </div>
+                <div className="mt-4">
+                  <h3 className="text-sm font-medium text-gray-500">Total Vendors</h3>
+                  <p className="text-2xl font-bold"></p>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+          >
+            <Card>
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div className={`p-2 rounded-full bg-purple-100 text-purple-700`}>
+                    <Users className="h-5 w-5" />
+                  </div>
+                  <div className="flex items-center space-x-1">
+                    <span className={`text-sm text-green-600`}>
+                      +4
+                    </span>
+                    <ArrowUp className="h-3 w-3 text-green-600" />
+                  </div>
+                </div>
+                <div className="mt-4">
+                  <h3 className="text-sm font-medium text-gray-500">Total Customers</h3>
+                  <p className="text-2xl font-bold"></p>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+          >
+            <Card>
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div className={`p-2 rounded-full bg-amber-100 text-amber-700`}>
+                    <IndianRupee className="h-5 w-5" />
+                  </div>
+                  <div className="flex items-center space-x-1">
+                    <span className={`text-sm text-green-600`}>
+                      +18.3%
+                    </span>
+                    <ArrowUp className="h-3 w-3 text-green-600" />
+                  </div>
+                </div>
+                <div className="mt-4">
+                  <h3 className="text-sm font-medium text-gray-500">Total Earnings</h3>
+                  <p className="text-2xl font-bold"></p>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </div>
 
         <motion.div variants={itemVariants}>
           <Tabs defaultValue="7days">
