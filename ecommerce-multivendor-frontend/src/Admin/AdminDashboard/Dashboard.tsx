@@ -59,10 +59,6 @@ export default function Dashboard() {
   return (
     <AdminLayout>
       <motion.div variants={containerVariants} initial="hidden" animate="visible" className="space-y-6">
-        <motion.div variants={itemVariants}>
-          <h1 className="text-2xl font-bold tracking-tight">Dashboard</h1>
-          <p className="text-muted-foreground">Overview of your store performance and analytics</p>
-        </motion.div>
 
         <motion.div variants={itemVariants} className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           {/* KPI Cards */}
