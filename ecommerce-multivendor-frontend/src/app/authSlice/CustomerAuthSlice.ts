@@ -45,7 +45,7 @@ export const checkAuthStatus = createAsyncThunk("/customers/checkAuthStatus", as
     try {
         console.log('Checking auth status...');
         const response = await api.get("/customers/me", {
-            withCredentials: true // Ensure cookies are sent with the request
+            withCredentials: true
         });
         console.log('Auth check successful:', response.data);
         return response.data;

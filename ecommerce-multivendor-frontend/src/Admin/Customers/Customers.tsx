@@ -80,7 +80,7 @@ export const fadeIn = {
 };
 
 
-const Customers = () => {
+const Customers = ({allCustomers} :any) => {
     const [customers, setCustomers] = useState<Customer[]>([]);
     const [isLoading, setIsLoading] = useState(true);
 

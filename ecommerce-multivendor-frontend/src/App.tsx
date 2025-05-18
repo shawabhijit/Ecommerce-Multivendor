@@ -9,6 +9,7 @@ import store, { persistor } from "./app/Store";
 import CustomerIndex from "./Customer/Components/Pages/CustomerIndex";
 import { Toaster } from "./Components/ui/sonner";
 import AdminIndex from "./Admin/AdminIndex";
+import LoadingPage from "./Components/Pages/LoadingPage";
 
 function AppWrapper() {    
 
@@ -54,7 +55,7 @@ function App() {
   return (
     // <QueryClientProvider>
     <Provider store={store}>
-      <PersistGate loading={<div className="w-full h-[100vh] flex items-center justify-center">Loading...</div>} persistor={persistor}>
+      <PersistGate loading={<LoadingPage />} persistor={persistor}>
         <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
           <BrowserRouter>
             <AppWrapper />

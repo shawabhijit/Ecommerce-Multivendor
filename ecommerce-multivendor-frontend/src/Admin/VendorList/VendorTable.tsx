@@ -41,16 +41,16 @@ import {
 import { Vendor } from "./VendorList";
 import { containerAnimation, tableRowAnimation } from "../Customers/CustomerTable";
 
-interface VendorTableProps {
-    vendors: Vendor[];
-}
+const VendorTable = ({ vendors }: any) => {
 
-const VendorTable = ({ vendors }: VendorTableProps) => {
+
     const [searchTerm, setSearchTerm] = useState("");
     const [statusFilter, setStatusFilter] = useState<string>("all");
     const [selectedVendor, setSelectedVendor] = useState<Vendor | null>(null);
-    const [tableVendors, setTableVendors] = useState<Vendor[]>(vendors);
+    const [tableVendors, setTableVendors] = useState<any[]>(vendors);
     const [viewVendorOpen, setViewVendorOpen] = useState(false);
+
+    console.log("Vendors: ", tableVendors);
 
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(e.target.value);

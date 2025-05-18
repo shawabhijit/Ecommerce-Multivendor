@@ -6,22 +6,23 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../..
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../Components/ui/tabs"
 
 import { AdminLayout } from "../Layout/AdminLayout"
+import { all } from "axios"
 
 // Sample data for charts
 const salesData = [
-  { name: "Mon", sales: 4000 },
-  { name: "Tue", sales: 3000 },
-  { name: "Wed", sales: 5000 },
-  { name: "Thu", sales: 2780 },
-  { name: "Fri", sales: 1890 },
-  { name: "Sat", sales: 6390 },
+  { name: "Mon", sales: 0 },
+  { name: "Tue", sales: 0 },
+  { name: "Wed", sales: 0 },
+  { name: "Thu", sales: 0 },
+  { name: "Fri", sales: 0 },
+  { name: "Sat", sales: 0 },
   { name: "Sun", sales: 3490 },
 ]
 
 const orderStatusData = [
-  { name: "Pending", value: 35, color: "#3B82F6" },
-  { name: "Shipped", value: 45, color: "#10B981" },
-  { name: "Cancelled", value: 20, color: "#F97316" },
+  { name: "Pending", value: 75, color: "#3B82F6" },
+  { name: "Shipped", value:15, color: "#10B981" },
+  { name: "Cancelled", value: 10, color: "#F97316" },
 ]
 
 const vendorSignupData = [
@@ -33,7 +34,7 @@ const vendorSignupData = [
   { month: "Jun", signups: 28 },
 ]
 
-export default function Dashboard() {
+export default function Dashboard({allSelers , allCustomers , allOrders}: any) {
   // Animation variants for staggered animations
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -55,6 +56,8 @@ export default function Dashboard() {
       },
     },
   }
+
+  const totalEarnings = allOrders.filter((order: any) => order.orderStatus === "COMPLETE").reduce((acc:any, order:any) => acc + order.totalMrpPrice , 0)
 
   return (
     <AdminLayout>
@@ -81,7 +84,7 @@ export default function Dashboard() {
                 </div>
                 <div className="mt-4">
                   <h3 className="text-sm font-medium text-gray-500">Total Orders</h3>
-                  <p className="text-2xl font-bold"></p>
+                  <p className="text-2xl font-bold">{allOrders.length}</p>
                 </div>
               </CardContent>
             </Card>
@@ -106,7 +109,7 @@ export default function Dashboard() {
                 </div>
                 <div className="mt-4">
                   <h3 className="text-sm font-medium text-gray-500">Total Vendors</h3>
-                  <p className="text-2xl font-bold"></p>
+                  <p className="text-2xl font-bold">{allSelers.length}</p>
                 </div>
               </CardContent>
             </Card>
@@ -131,7 +134,7 @@ export default function Dashboard() {
                 </div>
                 <div className="mt-4">
                   <h3 className="text-sm font-medium text-gray-500">Total Customers</h3>
-                  <p className="text-2xl font-bold"></p>
+                  <p className="text-2xl font-bold">{allCustomers.length}</p>
                 </div>
               </CardContent>
             </Card>
@@ -156,7 +159,7 @@ export default function Dashboard() {
                 </div>
                 <div className="mt-4">
                   <h3 className="text-sm font-medium text-gray-500">Total Earnings</h3>
-                  <p className="text-2xl font-bold"></p>
+                  <p className="text-2xl font-bold">₹{totalEarnings}</p>
                 </div>
               </CardContent>
             </Card>

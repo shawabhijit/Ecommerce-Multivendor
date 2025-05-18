@@ -1,6 +1,18 @@
 import { createAsyncThunk, createSlice, Reducer } from "@reduxjs/toolkit";
 import { api } from "../../config/api";
 
+export const fetchAllCustomers = createAsyncThunk("/customersProfile/fetchAllCustomers", async (_, { rejectWithValue }) => {
+    try {
+        const response = await api.get("/user");
+        console.log("All Customers fetch successfully ,  Response:", response.data);
+        return response.data;
+    }
+    catch (error : any) {
+        console.error("fetch All Customers failed:", error);
+        return rejectWithValue(error.response?.data || "Unknown error");
+    }
+})
+
 export const fetchCustomerProfile = createAsyncThunk(
     "/customersProfile/fetchCustomerProfile",
     async (_, { rejectWithValue }) => {

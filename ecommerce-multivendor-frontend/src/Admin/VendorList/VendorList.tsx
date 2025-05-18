@@ -13,7 +13,7 @@ export interface Vendor {
   joinedDate: string;
 }
 
-const mockVendors : Vendor[] = [
+const mockVendors: Vendor[] = [
   {
     id: "9f0c2a98-8c91-4c4b-b1f1-17279f4e29a1",
     name: "Jackson Reed",
@@ -198,36 +198,15 @@ const mockVendors : Vendor[] = [
 
 
 
-const VendorList = () => {
-  const [vendors, setVendors] = useState<Vendor[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    // Simulate API data fetching
-    const fetchVendors = async () => {
-      await new Promise((resolve) => setTimeout(resolve, 800));
-      setVendors(mockVendors);
-      setIsLoading(false);
-    };
-
-    fetchVendors();
-  }, []);
+const VendorList = ({ allSelers }) => {
 
   return (
-      <motion.div variants={fadeIn} initial="hidden" animate="visible">
+    <motion.div variants={fadeIn} initial="hidden" animate="visible">
+      <div className="grid gap-6">
+        <VendorTable vendors={allSelers} />
+      </div>
+    </motion.div>
 
-        {isLoading ? (
-          <div className="grid gap-4">
-            <div className="h-10 w-48 animate-pulse rounded-md bg-gray-200 dark:bg-gray-700" />
-            <div className="h-96 animate-pulse rounded-md bg-gray-200 dark:bg-gray-700" />
-          </div>
-        ) : (
-          <div className="grid gap-6">
-            <VendorTable vendors={vendors} />
-          </div>
-        )}
-      </motion.div>
-    
   );
 };
 

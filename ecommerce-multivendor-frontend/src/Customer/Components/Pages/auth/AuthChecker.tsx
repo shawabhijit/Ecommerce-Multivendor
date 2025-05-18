@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelecter } from '../../../../app/Store'
 import { checkAuthStatus } from '../../../../app/authSlice/CustomerAuthSlice';
+import LoadingPage from '../../../../Components/Pages/LoadingPage';
 
 const AuthChecker = ({ children }) => {
     const dispatch = useAppDispatch();
@@ -29,7 +30,7 @@ const AuthChecker = ({ children }) => {
     }, [dispatch , isLoggedIn]);
 
     if (!authChecked || isChecking) {
-        return <div>Loading...</div>;
+        return <LoadingPage />;
     }
 
     return <>{children}</>;

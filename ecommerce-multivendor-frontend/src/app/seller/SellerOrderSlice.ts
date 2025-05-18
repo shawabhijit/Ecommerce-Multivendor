@@ -16,6 +16,17 @@ export const fetchAllSellerOrders = createAsyncThunk("sellerOrders/fetchAllSelle
     }
 })
 
+export const fetchAllOrders = createAsyncThunk("sellerOrders/fetchAllOrders" , async (_ , {rejectWithValue}) => {
+    try {
+        const response = await api.get("/api/orders" )
+        console.log("fetch all orders successfull with ," , response.data);
+        return response.data
+    }
+    catch (error : any) {
+        console.log("fetching all orders failed ," , error);
+        return rejectWithValue(error.response?.data || "unknown error")
+    }
+})
 
 interface OrderHistory {
     orders: any[] | null,
@@ -51,7 +62,21 @@ const sellerOrderSlice = createSlice({
             .addCase(fetchAllSellerOrders.rejected , (state, action) => {
                 state.loading = false;
                 state.error = action.payload as string;
+            })
+            .addCase(fetchAllOrders.pending , (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(fetchAllOrders.fulfilled , (state , action) => {
+                state.loading = false;
+                state.error = null;
+                state.orders = action.payload;
+            })
+            .addCase(fetchAllOrders.rejected , (state, action) => {
+                state.loading = false;
+                state.error = action.payload as string;
             });
+
     }
 })
 
