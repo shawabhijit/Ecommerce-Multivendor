@@ -1,6 +1,7 @@
 package com.ecom.Config;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -24,6 +25,9 @@ import java.util.List;
 @EnableWebSecurity
 public class AppConfig {
 
+    @Value("${frontend.url}")
+    private String frontendUrl;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
@@ -33,6 +37,7 @@ public class AppConfig {
                         requests.requestMatchers(new AntPathRequestMatcher("/api/**")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/seller/**")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/api/products/*/reviews")).permitAll()
+                                .requestMatchers(new AntPathRequestMatcher("/customers/me")).authenticated()
                                 .anyRequest().permitAll()
                 ).csrf(AbstractHttpConfigurer::disable)
                 .addFilterBefore(new JwtTokenValidator(), BasicAuthenticationFilter.class) // this line works for authorization
@@ -45,12 +50,13 @@ public class AppConfig {
         return new CorsConfigurationSource() {
             @Override
             public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
+                System.out.println("front end url getting by .properties---------------- :"+frontendUrl);
                 CorsConfiguration config = new CorsConfiguration();
                 config.setAllowedOrigins(List.of("http://localhost:5173"));
-                config.setAllowedMethods(Collections.singletonList("*"));
-                config.setAllowedHeaders(Collections.singletonList("*"));
-                config.setAllowCredentials(true);
+                config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+                config.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Requested-With"));
                 config.setExposedHeaders(List.of("Authorization", "Cache-Control", "Content-Type"));
+                config.setAllowCredentials(true);
                 config.setMaxAge(3600L);
                 return config;
             }

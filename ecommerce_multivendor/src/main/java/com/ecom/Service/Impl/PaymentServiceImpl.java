@@ -39,6 +39,10 @@ public class PaymentServiceImpl implements PaymentService {
     private String apiSecret;
     @Value("${stripe.api.key}")
     private String stripeApiKey;
+    @Value("${payment.callback.url}")
+    private String paymentCallbackUrl;
+    @Value("${payment.cancel.url}")
+    private String paymentCancelUrl;
 
     @Override
     public PaymentOrder createOrder(UserEntity user, List<OrderEntity> orders) {
@@ -109,7 +113,7 @@ public class PaymentServiceImpl implements PaymentService {
             notify.put("email", true);
             notify.put("type", "notify");
 
-            paymentLinkRequest.put("callback_url", "http://localhost:5173/my/confirmation/"+orderId);
+            paymentLinkRequest.put("callback_url", paymentCallbackUrl+orderId);
             paymentLinkRequest.put("callback_method", "get");
 
             PaymentLink paymentLink = razorpay.paymentLink.create(paymentLinkRequest);
@@ -131,8 +135,8 @@ public class PaymentServiceImpl implements PaymentService {
         SessionCreateParams params = SessionCreateParams.builder()
                 .addPaymentMethodType(SessionCreateParams.PaymentMethodType.CARD)
                 .setMode(SessionCreateParams.Mode.PAYMENT)
-                .setSuccessUrl("https://localhost:5173/my/confirmation"+orderId)
-                .setCancelUrl("https://localhost:3000/payment-cancel")
+                .setSuccessUrl(paymentCallbackUrl+orderId)
+                .setCancelUrl(paymentCancelUrl)
                 .addLineItem(SessionCreateParams.LineItem.builder()
                         .setQuantity(1L)
                         .setPriceData(SessionCreateParams.LineItem.PriceData.builder()
