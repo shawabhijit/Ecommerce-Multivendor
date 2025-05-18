@@ -2,7 +2,6 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
 const LoadingPage = () => {
-    const [loadingProgress, setLoadingProgress] = useState(0);
     const [loadingTime, setLoadingTime] = useState(0);
     const [startTime] = useState(performance.now());
 
@@ -12,11 +11,6 @@ const LoadingPage = () => {
             const currentTime = performance.now();
             const elapsedSeconds = ((currentTime - startTime) / 1000).toFixed(2);
             setLoadingTime(parseFloat(elapsedSeconds));
-
-            setLoadingProgress((prev) => {
-                const newProgress = prev + parseFloat(elapsedSeconds);
-                return newProgress >= 100 ? 100 : newProgress;
-            });
             
         }, 300);
 
@@ -91,25 +85,6 @@ const LoadingPage = () => {
                         className="h-8 w-8 rounded-full bg-gradient-to-r from-[#9b87f5] to-[#7E69AB]"
                     />
                 </motion.div>
-
-                <motion.div
-                    variants={variants}
-                    className="w-64 h-2 bg-gray-200 rounded-full overflow-hidden"
-                >
-                    <motion.div
-                        initial={{ width: "0%" }}
-                        animate={{ width: `${loadingProgress}%` }}
-                        transition={{ duration: 0.3, ease: "easeOut" }}
-                        className="h-full bg-gradient-to-r from-[#9b87f5] to-[#7E69AB]"
-                    />
-                </motion.div>
-
-                <motion.p
-                    variants={variants}
-                    className="text-gray-600 font-medium text-sm"
-                >
-                    {loadingProgress < 100 ? "Loading..." : "Ready!"}
-                </motion.p>
 
                 <motion.p
                     variants={variants}
