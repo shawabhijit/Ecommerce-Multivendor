@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { ChevronLeft, ChevronRight } from "lucide-react"
 import { Button } from "../../../../../../Components/ui/button"
 
 const banners = [
@@ -53,10 +52,10 @@ export default function HeroCarousel() {
         setCurrent((prev) => (prev === banners.length - 1 ? 0 : prev + 1))
     }
 
-    const prevSlide = () => {
-        setDirection(-1)
-        setCurrent((prev) => (prev === 0 ? banners.length - 1 : prev - 1))
-    }
+    // const prevSlide = () => {
+    //     setDirection(-1)
+    //     setCurrent((prev) => (prev === 0 ? banners.length - 1 : prev - 1))
+    // }
 
     useEffect(() => {
         const interval = setInterval(() => {

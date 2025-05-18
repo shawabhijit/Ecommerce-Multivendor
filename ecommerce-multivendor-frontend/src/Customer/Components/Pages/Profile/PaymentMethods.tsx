@@ -2,11 +2,10 @@ import { Button } from '../../../../Components/ui/button'
 import { Card, CardContent } from '../../../../Components/ui/card'
 import { CreditCard, Plus, Trash2 } from 'lucide-react'
 import { motion } from "framer-motion"
-import { useState } from 'react'
 
 const PaymentMethods = ({ containerVariants, itemVariants }: any) => {
 
-    const [paymentMethods, setPaymentMethods] = useState([
+    const paymentMethods = [
         {
             id: 1,
             type: "Credit Card",
@@ -21,7 +20,7 @@ const PaymentMethods = ({ containerVariants, itemVariants }: any) => {
             number: "xxxx xxxx xxxx 4567",
             expiry: "05/26",
         },
-    ])
+    ]
 
     return (
         <Card>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+// import { useState } from 'react'
 
 import { motion } from "framer-motion"
 import { CheckCircle2 } from 'lucide-react'
@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom'
 const Confirmation = () => {
     const navigate = useNavigate();
 
-    const [paymentMethod, setPaymentMethod] = useState("card")
+    // const [paymentMethod, setPaymentMethod] = useState("card")
 
     return (
         <motion.div
@@ -36,11 +36,7 @@ const Confirmation = () => {
                 </p>
                 <p className="text-gray-600">
                     Payment Method:{" "}
-                    {paymentMethod === "card"
-                        ? "Credit/Debit Card"
-                        : paymentMethod === "upi"
-                            ? "UPI"
-                            : "Cash on Delivery"}
+                    Razorpay
                 </p>
             </div>
             <Button onClick={() => navigate("/")}>Continue Shopping</Button>

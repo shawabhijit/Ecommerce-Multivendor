@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelecter } from '../../../../app/Store'
 import { checkAuthStatus } from '../../../../app/authSlice/CustomerAuthSlice';
 import LoadingPage from '../../../../Components/Pages/LoadingPage';

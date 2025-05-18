@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react';
+import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { Users, Truck, Search, ShieldCheck, PieChart } from 'lucide-react';
 

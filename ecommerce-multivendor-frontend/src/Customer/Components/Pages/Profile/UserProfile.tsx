@@ -10,7 +10,7 @@ import UserInfo from "./UserInfo"
 import PaymentMethods from "./PaymentMethods"
 import { useAppDispatch } from "../../../../app/Store"
 import { fetchCustomerProfile } from "../../../../app/customer/CustomerSlice"
-import { Address, AddressProvider, useAddress } from "../Context/CartContext"
+import { Address, AddressProvider } from "../Context/CartContext"
 import { fetchUserOrderHistory } from "../../../../app/customer/OrderSlice"
 
 export default function UserProfile() {

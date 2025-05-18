@@ -3,6 +3,7 @@
 import { motion } from "framer-motion"
 import { ShoppingCart, Star, X } from "lucide-react"
 import { Button } from "../../../../../../Components/ui/button"
+import { useNavigate } from "react-router-dom"
 
 // Define both product structure types
 type StandardProduct = {
@@ -48,7 +49,7 @@ function isStandardProduct(product: StandardProduct | AlternateProduct): product
 export default function HomeProductCard({
     product,
     index = 0,
-    isInView,
+    //isInView,
     showDiscount = false,
     onRemove,
     onMoveToCart,
@@ -65,6 +66,8 @@ export default function HomeProductCard({
             },
         },
     }
+
+    const navigate = useNavigate();
 
     // Normalize the product data regardless of its structure
     const normalizedProduct = {
@@ -91,6 +94,7 @@ export default function HomeProductCard({
         >
             <div className="relative cursor-pointer">
                 <img
+                    onClick={() => navigate(`/product/${normalizedProduct.id}`)}
                     src={normalizedProduct.images[0]}
                     alt={normalizedProduct.title}
                     className="h-full w-full object-contain p-4"

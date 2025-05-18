@@ -17,7 +17,6 @@ import Pagination from "../Components/Pagination/Pagination"
 import { useAppDispatch } from "../../app/Store"
 import { fetchSellerProducts } from "../../app/seller/SellerProductSlice"
 import { Products } from "../../types/ProductTupe"
-import { number } from "zod"
 // Mock data for products
 
 
@@ -73,7 +72,7 @@ export function ProductManagement() {
     const indexOfFirstProduct = indexOfLastProduct - productsPerPage
     const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct)
 
-    const paginate = (pageNumber: number) => setCurrentPage(pageNumber)
+    // const paginate = (pageNumber: number) => setCurrentPage(pageNumber)
 
     const handleSelectAll = (checked: boolean) => {
         if (checked) {

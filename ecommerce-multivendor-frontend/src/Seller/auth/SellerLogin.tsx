@@ -14,7 +14,7 @@ import { Label } from "../../Components/ui/label"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../../Components/ui/card"
 import { InputOTP, InputOTPSlot } from "../../Components/ui/input-otp"
 import { useAppDispatch, useAppSelecter } from "../../app/Store"
-import { sendLoginOtp, signIn } from "../../app/authSlice/AuthSlice"
+import { sendLoginOtp } from "../../app/authSlice/AuthSlice"
 import { sellerLogin } from "../../app/authSlice/sellerAuthSlice"
 
 const formSchema = z.object({
@@ -25,7 +25,7 @@ const formSchema = z.object({
 type FormData = z.infer<typeof formSchema>
 
 export function SellerLogin() {
-    const { isLoggedIn, loading: storeLoading, error: storeError } = useAppSelecter((state) => state.sellers);
+    const { isLoggedIn } = useAppSelecter((state) => state.sellers);
     const navigate = useNavigate();
     // const isLogedin = useAppSelecter((state) => state.sellers.isLoggedIn);
     const [loading, setLoading] = useState(false)

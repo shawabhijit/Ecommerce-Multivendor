@@ -1,5 +1,4 @@
-import React from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from 'recharts';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "../../../Components/ui/chart";
 
 interface SalesChartProps {

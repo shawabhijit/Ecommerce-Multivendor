@@ -30,7 +30,7 @@ import {
     DialogTitle,
 } from "../../Components/ui/dialog"
 import { Popover, PopoverContent, PopoverTrigger } from "../../Components/ui/popover"
-import { Avatar, AvatarFallback, AvatarImage } from "../../Components/ui/avatar"
+import { Avatar, AvatarFallback } from "../../Components/ui/avatar"
 import { Label } from "../../Components/ui/label"
 import { Textarea } from "../../Components/ui/textarea"
 

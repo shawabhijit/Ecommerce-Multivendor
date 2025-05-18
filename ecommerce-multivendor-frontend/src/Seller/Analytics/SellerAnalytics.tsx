@@ -1,9 +1,8 @@
 import { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../Components/ui/card";
+import { Card, CardContent } from "../../Components/ui/card";
 import { Button } from "../../Components/ui/button";
-import { ShoppingBag, DollarSign, Package, Users, CheckCircle, XCircle, ArrowUpRight, Globe, TrendingUp, MousePointerClick, PieChart } from "lucide-react";
+import { Users,ArrowUpRight, Globe, TrendingUp, MousePointerClick } from "lucide-react";
 import { motion } from "motion/react"
-import { Bar, BarChart, CartesianGrid, Legend, Pie, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import CategoryPieChart from './Charts/CategoryPieChart';
 import OrderStatusChart from './Charts/OrderStatusChart';
 import EarningsBarChart from './Charts/EarningsBarChart';

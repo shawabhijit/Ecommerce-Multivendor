@@ -1,4 +1,3 @@
-import React from 'react'
 import { Card, CardContent } from '../../../Components/ui/card'
 import { Filter, Search } from 'lucide-react'
 import { Input } from '../../../Components/ui/input'

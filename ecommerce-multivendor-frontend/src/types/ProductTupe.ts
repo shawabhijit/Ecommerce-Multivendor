@@ -1,4 +1,3 @@
-import { SellerSignupRequest } from "./SellerType";
 
 export type Products = {
     id: number;
@@ -73,35 +72,4 @@ export type ProductsResponse = {
 };
 
 
-interface Categories {
-    name: string;
-    categoryid: string;
-    parentCategory: string;
-    level: number;
-}
 
-interface variants {
-    name: string;
-    value: string;
-}
-
-interface SEO {
-    metaTitle: string;
-    metaDescription: string;
-    keywords?: string | null;
-}
-
-interface Shipping {
-    weight: number;
-    dimensions: {
-        length: number;
-        width: number;
-        height: number;
-    }
-    freeShipping: boolean;
-}
-
-interface Ratings {
-    average: number;
-    count: number;
-}

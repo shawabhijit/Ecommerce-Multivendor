@@ -15,7 +15,6 @@ interface ProductInfoProps {
 
 export default function ProductInfo({ product }: ProductInfoProps) {
     const [quantity, setQuantity] = useState(1);
-    const [size , setSize] = useState("");
     const [isAddingToCart, setIsAddingToCart] = useState(false)
     const [addedToCart, setAddedToCart] = useState(false)
     const [addToWishlist , setAddToWishlist] = useState(false);
@@ -27,7 +26,7 @@ export default function ProductInfo({ product }: ProductInfoProps) {
 
         const data = {
             productId: product.id,
-            size:size,
+            size:"",
             quantity: quantity,
             mrpPrice: product.mrpPrice
         }

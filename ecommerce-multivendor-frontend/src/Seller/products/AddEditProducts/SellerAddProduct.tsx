@@ -116,7 +116,7 @@ export function AddEditProduct() {
     const [showPreviewDialog, setShowPreviewDialog] = useState(false);
     const [showHistoryDialog, setShowHistoryDialog] = useState(false);
     const [formChanged, setFormChanged] = useState(false);
-    const [response , setResponse] = useState<any>(null);
+    // const [response , setResponse] = useState<any>(null);
     const [imagePreviews, setImagePreviews] = useState<string[]>([]);
     const [tagInput, setTagInput] = useState("");
 
@@ -128,7 +128,7 @@ export function AddEditProduct() {
         setValue,
         watch,
         reset,
-        formState: { errors, isDirty, isSubmitting, isValid }
+        formState: { errors, isDirty }
     } = useForm<ProductFormValues>({
         resolver: zodResolver(productSchema),
         mode: "onChange", // This will validate on change
@@ -286,9 +286,10 @@ export function AddEditProduct() {
 
             console.log("Product created successfully:", product);
 
-            setResponse(product);
+            // setResponse(product);
             setSaveSuccess(true);
             setFormChanged(false);
+            
 
             setTimeout(() => {
                 setSaveSuccess(false);
@@ -330,9 +331,9 @@ export function AddEditProduct() {
             if (id && !isNaN(Number(id)) && isEditMode) {
                 const res = dispatch(updateProduct({ request: watch(), id: Number(id) }));
 
-                console.log("Product updated successfully");
+                console.log("Product updated successfully" , res);
 
-                setResponse(res);
+                // setResponse(res);
                 setSaveSuccess(true);
                 setFormChanged(false);
             }
@@ -668,7 +669,7 @@ export function AddEditProduct() {
                                     </CardHeader>
                                     <CardContent>
                                         <div className="space-y-4">
-                                            {variantFields.map((variant, index) => (
+                                            {variantFields.map((_, index) => (
                                                 <motion.div
                                                     key={index}
                                                     initial={{ opacity: 0, y: 10 }}

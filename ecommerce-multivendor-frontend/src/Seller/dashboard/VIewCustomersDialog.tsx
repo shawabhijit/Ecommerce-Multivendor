@@ -10,16 +10,16 @@ import { Button } from '../../Components/ui/button'
 const VIewCustomersDialog = ({totalCustomer , openCustomers, setOpenCustomers }) => {
     const [searchTerm, setSearchTerm] = useState("")
     const [statusFilter, setStatusFilter] = useState("all")
-    const [selectedCustomer, setSelectedCustomer] = useState<any>(null)
-    const [confirmDialogOpen, setConfirmDialogOpen] = useState(false)
-    const [actionType, setActionType] = useState<"ban" | "unban" | null>(null)
+    // const [selectedCustomer, setSelectedCustomer] = useState<any>(null)
+    // const [confirmDialogOpen, setConfirmDialogOpen] = useState(false)
+    // const [actionType, setActionType] = useState<"ban" | "unban" | null>(null)
 
     // Handle customer action (ban/unban)
-    const handleCustomerAction = (customer: any, action: "ban" | "unban") => {
-        setSelectedCustomer(customer)
-        setActionType(action)
-        setConfirmDialogOpen(true)
-    }
+    // const handleCustomerAction = (customer: any, action: "ban" | "unban") => {
+    //     setSelectedCustomer(customer)
+    //     setActionType(action)
+    //     setConfirmDialogOpen(true)
+    // }
 
     console.log("filteredCustomers", totalCustomer)
     

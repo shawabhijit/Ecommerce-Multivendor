@@ -1,5 +1,4 @@
-import React from 'react';
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
+import { PieChart, Pie, Cell, ResponsiveContainer, Legend } from 'recharts';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "../../../Components/ui/chart";
 
 const data = [
@@ -34,7 +33,7 @@ const TrafficSourceChart = () => {
                             dataKey="value"
                             nameKey="name"
                         >
-                            {data.map((entry, index) => (
+                            {data.map((_, index) => (
                                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                             ))}
                         </Pie>

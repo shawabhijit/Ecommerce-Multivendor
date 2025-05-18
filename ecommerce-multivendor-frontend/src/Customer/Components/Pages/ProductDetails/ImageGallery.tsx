@@ -106,7 +106,7 @@ export default function ImageGallery({ images }: ImageGalleryProps) {
                                 }`}
                             onClick={() => setCurrentImageIndex(index)}
                         >
-                            <img src={images[index]} alt={`Thumbnail ${index + 1}`} className="w-full h-full object-cover" />
+                            <img src={image} alt={`Thumbnail ${index + 1}`} className="w-full h-full object-cover" />
                         </motion.div>
                     ))}
                 </div>

@@ -2,7 +2,6 @@
 
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import type { Product } from "../../../../lib/Types"
 import { Star, User } from "lucide-react"
 import { Products } from "../../../../types/ProductTupe"
 

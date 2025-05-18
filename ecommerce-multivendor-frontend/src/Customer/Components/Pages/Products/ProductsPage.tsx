@@ -5,10 +5,8 @@ import { motion } from "framer-motion"
 import ProductGrid from "./ProductGrid"
 import FilterSidebar from "./ProductFilterSidebar"
 import SortDropdown from "./SortBy"
-import type { Product } from "../../../../lib/Types"
-import { getProducts } from "../../../../lib/api"
 import { FilterIcon } from "lucide-react"
-import { useLocation, useNavigate } from "react-router-dom"
+import { useLocation } from "react-router-dom"
 import { useAppDispatch } from "../../../../app/Store"
 import { fetchAllProducts } from "../../../../app/customer/ProductSlice"
 import { Products, ProductsResponse } from "../../../../types/ProductTupe"
@@ -22,7 +20,7 @@ export default function ProductsPage() {
     const [productResponse , setProductResponse ] = useState<ProductsResponse>()
     const [products, setProducts] = useState<Products[]>([])
     const [loading, setLoading] = useState(true)
-    const [searchQuery, setSearchQuery] = useState("")
+    // const [searchQuery, setSearchQuery] = useState("")
     const [sortOption, setSortOption] = useState("featured")
     const [selectedCategories, setSelectedCategories] = useState<string[]>(categoryFromNav ? [categoryFromNav] : [])
     const [priceRange , setPriceRange ] = useState({min: '', max:''});
@@ -39,6 +37,7 @@ export default function ProductsPage() {
         console.log("response in product page of all products ,", res);
         if (res.meta.requestStatus == "fulfilled") {
             setProductResponse(res.payload)
+            console.log(productResponse)
             setProducts(res.payload.content);
             setLoading(false);
         }
@@ -60,12 +59,12 @@ export default function ProductsPage() {
 
     // Filter products based on search query and selected categories
     const filteredProducts = products.filter((product) => {
-        const matchesSearch = product.title.toLowerCase().includes(searchQuery.toLowerCase())
+        // const matchesSearch = product.title.toLowerCase().includes(searchQuery.toLowerCase())
         const matchesCategory = selectedCategories.length === 0 || selectedCategories.includes(product.category.name)
         const min = priceRange.min !== '' ? Number(priceRange.min) : 0;
         const max = priceRange.max !== '' ? Number(priceRange.max) : Infinity;
         const matchesPriceRange = product.mrpPrice >= min && product.mrpPrice <= max;
-        return matchesSearch && matchesCategory && matchesPriceRange
+        return matchesCategory && matchesPriceRange
     })
 
     // Sort products based on selected sort option

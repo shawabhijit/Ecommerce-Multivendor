@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { TabsContent } from '../../../Components/ui/tabs'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../Components/ui/card'
 import { Label } from '../../../Components/ui/label'
@@ -13,7 +13,7 @@ const SellerNotification = (
     }
 ) => {
 
-    const [seller, setSeller] = useState(sellerInfo)
+    const [seller] = useState(sellerInfo)
 
 
 

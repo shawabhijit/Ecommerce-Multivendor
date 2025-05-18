@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 import {
     Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle
@@ -34,7 +34,6 @@ const CustomerLogin = () => {
     const {
         register,
         handleSubmit,
-        getValues,
         setValue,
         watch,
         formState: { errors },

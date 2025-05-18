@@ -1,11 +1,10 @@
 "use client"
 
-import { useRef, useState } from "react"
+import { useRef } from "react"
 import { motion, useInView } from "framer-motion"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { Button } from "../../../../../../Components/ui/button"
 import ProductCard from "../HomeProductCard/HomeProductCard"
-import { Products } from "../../../../../../types/ProductTupe"
 
 // Mock data for personalized suggestions
 const suggestedProducts = [

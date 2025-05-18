@@ -81,6 +81,8 @@ export const fadeIn = {
 
 
 const Customers = ({allCustomers} :any) => {
+
+    console.log(allCustomers)
     const [customers, setCustomers] = useState<Customer[]>([]);
     const [isLoading, setIsLoading] = useState(true);
 

@@ -93,20 +93,20 @@ export function SellerProfile({ sellerInfo, setSellerInfo }: any) {
         });
     };
 
-    const handleSwitchChange = (section: string, field: string, checked: boolean) => {
-        setSeller((prev) => {
-            const safePrev = prev || {};
-            const sectionData = safePrev[section] || {};
+    // const handleSwitchChange = (section: string, field: string, checked: boolean) => {
+    //     setSeller((prev) => {
+    //         const safePrev = prev || {};
+    //         const sectionData = safePrev[section] || {};
 
-            return {
-                ...safePrev,
-                [section]: {
-                    ...sectionData,
-                    [field]: checked,
-                },
-            };
-        });
-    }
+    //         return {
+    //             ...safePrev,
+    //             [section]: {
+    //                 ...sectionData,
+    //                 [field]: checked,
+    //             },
+    //         };
+    //     });
+    // }
 
     return (
         <div className="container mx-auto px-4 lg:px-8">
@@ -238,7 +238,7 @@ export function SellerProfile({ sellerInfo, setSellerInfo }: any) {
                 </TabsContent>
 
                 {/* Security Tab */}
-                <SellerSecurityInfo sellerInfo={seller} handleSwitchChange={handleSwitchChange} />
+                <SellerSecurityInfo sellerInfo={seller} />
 
                 {/* Notifications Tab */}
                 {/* <SellerNotification sellerInfo={seller} handleNestedSwitchChange={handleNestedSwitchChange} /> */}

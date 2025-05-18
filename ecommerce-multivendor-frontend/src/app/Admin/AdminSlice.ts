@@ -45,7 +45,7 @@ export const adminSlice = createSlice({
                 state.loading = true;
                 state.error = null;
             })
-            .addCase(loginAdmin.fulfilled, (state, action) => {
+            .addCase(loginAdmin.fulfilled, (state) => {
                 state.loading = false;
                 state.isLoggedIn = true;
                 state.error = null;

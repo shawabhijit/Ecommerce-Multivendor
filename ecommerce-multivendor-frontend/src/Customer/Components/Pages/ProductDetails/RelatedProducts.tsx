@@ -2,7 +2,6 @@
 
 import { useRef } from "react"
 import { motion } from "framer-motion"
-import type { Product } from "../../../../lib/Types"
 import ProductCard from "../Products/ProductCard"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { Products } from "../../../../types/ProductTupe"

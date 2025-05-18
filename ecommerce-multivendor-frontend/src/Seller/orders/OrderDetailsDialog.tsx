@@ -1,7 +1,6 @@
-import React, { useState } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../Components/ui/tabs'
 import { Package } from 'lucide-react'
-import { Avatar, AvatarFallback, AvatarImage } from '../../Components/ui/avatar'
+import { Avatar, AvatarFallback } from '../../Components/ui/avatar'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '../../Components/ui/dialog'
 import { Button } from '../../Components/ui/button'
 import { Badge } from '../../Components/ui/badge'

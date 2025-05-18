@@ -1,12 +1,11 @@
 "use client"
 import { motion } from "framer-motion"
-import { ArrowDown, ArrowUp, DollarSign, IndianRupee, Package, ShoppingCart, Users } from "lucide-react"
+import { ArrowUp, IndianRupee, Package, ShoppingCart, Users } from "lucide-react"
 import {Area,AreaChart,Bar,BarChart,CartesianGrid,Cell, Legend,Pie,PieChart,ResponsiveContainer,Tooltip,XAxis,YAxis,} from "recharts"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../Components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../Components/ui/tabs"
 
 import { AdminLayout } from "../Layout/AdminLayout"
-import { all } from "axios"
 
 // Sample data for charts
 const salesData = [

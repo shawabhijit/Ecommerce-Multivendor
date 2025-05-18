@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { useAppSelecter } from '../../../../app/Store'
 import { Navigate, Outlet, useLocation } from 'react-router-dom'
 

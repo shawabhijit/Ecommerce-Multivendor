@@ -1,4 +1,3 @@
-import React from 'react'
 import { Card, CardContent } from '../../Components/ui/card'
 import { ArrowUp, Package, Truck } from 'lucide-react'
 

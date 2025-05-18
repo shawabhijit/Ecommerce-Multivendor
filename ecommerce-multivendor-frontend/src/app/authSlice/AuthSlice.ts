@@ -8,6 +8,7 @@ export const sendLoginOtp = createAsyncThunk("/auth/sendLoginOtp", async ({email
     }
     catch (error) {
         console.log('error', error) 
+        return rejectWithValue("Failed to send OTP");
     }
 })
 
@@ -23,5 +24,6 @@ export const signIn = createAsyncThunk("/auth/sigIn", async(loginRequest: LoginR
     }
     catch (error) {
         console.log('sign in error :', error)
+        return rejectWithValue("Failed to sign in");
     }
 })

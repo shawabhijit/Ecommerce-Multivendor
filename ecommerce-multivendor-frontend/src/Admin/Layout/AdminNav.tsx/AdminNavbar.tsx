@@ -1,10 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useScroll, useTransform } from 'motion/react';
 import { motion } from "motion/react"
-import { cn } from '../../../lib/utils';
 import { Button } from "../../../Components/ui/button"
-import { Badge, BarChart3, Bell, CreditCard, Home, LogOut, Menu, Moon, Package, Settings, ShoppingCart, Store, Sun, User, User2Icon, X } from 'lucide-react';
+import { Badge, Bell, Home, LogOut, Menu, Moon, Settings, ShoppingCart, Store, Sun, User, User2Icon, X } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from "../../../Components/ui/avatar"
 
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '../../../Components/ui/dropdown-menu';
@@ -23,7 +22,6 @@ const AdminNavbar = () => {
 
     const { isLoggedIn: isLogedin } = useAppSelecter((state) => state.admin);
 
-    const [isScrolled, setIsScrolled] = useState(false);
     const [isAccountOpen, setIsAccountOpen] = useState(false);
     const [isOpen, setIsOpen] = useState(false)
 
@@ -42,12 +40,11 @@ const AdminNavbar = () => {
         { name: "All Vendors", href: "/admin/sellers", icon: Store },
     ]
 
+    console.log(isAccountOpen)
     return (
         <motion.header
-            className={cn(
-                "fixed top-0 left-0 right-0 z-50 transition-all duration-300 ",
-                isScrolled ? "bg-white shadow-md py-1" : "bg-transparent py-2"
-            )}
+            className={
+                "fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-white shadow-md py-1"}
             style={{
                 backgroundColor: headerBackground,
                 boxShadow: headerShadow,

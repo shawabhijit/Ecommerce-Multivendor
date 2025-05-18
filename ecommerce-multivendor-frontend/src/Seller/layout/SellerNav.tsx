@@ -11,7 +11,6 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import { useTheme } from '../../context/theme-provider';
 import { useAppDispatch, useAppSelecter } from '../../app/Store';
 import { logout } from '../../app/authSlice/sellerAuthSlice';
-import { fetchSellerProfile } from '../../app/seller/SellerSlice';
 
 
 const products = [
@@ -39,7 +38,7 @@ const SellerNav = ({ isLogedin , sellerInfo }: any) => {
 
 
     const [isScrolled, setIsScrolled] = useState(false);
-    const [isAccountOpen, setIsAccountOpen] = useState(false);
+    // const [isAccountOpen, setIsAccountOpen] = useState(false);
     const [searchValue, setSearchValue] = useState("");
     const [filteredResults, setFilteredResults] = useState<string[]>([]);
     const [isOpen, setIsOpen] = useState(false)
@@ -176,10 +175,7 @@ const SellerNav = ({ isLogedin , sellerInfo }: any) => {
                                             <Bell className="h-5 w-5" />
                                             <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 ">3</Badge>
                                         </Button>
-                                        <div className="relative"
-                                            onMouseEnter={() => setIsAccountOpen(true)}
-                                            onMouseLeave={() => setIsAccountOpen(false)}
-                                        >
+                                        <div className="relative">
                                             <DropdownMenu>
                                                 <DropdownMenuTrigger asChild>
                                                     <Button variant="ghost" size="icon" className="rounded-full">

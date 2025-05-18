@@ -1,18 +1,15 @@
 import { Input } from "../../ui/input";
-import { Label } from "../../ui/label";
 import { UploadCloud } from "lucide-react";
 import { useState } from "react";
 
 export function ImageUploader({
     label,
-    placeholderUrl,
     //onChange,
 }: {
     label: string;
     placeholderUrl?: string;
     //onChange: (file: File) => void;
 }) {
-    const [preview, setPreview] = useState<string | null>(null);
     const [fileName, setFileName] = useState<string>("");
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {

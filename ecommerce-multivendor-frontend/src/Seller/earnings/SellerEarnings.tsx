@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Card } from '../../Components/ui/card';
 import { ArrowDownCircle, ArrowUpCircle, Clock, DollarSign } from 'lucide-react';
 import { Button } from '../../Components/ui/button';

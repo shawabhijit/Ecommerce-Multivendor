@@ -95,13 +95,12 @@ const VendorCTASection = () => {
 
 
                             <div className='flex items-center'>
-                                <span className='border-b py-3 text-sm text-gray-300'>+91</span>
-                                <label htmlFor="phone" className="block text-sm font-medium mb-1"></label>
+                                <label htmlFor="email" className="block text-sm font-medium mb-1"></label>
                                 <input
-                                    type="tel"
-                                    id="phone"
+                                    type="email"
+                                    id="email"
                                     className="w-full px-4 py-3 border-b border-gray-300 focus:outline-none text-sm"
-                                    placeholder="- Enter your 10 Digits Number"
+                                    placeholder="Enter your Registered Email ID"
                                 />
                             </div>
 

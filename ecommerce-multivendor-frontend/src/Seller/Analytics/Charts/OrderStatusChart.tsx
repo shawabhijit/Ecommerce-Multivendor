@@ -1,5 +1,4 @@
-import React from 'react';
-import { PieChart, Pie, Cell, Legend, Tooltip, ResponsiveContainer } from 'recharts';
+import { PieChart, Pie, Cell, Legend, ResponsiveContainer } from 'recharts';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "../../../Components/ui/chart";
 
 const data = [
@@ -35,7 +34,7 @@ const OrderStatusChart = () => {
                             nameKey="name"
                             stroke="none"
                         >
-                            {data.map((entry, index) => (
+                            {data.map((_, index) => (
                                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                             ))}
                         </Pie>

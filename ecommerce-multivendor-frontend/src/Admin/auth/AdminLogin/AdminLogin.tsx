@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { motion } from "framer-motion"
 import { ShoppingBag } from "lucide-react"
 import { useForm } from "react-hook-form"
@@ -24,11 +24,10 @@ const formSchema = z.object({
 type FormData = z.infer<typeof formSchema>
 
 export function AdminLogin() {
-    const { isLoggedIn, loading: storeLoading, error: storeError } = useAppSelecter((state) => state.sellers);
+    const { isLoggedIn } = useAppSelecter((state) => state.sellers);
     const navigate = useNavigate();
     // const isLogedin = useAppSelecter((state) => state.sellers.isLoggedIn);
     const [loading, setLoading] = useState(false)
-    const [error, setError] = useState("")
 
     // Default admin credentials
     const defaultCredentials = {
@@ -41,9 +40,7 @@ export function AdminLogin() {
     const {
         register,
         handleSubmit,
-        getValues,
         setValue,
-        watch,
         formState: { errors },
     } = useForm<FormData>({
         resolver: zodResolver(formSchema),
@@ -53,7 +50,7 @@ export function AdminLogin() {
         },
     })
 
-    const value = watch("password")
+    //const value = watch("password")
 
     const fillDefaultCredentials = () => {
         setValue("email", defaultCredentials.email);
@@ -62,12 +59,10 @@ export function AdminLogin() {
 
     const onSubmit = async (data: FormData) => {
         setLoading(true)
-        setError("")
             // Simulate API call
         const res = await dispatch(loginAdmin(data))
         if (res.meta.requestStatus === "fulfilled") {
             setLoading(false)
-            setError("")
             navigate("/admin/")
         }
         else {

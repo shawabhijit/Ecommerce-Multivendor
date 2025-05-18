@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { motion, AnimatePresence } from "framer-motion"
-import { ArrowLeft, ArrowRight, CheckCircle, Upload } from "lucide-react"
+import { ArrowLeft, ArrowRight } from "lucide-react"
 import { useForm, FormProvider, useFormContext, SubmitHandler } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
@@ -26,13 +26,6 @@ const accountSchemaFields = {
     confirmPassword: z.string()
 }
 
-const accountSchema = z.object(accountSchemaFields).refine(
-    (data) => data.password === data.confirmPassword, {
-    message: "Passwords do not match",
-    path: ["confirmPassword"]
-}
-);
-
 const businessSchemaFields = {
     businessName: z.string().min(2, { message: "Business name is required" }),
     businessEmail: z.string().email({ message: "Please enter a valid email" }),
@@ -45,7 +38,6 @@ const businessSchemaFields = {
     gstin: z.string().optional(),
 };
 
-const businessSchema = z.object(businessSchemaFields);
 
 const verificationSchemaFields = {
     accountNumber: z.string().min(1, { message: "Account number is required" }),
@@ -53,7 +45,6 @@ const verificationSchemaFields = {
     accountHolderName: z.string().min(1, { message: "Account holder name is required" }),
 };
 
-const verificationSchema = z.object(verificationSchemaFields);
 
 const pickupAddressSchemaFields = {
     pickupBusinessName: z.string().min(2, { message: "Business name is required" }),
@@ -65,7 +56,6 @@ const pickupAddressSchemaFields = {
     pickupZipCode: z.string().min(5, { message: "Zip code is required" })
 };
 
-const pickupAddressSchema = z.object(pickupAddressSchemaFields);
 
 // Combine all schemas for the full form
 const formSchema = z.object({
@@ -79,7 +69,7 @@ type FormValues = z.infer<typeof formSchema>;
 
 // Create form field components for each step
 const AccountFormFields = () => {
-    const { control, formState: { errors } } = useFormContext<FormValues>();
+    const { control } = useFormContext<FormValues>();
 
     return (
         <motion.div
@@ -165,7 +155,7 @@ const AccountFormFields = () => {
 };
 
 const BusinessFormFields = () => {
-    const { control, watch, register } = useFormContext<FormValues>();
+    const { control } = useFormContext<FormValues>();
 
     return (
         <motion.div
@@ -321,7 +311,7 @@ const BusinessFormFields = () => {
 };
 
 const VerificationFormFields = () => {
-    const { control, register, watch } = useFormContext<FormValues>();
+    const { control } = useFormContext<FormValues>();
 
     return (
         <motion.div

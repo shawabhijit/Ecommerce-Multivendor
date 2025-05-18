@@ -26,7 +26,7 @@ type AddressFormData = z.infer<typeof addressesData>
 
 const AddressPage = ({ containerVariants, itemVariants, refetchProfile }) => {
     // Access the context values
-    const { addresses, handleRemoveAddress, handleSetDefaultAddress, setAddresses } = useAddress();
+    const { addresses, handleRemoveAddress, handleSetDefaultAddress } = useAddress();
     console.log("address page address -" , addresses)
     const {
         register,

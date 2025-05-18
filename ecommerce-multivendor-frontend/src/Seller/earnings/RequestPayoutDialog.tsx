@@ -1,4 +1,4 @@
-import { WalletCards, DollarSign } from "lucide-react";
+import { DollarSign } from "lucide-react";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '../../Components/ui/dialog';
 import { Button } from '../../Components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../../Components/ui/form';
@@ -33,7 +33,7 @@ const RequestPayoutDialog = ({ availableBalance, openRequestPayout, setOpenReque
 
     const onSubmit = (values: z.infer<typeof formSchema>) => {
         // Here you would typically make an API call to process the payout
-
+        console.log("Payout request submitted:", values);
     };
 
     return (

@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '../../../Components/ui/dialog'
 import { Separator } from '../../../Components/ui/separator'
 import { Button } from '../../../Components/ui/button'
 import { Badge } from '../../../Components/ui/badge'
 import { useAppDispatch } from '../../../app/Store'
-import { fetchSellerProducts } from '../../../app/seller/SellerProductSlice'
 import { api } from '../../../config/api'
 
 const ProductPreview = ({ id , showPreviewDialog, setShowPreviewDialog, imagePreviews }) => {
@@ -32,19 +31,6 @@ const ProductPreview = ({ id , showPreviewDialog, setShowPreviewDialog, imagePre
 
 
     console.log("response from product preview", response)
-
-    const formData = {
-        title: "Sample Product",
-        description: "This is a sample product description.",
-        mrpPrice: 100,
-        sellingPrice: 80,
-        variants: [
-            {
-                name: "Color",
-                values: "Red, Green, Blue"
-            }
-        ]
-    }
 
     return (
         <Dialog open={showPreviewDialog} onOpenChange={setShowPreviewDialog}>
