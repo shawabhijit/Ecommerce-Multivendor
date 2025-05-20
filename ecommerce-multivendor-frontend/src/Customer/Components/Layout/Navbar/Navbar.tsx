@@ -104,7 +104,7 @@ const Navbar = ({ isLogedin }) => {
         try {
             await dispatch(logoutUser()).unwrap();
             dispatch(logout());
-            setIsOpen(false); // Close mobile menu after logout
+            setIsOpen(false);
         } catch (error) {
             console.error("Logout failed:", error);
         }

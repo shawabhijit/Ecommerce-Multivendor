@@ -16,7 +16,7 @@ export default function DealsOfTheDay({products}) {
     const ref = useRef(null)
     const isInView = useInView(ref, { once: true, amount: 0.2 })
 
-    const dealProducts = products.filter(prod => prod.discountPrice >= 40 ) || []
+    const dealProducts = products.filter(prod => prod.discountPrice >= 40 ).slice(0,8) || []
 
     useEffect(() => {
         const timer = setInterval(() => {

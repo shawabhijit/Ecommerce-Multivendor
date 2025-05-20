@@ -27,10 +27,10 @@ const categories = [
     },
     {
         icon: <Utensils className="h-10 w-10" />,
-        name: "Groceries",
+        name: "Sports & Outdoors",
         count: "8,000+ Products",
-        path: "/products/groceries",
-        image:"https://res.cloudinary.com/dvkvr88db/image/upload/v1746792992/grocery-1232944_640_sxougv.webp"
+        path: "/products/sports-outdoors",
+        image:"https://res.cloudinary.com/dvkvr88db/image/upload/v1747737523/cycling-sport-feet-on-pedal-of-bike_g8kft0.webp"
     },
     {
         icon: <Book className="h-10 w-10" />,

@@ -45,6 +45,20 @@ export const fetchAllSellers = createAsyncThunk("/seller/fetchAllSellers", async
     }
 })
 
+export const fetchSellerByEmail = createAsyncThunk(
+    "/customerProfile/fetchSellerByEmail",
+    async (email: string, { rejectWithValue }) => {
+        try {
+            const response = await api.get(`/sellers/email/${email}`);
+            console.log("Customer Profile fetch suucessfully ,  Response:", response.data);
+            return response.data;
+        } catch (error: any) {
+            console.error("fetch Customer Profile failed:", error);
+            return rejectWithValue(error.response?.data || "Unknown error");
+        }
+    }
+)
+
 
 interface sellerState {
     sellers: any[],
@@ -107,6 +121,18 @@ const sellerSlice = createSlice({
                 state.error = null;
             })
             .addCase(fetchAllSellers.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload as string;
+            })
+            .addCase(fetchSellerByEmail.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(fetchSellerByEmail.fulfilled, (state, action) => {
+                state.loading = false;
+                state.selectedSeller = action.payload
+                state.error = null;
+            })
+            .addCase(fetchSellerByEmail.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload as string;
             });

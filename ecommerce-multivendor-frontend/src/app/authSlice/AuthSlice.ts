@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { api } from "../../config/api";
 
-export const sendLoginOtp = createAsyncThunk("/auth/sendLoginOtp", async ({email} : {email:string}, { rejectWithValue }) => {
+export const sendLoginOtp = createAsyncThunk("/auth/sendLoginOtp", async ({email } : {email:string}, { rejectWithValue }) => {
     try {
         const response = await api.post("/auth/signup/sent-otp", {email } )
         console.log("login otp response :", response)

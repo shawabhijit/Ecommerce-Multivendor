@@ -82,10 +82,10 @@ const CATEGORIES = [
     "Electronics",
     "Fashion",
     "Home & Kitchen",
-    "Beauty",
-    "Toys",
-    "Sports",
-    "Books"
+    "Sports & Outdoors",
+    "Health & Beauty",
+    "Computers",
+    "Books & Media"
 ];
 
 // List of variant types

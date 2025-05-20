@@ -4,6 +4,7 @@ import { motion } from "framer-motion"
 import { ShoppingCart, Star, X } from "lucide-react"
 import { Button } from "../../../../../../Components/ui/button"
 import { useNavigate } from "react-router-dom"
+import { useEffect, useRef, useState } from "react"
 
 // Define both product structure types
 type StandardProduct = {
@@ -68,6 +69,8 @@ export default function HomeProductCard({
     }
 
     const navigate = useNavigate();
+    const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
 
     // Normalize the product data regardless of its structure
     const normalizedProduct = {
@@ -86,26 +89,79 @@ export default function HomeProductCard({
         numRatings: isStandardProduct(product) ? product.numRatings : undefined
     }
 
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const sliderRef = useRef(null);
+
+    const images = normalizedProduct.images || [];
+
+    const startSlider = () => {
+        if (intervalRef.current || images.length <= 1) return;
+
+        intervalRef.current = setInterval(() => {
+            setCurrentIndex(prev => (prev + 1) % images.length);
+        }, 1500);
+    };
+
+    const stopSlider = () => {
+        if (intervalRef.current) {
+            clearInterval(intervalRef.current);
+        }
+        intervalRef.current = null;
+        setCurrentIndex(0);
+    };
+
+    useEffect(() => {
+        return () => {
+            if (intervalRef.current) {
+                clearInterval(intervalRef.current);
+            }
+        }; // cleanup
+    }, []);
+
+    useEffect(() => {
+        return () => {
+            if (intervalRef.current) {
+                clearInterval(intervalRef.current);
+            }
+        }; // cleanup on unmount
+    }, []);
+
     return (
         <motion.div
             variants={itemVariants}
             whileHover={{ y: -5, transition: { duration: 0.2 } }}
             className="min-w-[50%] sm:min-w-[25%] md:min-w-[unset] md:w-[200px] lg:w-[220px] bg-white rounded-lg shadow-sm border overflow-hidden"
         >
-            <div className="relative cursor-pointer">
-                <img
-                    onClick={() => navigate(`/product/${normalizedProduct.id}`)}
-                    src={normalizedProduct.images[0]}
-                    alt={normalizedProduct.title}
-                    className="h-full w-full object-contain p-4"
-                />
+            <div
+                className="relative cursor-pointer w-full h-[200px] overflow-hidden"
+                onMouseEnter={startSlider}
+                onMouseLeave={stopSlider}
+            >
+                {/* Sliding Image Wrapper */}
+                <div
+                    ref={sliderRef}
+                    className="flex h-full w-full transition-transform duration-700 ease-in-out"
+                    style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+                >
+                    {images.map((img, index) => (
+                        <img
+                            key={index}
+                            src={img}
+                            alt={normalizedProduct.title}
+                            className="w-full h-full object-cover flex-shrink-0 p-4"
+                            onClick={() => navigate(`/product/${normalizedProduct.id}`)}
+                        />
+                    ))}
+                </div>
 
+                {/* Discount Badge */}
                 {showDiscount && normalizedProduct.discountPrice && (
                     <div className="absolute top-2 left-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
                         {normalizedProduct.discountPrice} % OFF
                     </div>
                 )}
 
+                {/* Remove Button */}
                 {showWishlistActions && onRemove && (
                     <Button
                         variant="ghost"

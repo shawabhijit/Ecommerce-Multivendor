@@ -11,7 +11,7 @@ import { Products } from "../../../../../../types/ProductTupe"
 type ProductFeedProps = {
     products: Products[] | []
     title: string
-    category: "Electronics" | "fashion" | "home"
+    category: "Electronics" | "Fashion" | "Sports & Outdoors"
 }
 
 export default function ProductFeed({ products ,  title, category }: ProductFeedProps) {

@@ -9,7 +9,7 @@ const banners = [
         id: 1,
         title: "",
         description: "",
-        image: "https://res.cloudinary.com/dvkvr88db/image/upload/v1746803715/3700220_ygwfoq.jpg",
+        image: "https://res.cloudinary.com/dvkvr88db/image/upload/v1747757854/6f68b49c-49ef-4a76-8214-2a96a6e714ab1745924851912-Herd-se-hatke_fzjaep.webp",
         color: "bg-blue-500",
     },
     {
@@ -23,7 +23,7 @@ const banners = [
         id: 3,
         title: "Flash Deals",
         description: "Limited time offers on top brands",
-        image: "https://res.cloudinary.com/dvkvr88db/image/upload/v1746802401/179e278f-77ee-44c2-bf39-9f00b0cd08e01658752429301-Handbags_Desk_ycxcvl_rm3t9m.jpg",
+        image: "https://res.cloudinary.com/dvkvr88db/image/upload/v1747757727/9be788ff-39a4-4214-99d0-fc97505aae5a1658752545685-USPA_Desk_Banner_gcvgus.jpg",
         color: "bg-green-500",
     },
 ]

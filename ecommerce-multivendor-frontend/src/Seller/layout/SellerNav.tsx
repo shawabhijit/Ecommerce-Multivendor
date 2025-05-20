@@ -11,6 +11,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import { useTheme } from '../../context/theme-provider';
 import { useAppDispatch, useAppSelecter } from '../../app/Store';
 import { logout } from '../../app/authSlice/sellerAuthSlice';
+import { logoutUser } from '../../app/authSlice/CustomerAuthSlice';
 
 
 const products = [
@@ -25,7 +26,7 @@ const products = [
     "Mobile Holder"
 ];
 
-const SellerNav = ({ isLogedin , sellerInfo }: any) => {
+const SellerNav = ({ isLogedin, sellerInfo }: any) => {
 
     const { theme, setTheme } = useTheme();
     const isDark = theme === 'dark';
@@ -47,9 +48,14 @@ const SellerNav = ({ isLogedin , sellerInfo }: any) => {
     const headerBackground = useTransform(scrollY, [0, 50], [isDark ? "rgba(0, 0, 0, 0.9)" : "rgba(255, 255, 255, 1)", "rgba(255, 255, 255, 1)"])
     const headerShadow = useTransform(scrollY, [0, 50], ["0 0 0 rgba(0, 0, 0, 0)", "0 4px 6px rgba(0, 0, 0, 0.1)"])
 
-    const handleLogout = () => {
-        console.log("Logged out");
-        dispatch(logout())
+    const handleLogout = async () => {
+        try {
+            await dispatch(logoutUser()).unwrap();
+            dispatch(logout());
+            setIsOpen(false);
+        } catch (error) {
+            console.error("Logout failed:", error);
+        }
     }
 
     console.log("seller Image :", sellerProfile?.businessDetails?.logo)
@@ -73,7 +79,7 @@ const SellerNav = ({ isLogedin , sellerInfo }: any) => {
         return () => window.removeEventListener('scroll', handleScroll);
     }, [searchValue]);
 
-    
+
 
     // console.log("Seller Profile fetch suucessfully ,  Response:", response);
 

@@ -136,11 +136,11 @@ export function SellerDashboard() {
         <div className=" mx-auto px-4 lg:px-8">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
                 <div>
-                    <h1 className="text-2xl font-bold">Seller Dashboard</h1>
-                    <p className="text-gray-500">Welcome back! Here's what's happening with your store today.</p>
+                    {/* <h1 className="text-2xl font-bold">Seller Dashboard</h1>
+                    <p className="text-gray-500">Welcome back! Here's what's happening with your store today.</p> */}
                 </div>
                 <div className="mt-4 md:mt-0">
-                    <Button>View Reports</Button>
+                    {/* <Button>View Reports</Button> */}
                 </div>
             </div>
 

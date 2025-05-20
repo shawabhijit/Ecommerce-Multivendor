@@ -615,13 +615,12 @@ export function SellerSignup() {
             // Simulate API call
             await new Promise((resolve) => setTimeout(resolve, 2000));
             // console.log("Form submitted successfully:", data);
-            // Navigate to next page or show success message
             const response = await dispatch(sellerSignin(transformedData));
             console.log("response: ", response);
-            console.log("response payload: ", response.payload);
-            console.log("response payload success: ", response.payload?.success);
+            //console.log("response payload: ", response.payload);
+            //console.log("response payload success: ", response.payload?.success);
             console.log("selected selller : ", seller.selectedSeller)
-            if (response.payload?.success || seller.selectedSeller) { // Adjust condition based on your API response structure
+            if (response.meta.requestStatus == "fulfilled") {
                 navigate("/seller/login");
             }
         } catch (err) {

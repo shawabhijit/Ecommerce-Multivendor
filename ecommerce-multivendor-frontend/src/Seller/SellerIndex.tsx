@@ -43,7 +43,7 @@ const SellerIndex = () => {
         <>
             {!shouldHideNavbar && <SellerNav isLogedin={isLoggedIn} sellerInfo={sellerInfo} />}
             <main className="flex-grow min-h-screen overflow-hidden">
-                <div className="container mx-auto px-4 space-y-8 pb-10 mt-28">
+                <div className="container mx-auto space-y-8 pb-10 mt-20 md:mt-20">
                     <Routes>
                         {/* public routes */}
                         <Route path="signup" element={<SellerSignup />} />

@@ -2,7 +2,6 @@
 import HeroCarousel from './Private/HeroCarousel/HeroCarousel';
 import DealsOfTheDay from './Private/DealsOfTheDay/DealsOfTheDay';
 import ProductFeed from './Private/ProductFeed/ProductFeed';
-import PersonalizedSuggestions from './Private/PersonalizedSuggestion/PersonalizedSuggestion';
 import FeaturesSection from './Public/FeatureSection/FeatureSection';
 import CategoriesSection from './Public/CategoriesSection/CategoriesSection';
 import WhyChooseUsSection from './Public/WhyChooseUs/WhyChooseUsSection';
@@ -49,14 +48,14 @@ const Index = () => {
 
                                 <DealsOfTheDay products={products} />
 
-                                <PersonalizedSuggestions products={products} />
+                                {/* <PersonalizedSuggestions products={products} /> */}
 
                                 <ProductFeed products={products} title="Electronics" category="Electronics" />
 
-                                <ProductFeed products={products} title="Fashion" category="fashion" />
+                                <ProductFeed products={products} title="Fashion" category="Fashion" />
 
 
-                                <ProductFeed products={products} title="Home & Kitchen" category="home" />
+                                <ProductFeed products={products} title="Sports & Outdoors" category="Sports & Outdoors" />
                             </div>
                         </main>
                     ) : (
