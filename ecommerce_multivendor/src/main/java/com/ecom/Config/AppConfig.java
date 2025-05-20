@@ -41,7 +41,7 @@ public class AppConfig {
                                 .requestMatchers(new AntPathRequestMatcher("/customers/me")).authenticated()
                                 .anyRequest().permitAll()
                 ).csrf(AbstractHttpConfigurer::disable)
-                .addFilterBefore(new JwtTokenValidator(), BasicAuthenticationFilter.class) // this line works for authorization
+                .addFilterBefore(new JwtTokenValidator(), BasicAuthenticationFilter.class)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()));
 
         return http.build();
@@ -50,7 +50,7 @@ public class AppConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://localhost:5173", "https://hiakrihub.netlify.app"));
+        config.setAllowedOriginPatterns(List.of("https://hiakrihub.netlify.app", "http://localhost:5173/")); // this supports credentials
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         config.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Requested-With"));
         config.setExposedHeaders(List.of("Authorization", "Cache-Control", "Content-Type"));
@@ -61,6 +61,7 @@ public class AppConfig {
         source.registerCorsConfiguration("/**", config);
         return source;
     }
+
 
 
     @Bean
