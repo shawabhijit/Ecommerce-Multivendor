@@ -38,7 +38,7 @@ An advanced full-stack **multi-vendor e-commerce platform** built with **Spring 
 ## 🧰 Tech Stack
 
 ### 🖥️ Frontend:
-- [React.js](https://reactjs.org/) (with [Vite](https://vitejs.dev/))
+- [React.js](https://reactjs.org/) (with [Vite](https://vitejs.dev/) + **TypeScript**)
 - [Redux Toolkit](https://redux-toolkit.js.org/) (Thunk, Store, Slices)
 - [Tailwind CSS](https://tailwindcss.com/)
 - [ShadCN UI](https://ui.shadcn.dev/)
@@ -56,6 +56,7 @@ An advanced full-stack **multi-vendor e-commerce platform** built with **Spring 
 ### ☁️ Deployment:
 - Frontend: **Netlify**
 - Backend: **Render (Docker image)**
+- Database: **Neon db**
 
 ---
 
@@ -72,8 +73,8 @@ cd ecommerce-multivendor
 ### With Docker 
 ```bash
 cd backend
-docker build -t ecommerce-backend .
-docker run -p 8080:8080 ecommerce-backend
+docker build -t ecommerce_multivendor .
+docker run -p 8081:8081 ecommerce-backend
 
 ```
 ### With Maven
