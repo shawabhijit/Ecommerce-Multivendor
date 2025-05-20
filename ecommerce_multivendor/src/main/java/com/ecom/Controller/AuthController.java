@@ -13,12 +13,21 @@ import com.ecom.Service.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.Duration;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
+@Slf4j
 public class AuthController {
 
     private final AuthService authService;
@@ -38,17 +47,42 @@ public class AuthController {
     }
 
     @PostMapping("/signup/sent-otp")
-    public ResponseEntity<?> sentOtpHandler (@RequestBody LoginOtpRequest req) throws Exception {
+    public ResponseEntity<?> sentOtpHandler(@RequestBody LoginOtpRequest req) {
+        log.info("Received OTP request for email: {} with role: {}", req.getEmail(), req.getRole());
 
-        System.out.println(req.getEmail());
+        // Validate request
+        if (req.getEmail() == null || req.getEmail().isEmpty()) {
+            log.warn("Invalid request: Email is empty");
+            return ResponseEntity.badRequest()
+                    .body(Map.of("error", "Email address is required"));
+        }
 
-        authService.sentLoginOtp(req.getEmail(),req.getRole());
+        if (req.getRole() == null) {
+            log.warn("Invalid request: Role is null");
+            return ResponseEntity.badRequest()
+                    .body(Map.of("error", "User role is required"));
+        }
 
-        ApiResponse authResponse = new ApiResponse();
-        authResponse.setMessage("Otp Sent Successfully.");
+        try {
+            log.info("Calling authService.sentLoginOtp");
+            authService.sentLoginOtp(req.getEmail(), req.getRole());
 
+            log.info("OTP sent successfully to {}", req.getEmail());
+            ApiResponse authResponse = new ApiResponse();
+            authResponse.setMessage("OTP sent successfully.");
+            return ResponseEntity.ok().body(authResponse);
 
-        return ResponseEntity.ok().body(authResponse);
+        } catch (Exception e) {
+            log.error("Error sending OTP to {}: {}", req.getEmail(), e.getMessage());
+            log.error("Exception details:", e);
+
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", "Failed to send OTP");
+            errorResponse.put("details", e.getMessage());
+
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(errorResponse);
+        }
     }
 
     @PostMapping("/signing")
@@ -58,13 +92,15 @@ public class AuthController {
 
         AuthResponse auth = authService.signing(req);
 
-        Cookie cookie = new Cookie("jwt", auth.getToken());
-        cookie.setPath("/");
-        cookie.setHttpOnly(true);
-        cookie.setSecure(false);
-        cookie.setMaxAge((24 * 60 * 60)*2);   // 2 day
+        ResponseCookie cookie = ResponseCookie.from("jwt", auth.getToken())
+                .httpOnly(true)
+                .secure(true)
+                .sameSite("None")
+                .path("/")
+                .maxAge(Duration.ofDays(2))
+                .build();
 
-        response.addCookie(cookie);
+        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
 
         return ResponseEntity.ok().body(auth);
     }
@@ -72,13 +108,15 @@ public class AuthController {
     @GetMapping("/logout")
     public ResponseEntity<?> logouthandler (@CookieValue(name = "jwt" , required = false) String jwt , HttpServletResponse response) throws Exception {
         if (jwt != null) {
-            Cookie cookie = new Cookie("jwt", null);
-            cookie.setHttpOnly(true);
-            cookie.setSecure(true);
-            cookie.setPath("/");
-            cookie.setMaxAge(0);
+            ResponseCookie cookie = ResponseCookie.from("jwt", jwt)
+                    .httpOnly(true)
+                    .secure(true)
+                    .sameSite("None")
+                    .path("/")
+                    .maxAge(0)
+                    .build();
 
-            response.addCookie(cookie);
+            response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
         }
 
         return ResponseEntity.ok().body("Logged out successfully");

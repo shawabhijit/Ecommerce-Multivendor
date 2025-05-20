@@ -64,8 +64,10 @@ public class HomeController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        String email = authentication.getName(); // Email from token
+        String email = authentication.getName();
         UserEntity customer = userRepo.findByEmail(email);
+
+        System.out.println(customer);
 
         if (customer == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

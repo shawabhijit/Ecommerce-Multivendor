@@ -19,10 +19,13 @@ import jakarta.mail.MessagingException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Duration;
 import java.util.List;
 
 @RestController
@@ -47,13 +50,16 @@ public class SellerController {
         request.setEmail("seller_" + email);
         AuthResponse authResponse = authService.signing(request);
 
-        Cookie sellerCookie = new Cookie("jwt", authResponse.getToken());
-        sellerCookie.setPath("/");
-        sellerCookie.setHttpOnly(true);
-        sellerCookie.setSecure(false);
-        sellerCookie.setMaxAge((24 * 60 * 60)*2);   // 2 day
+        ResponseCookie cookie = ResponseCookie.from("jwt", authResponse.getToken())
+                .httpOnly(true)
+                .secure(true) // ✅ true for production HTTPS
+                .sameSite("None") // ✅ required for cross-site cookies
+                .path("/")
+                .maxAge(Duration.ofDays(2))
+                .build();
 
-        res.addCookie(sellerCookie);
+        res.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+
 
         return ResponseEntity.ok().body(authResponse);
 

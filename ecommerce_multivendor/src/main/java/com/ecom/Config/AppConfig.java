@@ -52,7 +52,7 @@ public class AppConfig {
             public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
                 System.out.println("front end url getting by .properties---------------- :"+frontendUrl);
                 CorsConfiguration config = new CorsConfiguration();
-                config.setAllowedOrigins(List.of("http://localhost:5173"));
+                config.setAllowedOrigins(List.of("http://localhost:5173" , "https://hiakrihub.netlify.app"));
                 config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
                 config.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Requested-With"));
                 config.setExposedHeaders(List.of("Authorization", "Cache-Control", "Content-Type"));
