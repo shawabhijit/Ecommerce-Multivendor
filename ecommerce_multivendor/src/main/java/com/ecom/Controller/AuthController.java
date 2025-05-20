@@ -48,24 +48,17 @@ public class AuthController {
 
     @PostMapping("/signup/sent-otp")
     public ResponseEntity<?> sentOtpHandler(@RequestBody LoginOtpRequest req) {
-        log.info("Received OTP request for email: {} with role: {}", req.getEmail(), req.getRole());
+        //log.info("Received OTP request for email: {} with role: {}", req.getEmail(), req.getRole());
 
-        // Validate request
         if (req.getEmail() == null || req.getEmail().isEmpty()) {
             log.warn("Invalid request: Email is empty");
             return ResponseEntity.badRequest()
                     .body(Map.of("error", "Email address is required"));
         }
 
-        if (req.getRole() == null) {
-            log.warn("Invalid request: Role is null");
-            return ResponseEntity.badRequest()
-                    .body(Map.of("error", "User role is required"));
-        }
-
         try {
             log.info("Calling authService.sentLoginOtp");
-            authService.sentLoginOtp(req.getEmail(), req.getRole());
+            authService.sentLoginOtp(req.getEmail());
 
             log.info("OTP sent successfully to {}", req.getEmail());
             ApiResponse authResponse = new ApiResponse();

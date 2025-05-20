@@ -78,6 +78,12 @@ public class SellerController {
         return ResponseEntity.ok().body(seller);
     }
 
+    @GetMapping("/email/{email}")
+    public ResponseEntity<?> getSellerByEmail (@PathVariable String email) throws SellerException {
+        SellerEntity seller = sellerService.getSellerByEmail(email);
+        return ResponseEntity.ok().body(seller);
+    }
+
     @PostMapping("/create")
     public ResponseEntity<?> createSeller (@RequestBody SellerEntity seller) throws SellerException , MessagingException {
 

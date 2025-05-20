@@ -26,7 +26,9 @@ public class SellerProductController {
     public ResponseEntity<?> getProductsBySellerId(@CookieValue(name = "jwt" , required = false) String token) throws SellerException, ProductException {
 //        System.out.println("token is not valid ");
         SellerEntity seller = sellerService.getSellerProfile(token);
-
+        if (seller == null) {
+            throw new SellerException("Invalid token");
+        }
         List<ProductEntity> products = productService.getProductBySellerId(seller.getId());
         return ResponseEntity.ok().body(products);
     }

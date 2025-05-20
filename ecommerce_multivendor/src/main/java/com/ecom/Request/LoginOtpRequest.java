@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class LoginOtpRequest {
     private String email;
-    //private String otp;
-    private UserRole role;
+    private String otp;
+    //private UserRole role;
 }

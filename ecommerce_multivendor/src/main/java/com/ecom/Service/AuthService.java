@@ -10,7 +10,7 @@ public interface AuthService {
 
     public String CreateUser(SignUpRequest signUpRequest) throws Exception;
 
-    void sentLoginOtp(String email , UserRole role) throws Exception;
+    void sentLoginOtp(String email ) throws Exception;
 
     AuthResponse signing(LoginRequest request);
 }
