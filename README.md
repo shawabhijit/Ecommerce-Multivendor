@@ -136,7 +136,5 @@ npm run dev
 
 ### ✅ Final Tips:
 - Replace all placeholders like `your-username`, Netlify/Render links, LinkedIn/Portfolio links with actual ones.
-- Optionally, include screenshots or a `/screenshots` folder for better visual appeal.
 
-Let me know if you want a dark-mode GitHub banner or badges (e.g., `Made with Spring Boot`, `Live on Netlify`)!
 
